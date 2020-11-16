@@ -1,0 +1,78 @@
+{extend name="layout/main" /}
+
+{block name="header"}
+
+{/block}
+
+{block name="content"}
+<section class="panel">
+    <header class="panel-heading">
+        <h4>团队等级配置</h4>
+    </header>
+    <div class="panel-body" style="padding-bottom: 50px">
+        <table class="table table-bordered table-striped no-margin">
+            <thead>
+            <tr>
+                <th class="text-center">团队等级</th>
+                <th class="text-center">直推人数</th>
+                <th class="text-center">团队人数</th>
+                <th class="text-center">任务收益百分比</th>
+                <th class="text-center">平级奖励</th>
+                <th class="text-center">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {foreach $list as $key=>$config}
+            <tr>
+                <td class="text-center" style="vertical-align: middle; ">Lv{$config['id']}</td>
+                <td class="text-center" style="vertical-align: middle; ">
+                    <input type="text" id="push{$config['id']}" style="text-align: center" class="form-control"
+                           value="{$config['push']}">
+                </td>
+                <td class="text-center" style="vertical-align: middle; ">
+                    <input type="text" id="team{$config['id']}" style="text-align: center" class="form-control"
+                           value="{$config['team']}">
+                </td>
+                <td class="text-center" style="vertical-align: middle; ">
+                    <input type="text" id="team_profit{$config['id']}" style="text-align: center" class="form-control"
+                           value="{$config['team_profit']}">
+                </td>
+                <td class="text-center" style="vertical-align: middle; ">
+                    <input type="text" id="level_profit{$config['id']}" style="text-align: center" class="form-control"
+                           value="{$config['level_profit']}">
+                </td>
+
+                <td class="text-center" style="vertical-align: middle; ">
+                    <a onclick="updateConfig(this)" data-id="{$config['id']}" class="btn btn-xs btn-primary">确认修改</a>
+                </td>
+            </tr>
+            {/foreach}
+            </tbody>
+        </table>
+
+    </div>
+</section>
+{/block}
+
+
+{block name="footer"}
+<script>
+    function updateConfig(e) {
+        var id = $(e).attr('data-id');
+        var push = $("#push" + id).val();
+        var team = $("#team" + id).val();
+        var team_profit = $("#team_profit" + id).val();
+        var level_profit = $("#level_profit" + id).val();
+        $.post("{:url('editConfigTeamLevel')}", {push: push,team: team,team_profit:team_profit,level_profit:level_profit,id:id}, function (data) {
+            if (data.code == 1) {
+                main.waringAlert(data.message);
+            } else {
+                main.waringAlert(data.message);
+                setTimeout(function () {
+                    window.location.reload();
+                }, 1000)
+            }
+        }, 'json')
+    }
+</script>
+{/block}

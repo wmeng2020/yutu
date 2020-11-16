@@ -1,0 +1,38 @@
+<?php
+namespace app\admin\controller;
+
+use app\common\entity\Name;
+use think\Controller;
+use think\Db;
+use think\Request;
+
+class Login extends Controller
+{
+    public function index()
+    {
+        return $this->fetch('index');
+    }
+
+    /**
+     * 登录处理
+     */
+    public function login(Request $request)
+    {
+        $service = new \app\admin\service\rbac\Users\Service();
+        $result = $this->validate($request->post(), 'app\admin\validate\LoginForm');
+
+        if (true !== $result) {
+            return json()->data(['code' => 1, 'message' => $result]);
+        }
+        $validate = $service->doLogin($request->post('username'), $request->post('password'));
+        if (true === $validate) {
+
+            $power = new \app\admin\service\rbac\Power\Service();
+            $power->delCache();
+
+            return json()->data(['toUrl' => url('index/index')]);
+        }else{
+            return json()->data(['code'=>1,'message'=>$validate]);
+        }
+    }
+}

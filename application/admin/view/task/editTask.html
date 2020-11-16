@@ -1,0 +1,178 @@
+{extend name="layout/main" /}
+
+{block name="header"}
+
+{/block}
+
+{block name="content"}
+<link rel="stylesheet" href="__PUBLIC__/static/webuploader/webuploader.css">
+<script type="text/javascript" src='__PUBLIC__/static/webuploader/webuploader.js'></script>
+<section class="panel">
+    {if isset($info)}
+    <header class="panel-heading">
+        <h4>编辑任务</h4>
+    </header>
+    <div class="panel-body" style="padding-bottom: 50px">
+        <form class="form-horizontal" method="post" onsubmit="return false" role="form">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">任务分类名称</label>
+                <div class="col-sm-5">
+                    <select name="sort_id" class="form-control">
+                        <option value="">--请选择--</option>
+                        {foreach $allSort as $key=>$item}
+                        <option {if $info->sort_id == $key}selected{/if} value="{$key}">{$item}</option>
+                        {/foreach}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">需求分类名称</label>
+                <div class="col-sm-5">
+                    <select name="need_type_id" class="form-control">
+                        <option value="">--请选择--</option>
+                        {foreach $allNeedType as $key=>$item}
+                        <option {if $info->need_type_id == $key}selected{/if} value="{$key}">{$item}</option>
+                        {/foreach}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">任务链接</label>
+                <div class="col-sm-5">
+                    <input type="text" value="{$info->task_url}" name="task_url" class="form-control"
+                           placeholder="请输入抖音链接">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">需求方</label>
+                <div class="col-sm-5">
+                    <input type="text" value="{$info->demand_side}" name="demand_side" class="form-control"
+                           placeholder="请输入需求方">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">任务总数量</label>
+                <div class="col-sm-5">
+                    <input type="text" value="{$info->task_num}" name="task_num" class="form-control"
+                           placeholder="请输入任务总数量">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">任务价格</label>
+                <div class="col-sm-5">
+                    <input type="text" value="{$info->task_price}" name="task_price" class="form-control"
+                           placeholder="请输入任务价格">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">任务状态</label>
+                <div class="col-sm-5">
+                    <label class="radio radio-custom pull-left">
+                        <input type="radio" {if $info->status == 1}checked{/if} name="status" value="1">
+                        <i class="radio "></i> 上架
+                    </label>
+                    <label class="radio radio-custom pull-left">
+                        <input type="radio" {if $info->status == 0}checked{/if} name="status" value="0">
+                        <i class="radio "></i> 下架
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" data-url="{:url('createTask',['id'=>$info.id])}"
+                            onclick="main.ajaxPosts(this)" class="btn btn-primary">确定修改
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    {else /}
+    <header class="panel-heading">
+        <h4>添加任务</h4>
+    </header>
+    <div class="panel-body" style="padding-bottom: 50px">
+        <form class="form-horizontal" method="post" onsubmit="return false" role="form">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">任务分类名称</label>
+                <div class="col-sm-5">
+                    <select name="sort_id" class="form-control">
+                        <option value="">--请选择--</option>
+                        {foreach $allSort as $key=>$item}
+                        <option value="{$key}">{$item}</option>
+                        {/foreach}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">需求分类名称</label>
+                <div class="col-sm-5">
+                    <select name="need_type_id" class="form-control">
+                        <option value="">--请选择--</option>
+                        {foreach $allNeedType as $key=>$item}
+                        <option value="{$key}">{$item}</option>
+                        {/foreach}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">任务链接</label>
+                <div class="col-sm-5">
+                    <input type="text" value="" name="task_url" class="form-control"
+                           placeholder="请输入抖音链接">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">需求方</label>
+                <div class="col-sm-5">
+                    <input type="text" value="" name="demand_side" class="form-control"
+                           placeholder="请输入需求方">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">任务总数量</label>
+                <div class="col-sm-5">
+                    <input type="text" value="" name="task_num" class="form-control"
+                           placeholder="请输入任务总数量">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">任务价格</label>
+                <div class="col-sm-5">
+                    <input type="text" value="" name="task_price" class="form-control"
+                           placeholder="请输入任务价格">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">任务状态</label>
+                <div class="col-sm-5">
+                    <label class="radio radio-custom pull-left">
+                        <input type="radio" checked name="status" value="1">
+                        <i class="radio "></i> 上架
+                    </label>
+                    <label class="radio radio-custom pull-left">
+                        <input type="radio" name="status" value="0">
+                        <i class="radio "></i> 下架
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" onclick="main.ajaxPosts(this)" data-url="{:url('createTask')}"
+                            class="btn btn-primary">提交
+                    </button>
+                    &nbsp;
+                    <button type="button" onclick="javascript:history.back(-1);" class="btn btn-warning">返回
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    {/if}
+</section>
+{/block}
+
+
+{block name="footer"}
+<script src="__PUBLIC__/admin/vendor/fuelux/radio.js"></script>
+
+{/block}
