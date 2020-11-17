@@ -7,8 +7,6 @@ use think\Validate;
 class CreateTask extends Validate
 {
     protected $rule = [
-        'sort_id'  =>  'require',
-        'need_type_id' =>  'require',
         'task_url' =>  'require',
         'demand_side' =>  'require|checkDemand',
         'task_num' =>  'require',
@@ -18,8 +16,6 @@ class CreateTask extends Validate
     ];
 
     protected $message  =   [
-        'sort_id.require' => '请输入任务分类名称',
-        'need_type_id.require'     => '请输入需求分类名称',
         'task_url.require'     => '请输入任务链接',
         'demand_side.require'     => '请输入需求方',
         'task_num.require'     => '请输入任务总数量',

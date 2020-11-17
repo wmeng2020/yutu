@@ -16,7 +16,7 @@ class System extends Admin
      */
     public function index()
     {
-        $list = ConfigUserLevelModel::select();
+        $list = ConfigUserLevelModel::order('id')->select();
         return $this->render('index', [
             'list' => $list,
         ]);
@@ -35,7 +35,7 @@ class System extends Admin
         return json()->data(['code' => 1, 'message' => '操作失败']);
     }
     /**
-     *  系统设置|团队等级配置
+     *  系统设置|保证金配置
      */
     public function teamLevel()
     {
@@ -95,26 +95,71 @@ class System extends Admin
         return json(['code' => 0,'message'=>'操作成功']);
     }
     /**
-     *  系统设置|发布管理配置
+     *  系统设置|推广二维码背景图配置
      */
     public function publishSet()
     {
-        $list = ConfigPublishModel::select();
-        return $this->render('publishSet', [
+        $list = Db::table('spread_image')->order('id')->select();
+        return $this->render('imagelist', [
             'list' => $list,
         ]);
     }
-    /**
-     *  系统设置|修改发布管理配置
-     */
-    public function editConfigPublish(Request $request)
+    #内容管理|图片添加
+    public function imageadd()
     {
-        $id = $request->post('id');
-        $query = ConfigPublishModel::where('id',$id)->find();
-        $res = $query->addNew($query,$request->post());
-        if($res){
-            return json()->data(['code' => 0,'message' => '修改成功']);
+        return $this->render('imageedit');
+    }
+    #图片添加
+    public function saveimage(Request $request)
+    {
+        $photo = $request->post('photo');
+        $data = [
+            'pic' => $photo,
+            'create_time' => time()
+        ];
+        $insphoto = Db::table('spread_image')->insert($data);
+        if ($insphoto){
+            return json(['code' => 0, 'message' => '添加成功','toUrl' => url('System/publishSet')]);
         }
-        return json()->data(['code' => 1, 'message' => '操作失败']);
+        return json(['code' => 1, 'message' => '添加失败']);
+    }
+    #内容管理|图片编辑
+    public function imageedit(Request $request)
+    {
+        $id = $request->param('id');
+        $list = Db::table('spread_image')->where('id',$id)->find();
+        return $this->render('imageedit',[
+            'info' => $list
+        ]);
+    }
+
+    #图片修改
+    public function updimage(Request $request)
+    {
+        $id = $request->param('id');
+        $title = $request->post('title');
+        $photo = $request->post('photo');
+        $sort = $request->post('sort');
+        $data = [
+            'pic' => $photo,
+            'sort' => $sort,
+            'title' => $title,
+            'update_time' => time()
+        ];
+        $updphoto = Db::table('spread_image')->where('id',$id)->update($data);
+        if ($updphoto){
+            return json(['code' => 0, 'message' => '修改成功','toUrl'=>url('System/publishSet')]);
+        }
+        return json(['code' => 1, 'message' => '修改失败']);
+    }
+    #图片删除
+    public function imagedel(Request $request)
+    {
+        $uid = $request->param('id');
+        $del = Db::table('spread_image')->where('id',$uid)->delete();
+        if ($del){
+            return json(['code' => 0, 'message' => '删除成功']);
+        }
+        return json(['code' => 1, 'message' => '删除失败']);
     }
 }

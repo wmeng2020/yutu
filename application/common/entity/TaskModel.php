@@ -73,8 +73,6 @@ class TaskModel extends Model {
      */
     public function addNew($query,$data)
     {
-        $query->sort_id = $data['sort_id'];
-        $query->need_type_id = $data['need_type_id'];
         $query->task_url = $data['task_url'];
         $query->demand_side = $data['demand_side'];
         $query->task_num = $data['task_num'];

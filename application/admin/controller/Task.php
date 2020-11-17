@@ -221,12 +221,8 @@ class Task extends Admin {
             ->paginate(15,false,[
                 'query' => $request->param()?$request->param():[],
             ]);
-        $allSort = TaskModel::getAllSort();
-        $allNeedType = TaskModel::getAllNeedType();
         return $this->render('taskList',[
             'list' => $list,
-            'allSort' => $allSort,
-            'allNeedType' => $allNeedType,
         ]);
     }
     /**

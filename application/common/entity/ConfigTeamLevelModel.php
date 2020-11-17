@@ -27,10 +27,9 @@ class ConfigTeamLevelModel extends Model {
      */
     public function addNew($query,$data)
     {
-        $query->push = $data['push'];
-        $query->team = $data['team'];
-        $query->team_profit = $data['team_profit'];
-        $query->level_profit = $data['level_profit'];
+        $query->assure_money = $data['assure_money'];
+        $query->task_num = $data['task_num'];
+        $query->deposit_cost = $data['deposit_cost'];
         return $query->save();
     }
 }

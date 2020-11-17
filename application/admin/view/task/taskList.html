@@ -14,22 +14,6 @@
     <div class="panel-body" style="padding-bottom: 50px">
         <form class="form-horizontal" action="{:url('taskList')}" >
             <div class="form-group">
-                <div class="col-xs-1">
-                    <select name="sort_id" class="form-control">
-                        <option value="0">全部任务分类</option>
-                        {foreach $allSort as $key=>$item}
-                        <option {if $Request.get.sort_id == $key}selected{/if} value="{$key}">{$item}</option>
-                        {/foreach}
-                    </select>
-                </div>
-                <div class="col-xs-1">
-                    <select name="need_type_id" class="form-control">
-                        <option value="0">全部需求分类</option>
-                        {foreach $allNeedType as $key=>$item}
-                        <option {if $Request.get.need_type_id == $key}selected{/if} value="{$key}">{$item}</option>
-                        {/foreach}
-                    </select>
-                </div>
                 <!--<div class="col-xs-1 no-pd-r">-->
                     <!--<select name="type" id="type" class="form-control">-->
                         <!--<option {if $Request.get.type == 'type_name'} selected {/if} value="type_name">需求分类名称</option>-->
@@ -52,8 +36,6 @@
             <thead>
                 <tr>
                     <th class="text-center">ID</th>
-                    <th class="text-center">任务分类名称</th>
-                    <th class="text-center">需求分类名称</th>
                     <th class="text-center">任务链接</th>
                     <th class="text-center">需求方</th>
                     <th class="text-center">任务总数量</th>
@@ -68,12 +50,6 @@
                 {foreach $list as $order}
                     <tr>
                         <td class="text-center">{$order->id}</td>
-                        <td class="text-center">
-                            {$order->getSort($order->sort_id)}
-                        </td>
-                        <td class="text-center">
-                            {$order->getNeedType($order->need_type_id)}
-                        </td>
                         <td class="text-center">
                             {$order->task_url}
                         </td>

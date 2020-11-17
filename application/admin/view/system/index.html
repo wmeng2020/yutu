@@ -13,33 +13,44 @@
         <table class="table table-bordered table-striped no-margin">
             <thead>
             <tr>
-                <th class="text-center">会员等级</th>
-                <th class="text-center">每日可领取任务数</th>
-                <th class="text-center">每日收益</th>
-                <th class="text-center">开通费</th>
-                <th class="text-center">赠送金豆数量</th>
+                <th class="text-center">会员身份</th>
+                <th class="text-center">团队人数</th>
+                <th class="text-center">有效人数</th>
+                <th class="text-center">一级（%）</th>
+                <th class="text-center">二级（%）</th>
+                <th class="text-center">三级（%）</th>
                 <th class="text-center">操作</th>
             </tr>
             </thead>
             <tbody>
             {foreach $list as $key=>$config}
             <tr>
-                <td class="text-center" style="vertical-align: middle; ">VIP{$key}</td>
                 <td class="text-center" style="vertical-align: middle; ">
-                    <input type="text" id="tasks_num{$config['id']}" style="text-align: center" class="form-control"
-                           value="{$config['tasks_num']}">
+                    {if $config['id'] == 0}
+                    普通会员
+                    {else /}
+                    VIP{$config['id']}
+                    {/if}
                 </td>
                 <td class="text-center" style="vertical-align: middle; ">
-                    <input type="text" id="profit{$config['id']}" style="text-align: center" class="form-control"
-                           value="{$config['profit']}">
+                    <input type="text" id="team_num{$config['id']}" style="text-align: center" class="form-control"
+                           value="{$config['team_num']}">
                 </td>
                 <td class="text-center" style="vertical-align: middle; ">
-                    <input type="text" id="openin{$config['id']}" style="text-align: center" class="form-control"
-                           value="{$config['openin']}">
+                    <input type="text" id="valid_num{$config['id']}" style="text-align: center" class="form-control"
+                           value="{$config['valid_num']}">
                 </td>
                 <td class="text-center" style="vertical-align: middle; ">
-                    <input type="text" id="gold_profit{$config['id']}" style="text-align: center" class="form-control"
-                           value="{$config['gold_profit']}">
+                    <input type="text" id="one_level{$config['id']}" style="text-align: center" class="form-control"
+                           value="{$config['one_level']}">
+                </td>
+                <td class="text-center" style="vertical-align: middle; ">
+                    <input type="text" id="two_level{$config['id']}" style="text-align: center" class="form-control"
+                           value="{$config['two_level']}">
+                </td>
+                <td class="text-center" style="vertical-align: middle; ">
+                    <input type="text" id="three_level{$config['id']}" style="text-align: center" class="form-control"
+                           value="{$config['three_level']}">
                 </td>
 
                 <td class="text-center" style="vertical-align: middle; ">
@@ -59,11 +70,13 @@
 <script>
     function updateConfig(e) {
         var id = $(e).attr('data-id');
-        var tasks_num = $("#tasks_num" + id).val();
-        var profit = $("#profit" + id).val();
-        var openin = $("#openin" + id).val();
-        var gold_profit = $("#gold_profit" + id).val();
-        $.post("{:url('editConfigUserLevel')}", {tasks_num: tasks_num,profit: profit,openin:openin,gold_profit:gold_profit,id:id}, function (data) {
+        var level_name = $("#level_name" + id).val();
+        var team_num = $("#team_num" + id).val();
+        var valid_num = $("#valid_num" + id).val();
+        var one_level = $("#one_level" + id).val();
+        var two_level = $("#two_level" + id).val();
+        var three_level = $("#three_level" + id).val();
+        $.post("{:url('editConfigUserLevel')}", {level_name: level_name,team_num: team_num,valid_num:valid_num,one_level:one_level,two_level:two_level,three_level:three_level,id:id}, function (data) {
             if (data.code == 1) {
                 main.waringAlert(data.message);
             } else {

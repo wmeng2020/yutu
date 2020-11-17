@@ -27,10 +27,14 @@ class ConfigUserLevelModel extends Model {
      */
     public function addNew($query,$data)
     {
-        $query->tasks_num = $data['tasks_num'];
-        $query->profit = $data['profit'];
-        $query->openin = $data['openin'];
-        $query->gold_profit = $data['gold_profit'];
+        if(isset($data['level_name'])){
+            $query->level_name = $data['level_name'];
+        }
+        $query->team_num = $data['team_num'];
+        $query->valid_num = $data['valid_num'];
+        $query->one_level = $data['one_level'];
+        $query->two_level = $data['two_level'];
+        $query->three_level = $data['three_level'];
         return $query->save();
     }
 }
