@@ -38,14 +38,33 @@ class MyWalletLog extends Model {
             3 => '提现拒绝，退还',
             4 => '转账',
             5 => '任务佣金',
-            6 => '发布任务',
-            7 => '抢购VIP',
-            8 => '任务直推奖',
-            9 => '任务团队奖',
-            10 => '任务平级奖',
-            13 => '取消预约VIP',
-            12 => '任务间推奖',
+            6 => '下级分佣',
+            7 => '代理佣金',
+
         ];
+    }
+    //获取所有账户类型
+    public static function getAllMoneyTypes()
+    {
+        return [
+            1 => '保证金账户',
+            2 => '佣金账户',
+            3 => '代理账户',
+        ];
+    }
+    //获取账户类型
+    public function getMoneyType($type)
+    {
+        switch ($type) {
+            case 1:
+                return '保证金账户';
+            case 2:
+                return '佣金账户';
+            case 3:
+                return '代理账户';
+            default:
+                return '';
+        }
     }
     //获取类型
     public function getType($type)
@@ -62,19 +81,9 @@ class MyWalletLog extends Model {
             case 5:
                 return '任务佣金';
             case 6:
-                return '发布任务';
+                return '下级分佣';
             case 7:
-                return '抢购VIP';
-            case 8:
-                return '任务直推奖';
-            case 9:
-                return '任务团队奖';
-            case 10:
-                return '任务平级奖';
-            case 13:
-                return '取消预约VIP';
-            case 12:
-                return '任务间推奖';
+                return '代理佣金';
             default:
                 return '';
         }

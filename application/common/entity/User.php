@@ -250,7 +250,13 @@ class User extends Model
                 return $childs;
             }
         }
-        $child = Db::table('user')->whereIn('pid', $uid)->field('id,pid,mobile,level,register_time')->select();
+        $child = Db::table('user')
+            ->alias('u')
+            ->leftJoin('my_wallet w','u.id = w.uid')
+            ->leftJoin('config_user_level l','l.id = u.level')
+            ->whereIn('pid', $uid)
+            ->field('u.id,u.pid,u.mobile,u.level,u.register_time,w.number,l.level_name')
+            ->select();
         if ($child) {
             $level++;
             $childs[$level] = $child;

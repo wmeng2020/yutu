@@ -70,10 +70,13 @@ class User {
             //增加邀请人数
             if($parentId != 0){
                 \app\common\entity\User::where('id', $parentId)->setInc('invite_count');
-                $info = DB::table('user')->where('id',$parentId)->find();
             }
+            $give_money = db('config')
+                ->where('key','give_money')
+                ->value('value');
             $wallet_data = [
                 'uid' => $entity->id,
+                'number' => $give_money,
                 'update_time' => time(),
             ];
             $this->addWallet($wallet_data);

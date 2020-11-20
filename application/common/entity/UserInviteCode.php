@@ -16,7 +16,7 @@ class UserInviteCode extends Model
         $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         // $chars = '0123456789';
         $password = '';
-        for ($i = 0; $i < 8; $i++) {
+        for ($i = 0; $i < 5; $i++) {
             $password .= $chars[mt_rand(0, strlen($chars) - 1)];
         }
         return $password . $userId;

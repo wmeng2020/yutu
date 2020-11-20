@@ -35,7 +35,7 @@
                 </div>
                 <button type="submit" class="btn btn-color">搜索</button>
                 <!--<button type="button" class="btn btn-success" id="export">导出</button>-->
-                <a type="button" href="/admin/user/create" class="btn btn-info">添加会员</a>
+                <a type="button" href="{:url('admin/user/create')}" class="btn btn-info">添加会员</a>
             </div>
         </form>
         <table class="table table-bordered table-striped no-margin">
@@ -48,8 +48,9 @@
                 <th class="text-center">注册信息</th>
                 <th class="text-center">等级</th>
                 <th class="text-center">状态</th>
-                <th class="text-center">余额</th>
-                <th class="text-center">金豆</th>
+                <th class="text-center">佣金账户</th>
+                <th class="text-center">保证金账户</th>
+                <th class="text-center">代理账户</th>
                 <th class="text-center">直推人数</th>
                 <th class="text-center">操作</th>
             </tr>
@@ -96,7 +97,10 @@
                         {$entity->number}
                     </td>
                     <td class="text-center">
-                        {$entity->gold}
+                        {$entity->bond}
+                    </td>
+                    <td class="text-center">
+                        {$entity->agent}
                     </td>
                     <td class="text-center">
                         {$entity->next_count}

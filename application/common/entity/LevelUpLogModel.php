@@ -25,23 +25,19 @@ class LevelUpLogModel extends Model {
         return self::where('id', $id)->find();
     }
     /**
-     * 抢购成功，添加升级记录
+     * 购买成功，添加升级记录
      */
     public function lootVipLog($data)
     {
 
         $res = $this->addNew($this,$data);
         if($res){
-            $level_info = ConfigUserLevelModel::where('id',$data['level'])
-                ->find();
             Db::startTrans();
             try {
-               User::where('id', $data['uid'])
+                $result = User::where('id', $data['uid'])
                     ->update([
-                        'level' => (int)$data['level'] - 1,
+                        'star_level' => (int)$data['level'],
                     ]);
-                $result = MyWallet::where('uid', $data['uid'])
-                    ->setInc('gold', $level_info['gold_profit']);
                 if(!$result) {
                     Db::rollback();
                     return false;
@@ -66,11 +62,6 @@ class LevelUpLogModel extends Model {
             $query->status = 1;
         }else{
             $query->status = $data['status'];
-        }
-        if(!isset($data['types'])){
-            $query->types = 0;
-        }else{
-            $query->types = $data['types'];
         }
         if(!isset($data['create_time'])){
             $query->create_time = time();

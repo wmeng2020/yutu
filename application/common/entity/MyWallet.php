@@ -239,7 +239,7 @@ class MyWallet extends Model {
         }
     }
     /**
-     * 抢购VIP扣除余额
+     * 购买保证金套餐扣除余额
      */
     public function lootVipMoney($query,$data)
     {
@@ -247,18 +247,31 @@ class MyWallet extends Model {
         Db::startTrans();
         try {
             $edit_data['number'] = $oldInfo['number'] - $data['num'];
-//            $edit_data['gold'] = $oldInfo['gold'] + $data['gold'];
-            $old = $oldInfo['number'];
+            $edit_data['bond'] = $oldInfo['bond'] + $data['num'];
+            $old_number = $oldInfo['number'];
+            $old_bond = $oldInfo['bond'];
             $edit_data['update_time']  = time();
             $query->where('uid',$data['uid'])->update($edit_data);
             $create_data = [
                 'uid' => $data['uid'],
                 'number' => $data['num'],
-                'old' => $old,
-                'new' => $old - $data['num'],
+                'old' => $old_number,
+                'new' => $old_number - $data['num'],
                 'remark' => $data['remark'],
-                'types' => 7,
+                'types' => 8,
                 'status' => 2,
+                'money_type' => 2,
+                'create_time' => time(),
+            ];
+            MyWalletLog::insert($create_data);
+            $create_data = [
+                'uid' => $data['uid'],
+                'number' => $data['num'],
+                'old' => $old_bond,
+                'new' => $old_bond + $data['num'],
+                'remark' => $data['remark'],
+                'types' => 4,
+                'status' => 1,
                 'money_type' => 1,
                 'create_time' => time(),
             ];

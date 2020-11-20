@@ -5,6 +5,7 @@ namespace app\index\controller;
 
 use app\common\entity\Config;
 use app\common\entity\MyWalletLog;
+use app\common\entity\RechargeModel;
 use app\common\entity\TaskOrderModel;
 use app\common\entity\UserInviteCode;
 use app\common\entity\UserOtherModel;
@@ -35,7 +36,8 @@ class Member extends Base
                 u.avatar,
                 u.star_level,
                 mw.number,
-                mw.gold
+                mw.bond,
+                mw.agent
             ')
             ->where('u.id', $this->userId)
             ->find();
@@ -55,7 +57,7 @@ class Member extends Base
                 ->sum('number');
         return json(['code' => 0, 'msg' => '请求成功', 'info' => [
             'userInfo' => $userInfo,
-            'today_profit' => $today_profit,
+            'today_profit' => $today_profit ,
         ]]);
     }
     /**
@@ -469,55 +471,68 @@ class Member extends Base
      */
     public function getTeamInfo(Request $request)
     {
-        $limit = $request->post('limit',15) ;
-        $page = $request->post('page',1) ;
-        //邀请人
-        $user = User::where('id',$this->userId)
-            ->find();
-        $mobile = User::where('id',$user['pid'])
-            ->value('mobile');
-        //查询直推人数
-        $nextNum = $user['invite_count'];
-        //查询直推以购买会员人数
-        $nextRealy = User::where('level','>',0)
-            ->where('pid',$this->userId)
-            ->count();
         $userModel = new User();
-        //查询团队总人数
-        $teamNum = $userModel->getChildsInfoNumAct1($this->userId);
-        //查询个人业绩
-        $successOrder = TaskOrderModel::where('uid',$this->userId)
-            ->where('status',2)
-            ->sum('realprice');
-        //查询团队已购买会员总人数
-        $teamRealyNum = $userModel->getChildsInfoNumAct1($this->userId);
-        $list = $userModel
-            ->field('id,level,mobile,invite_count')
-            ->where('pid',$this->userId)
-            ->page($page)
-            ->limit($limit)
-            ->paginate();
-        foreach ($list as $k=>$v){
-            $v['nextRealy'] = User::where('level','>',0)
-                ->where('pid',$v['id'])
-                ->count();
-            $v['teamNum'] = $userModel->getChildsInfoNumAct($v['id']);
-            $v['teamRealyNum'] = $userModel->getChildsInfoNumAct1($v['id']);
+        $nextArr = $userModel->getChildsInfo1($this->userId,3);
+        $nextArrId = [];
+        $todayStrattime = strtotime(date('Y-m-d',\time())."00:00:00");
+        $todayEndtime = strtotime(date('Y-m-d',\time())."23:59:59");
+        $new = [];
+        foreach ($nextArr as $k=>$v){
+            foreach ($v as $key=>$val){
+                $nextArrId[] = $val['id'];
+                if(strtotime($val['register_time']) >= $todayStrattime && strtotime($val['register_time']) <= $todayEndtime){
+                    $new[] = $val['id'];
+                }
+                $v[$key]['mobile'] = substr_replace($val['mobile'],'****',3,4);
+            }
+            $nextArr[$k] = $v;
         }
-        $user = [
-            'nextNum' => $nextNum,
-            'nextRealy' => $nextRealy,
-            'teamNum' => $teamNum,
-            'teamRealyNum' => $teamRealyNum,
-            'successOrder' => $successOrder,
+
+        //团队流水
+        $team_stream = MyWalletLog::whereIn('uid',$nextArrId)
+            ->where('types',4)
+            ->where('money_type',1)
+            ->where('status',1)
+            ->sum('number');
+        //团队总佣金
+        $total_commission = MyWalletLog::whereIn('uid',$nextArrId)
+            ->where('types',6)
+            ->where('money_type',2)
+            ->where('status',1)
+            ->sum('number');
+        //团队总提现
+        $total_withdrawal = MyWalletLog::whereIn('uid',$nextArrId)
+            ->where('types',2)
+            ->where('money_type',2)
+            ->where('status',2)
+            ->sum('number');
+        //首冲人数
+        $first_flush = RechargeModel::whereIn('id',$nextArrId)
+            ->where('status',2)
+            ->count('uid');
+        //直推人数
+        $direct_push = User::where('pid',$this->userId)->count();
+        //团队人数
+        $team_total_people = count($nextArrId);
+        //新增人数
+        $new_subordinate = count($new);
+        //团队资产
+        $result['team_assets'] = [
+            'team_stream' => $team_stream,//团队流水
+            'total_commission' => $total_commission,//团队总佣金
+            'total_withdrawal' => $total_withdrawal,//团队总提现
         ];
-        $result = [
-            'mobile' => $mobile,
-            'my' => $user,
-            'team' => $list,
+        //团队人数
+        $result['team_num'] = [
+            'first_flush' => $first_flush,//首冲人数
+            'direct_push' => $direct_push,//直推人数
+            'team_total_people' => $team_total_people,//团队人数
+            'new_subordinate' => $new_subordinate,//新增人数
         ];
+        $result['list'] = $nextArr;
         return json(['code' => 0, 'msg' => '获取成功', 'info' => $result]);
     }
+
     /**
      * 收益明细  MyWalletLog::
      *  '任务佣金奖励',  5

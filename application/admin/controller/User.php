@@ -31,7 +31,7 @@ class User extends Admin
         $next_id = $this->getNext($left_uid);
 
         $entity = userModel::alias('u')
-            ->field('u.*,mw.number,mw.gold,uic.invite_code');
+            ->field('u.*,mw.number,mw.bond,mw.agent,uic.invite_code');
         if ($keyword = $request->get('keyword')) {
             $type = $request->get('type');
             switch ($type) {

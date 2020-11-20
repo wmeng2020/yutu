@@ -2,6 +2,7 @@
 
 namespace app\index\controller;
 
+use app\common\entity\ConfigTeamLevelModel;
 use app\common\entity\ConfigUserLevelModel;
 use app\common\entity\LevelUpLogModel;
 use app\common\entity\LootVipModel;
@@ -14,22 +15,15 @@ class Level extends Base
     */
    public function getLevelList()
    {
-       $user_info = \app\common\entity\User::field('id,mobile,level')
-           ->where('id',$this->userId)
+       $user_info = \app\common\entity\User::alias('u')
+           ->field('u.id,u.mobile,l.level_name,u.avatar')
+           ->leftJoin('config_user_level l','l.id = u.level')
+           ->where('u.id',$this->userId)
            ->find();
-       $loot_start = $this->getConfigValue('loot_start_time');
-       $open_vip_num = $this->getConfigValue('open_vip_num');
-       $loot_vip_num = $this->getConfigValue('loot_vip_num');
-       $sell_num = LevelUpLogModel::whereTime('create_time','today')
-           ->where('types',1)
-           ->count();
-       $surplus = $loot_vip_num - $sell_num;
-        $list = ConfigUserLevelModel::select();
+
+        $list = ConfigTeamLevelModel::select();
         $data = [
             'user' => $user_info,
-            'loot_start' => $loot_start,
-            'surplus' => $surplus,
-            'open_vip_num' => $open_vip_num,
             'list' => $list,
         ];
         return json(['code' => 0, 'msg' => '获取成功', 'info' => $data]);
@@ -41,146 +35,49 @@ class Level extends Base
            ->value($value);
    }
    /**
-    * 抢购VIP
+    * 购买保证金套餐
     */
-   public function lootBuyVip(Request $request)
+   public function buyVip(Request $request)
    {
-       $level_id = $request->post('level_id');
-       if(!$level_id){
+       $id = $request->post('id');
+       if(!$id){
            return json(['code' => 1, 'msg' => '请检查参数']);
        }
-       $level_info = ConfigUserLevelModel::where('id',$level_id)
+       $team_info = ConfigTeamLevelModel::where('id',$id)
            ->find();
        $money = \app\common\entity\MyWallet::where('uid',$this->userId)
            ->value('number');
 
-       $start_time = $this->getConfigValue('loot_start_time');
-       if(time() < strtotime($start_time)){
-           return json(['code' => 1, 'msg' => '抢购未开始']);
-       }
-
-       if($money < $level_info['openin']){
-           return json(['code' => 1, 'msg' => '余额不足']);
-       }
-       //今日已售出名额
-       $sell_num = LevelUpLogModel::whereTime('create_time','today')
-           ->where('types',1)
-           ->count();
-       //今日开放名额
-       $loot_vip_num = $this->getConfigValue('loot_vip_num');
-       if($sell_num >= $loot_vip_num){
-           return json(['code' => 1, 'msg' => '名额已售空']);
-       }
-       //自己等级
-       $user_level = \app\common\entity\User::where('id',$this->userId)
-           ->value('level');
-
-       if($user_level == 0) {
-           $model = new \app\common\entity\MyWallet();
-           $model_data = [
-               'uid' => $this->userId,
-               'num' => $level_info['openin'],
-               'remark' => '抢购VIP',
-           ];
-           $take_money_res = $model->lootVipMoney($model, $model_data);
-           if ($take_money_res) {
-               //修改会员等级
-               $entry = new LevelUpLogModel();
-               $entry->lootVipLog([
-                   'uid' => $this->userId,
-                   'level' => $level_id,
-                   'types' => 1,
-                   'status' => 2,
-               ]);
-               return json(['code' => 0, 'msg' => '抢购成功']);
-           }
-       }else{
-           $model = new \app\common\entity\MyWallet();
-           $model_data = [
-               'uid' => $this->userId,
-               'num' => $level_info['openin'],
-               'gold' => $level_info['gold_profit'],
-               'remark' => '购买VIP',
-           ];
-           $take_money_res = $model->lootVipMoney($model, $model_data);
-           if ($take_money_res) {
-               //修改会员等级
-               $entry = new LevelUpLogModel();
-               $entry->lootVipLog([
-                   'uid' => $this->userId,
-                   'level' => $level_id,
-                   'status' => 2,
-               ]);
-               return json(['code' => 0, 'msg' => '抢购成功']);
-           }
-       }
-       return json(['code' => 1, 'msg' => '抢购失败']);
-   }
-   /**
-    * 预约VIP
-    */
-   public function orderVip(Request $request)
-   {
-       $level_id = $request->post('level_id');
-       if(!$level_id){
-           return json(['code' => 1, 'msg' => '请检查参数']);
-       }
-       $level_info = ConfigUserLevelModel::where('id',$level_id)
-           ->find();
-       $money = \app\common\entity\MyWallet::where('uid',$this->userId)
-           ->value('number');
-       if($money < $level_info['openin']){
+       if($money < $team_info['assure_money']){
            return json(['code' => 1, 'msg' => '余额不足']);
        }
        //自己等级
-       $user_level = \app\common\entity\User::where('id',$this->userId)
-           ->value('level');
-       if($user_level > $level_id - 1){
-           return json(['code' => 1, 'msg' => '您的等级高于该等级，无需预约']);
+       $star_level = \app\common\entity\User::where('id',$this->userId)
+           ->value('star_level');
+       if($star_level >= $id){
+           return json(['code' => 1, 'msg' => '您已购买，无需重复购买']);
        }
 
-        $order_res = LootVipModel::where('uid',$this->userId)
-            ->where('open_time',null)
-            ->find();
-       if($order_res){
-           return json(['code' => 1, 'msg' => '您已预约']);
-       }
-       if($user_level > 0){
-           return json(['code' => 0, 'msg' => '无需预约']);
-       }
        $model = new \app\common\entity\MyWallet();
        $model_data = [
            'uid' => $this->userId,
-           'num' => $level_info['openin'],
-           'remark' => '预约VIP',
+           'num' => $team_info['assure_money'],
+           'remark' => '购买保证金套餐',
        ];
        $take_money_res = $model->lootVipMoney($model,$model_data);
-       if($user_level > 0){
-           if($take_money_res){
-               //修改会员等级
-               $entry = new LevelUpLogModel();
-               $entry->lootVipLog([
-                   'uid' => $this->userId,
-                   'level' => $level_id,
-                   'status' => 2,
-               ]);
-               return json(['code' => 0, 'msg' => '购买成功']);
-           }
-       }else{
-           if($take_money_res){
-               //修改会员等级
-               $entry = new LootVipModel();
-               $loot_data = [
-                   'uid' => $this->userId,
-                   'level' => $level_id - 1,
-                   'price' =>  $level_info['openin'],
-                   'gold' =>  $level_info['gold_profit'],
-               ];
-               $entry->addNew($entry,$loot_data);
-               return json(['code' => 0, 'msg' => '预约成功']);
-           }
+
+       if($take_money_res){
+           //修改会员等级
+           $entry = new LevelUpLogModel();
+           $entry->lootVipLog([
+               'uid' => $this->userId,
+               'level' => $id,
+               'status' => 1,
+           ]);
+           return json(['code' => 0, 'msg' => '购买成功']);
        }
-       return json(['code' => 0, 'msg' => '预约失败']);
+
+       return json(['code' => 0, 'msg' => '预买失败']);
    }
    /**
     * 查看预约
