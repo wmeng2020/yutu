@@ -207,37 +207,7 @@ class MyWallet extends Model {
            return false;
        }
    }
-    /**
-     * 发布任务扣除余额
-     */
-    public function publishTask($query,$data)
-    {
-        $oldInfo = $this->where('uid',$data['uid'])->find();
-        Db::startTrans();
-        try {
-            $edit_data['number'] = $oldInfo['number'] - $data['num'];
-            $old = $oldInfo['number'];
-            $edit_data['update_time']  = time();
-            $query->where('uid',$data['uid'])->update($edit_data);
-            $create_data = [
-                'uid' => $data['uid'],
-                'number' => $data['num'],
-                'old' => $old,
-                'new' => $old - $data['num'],
-                'remark' => $data['remark'],
-                'types' => 6,
-                'status' => 2,
-                'money_type' => 1,
-                'create_time' => time(),
-            ];
-            MyWalletLog::insert($create_data);
-            Db::commit();
-            return true;
-        } catch (\Exception $e) {
-            Db::rollback();
-            return false;
-        }
-    }
+
     /**
      * 购买保证金套餐扣除余额
      */
@@ -284,34 +254,40 @@ class MyWallet extends Model {
         }
     }
     /**
-     * 取消预约
+     * 下级佣金结算
      */
-    public function delOrderVip($query,$data)
+    public function retailStore($query,$data)
     {
         $oldInfo = $this->where('uid',$data['uid'])->find();
         Db::startTrans();
         try {
-            $edit_data['number'] = $oldInfo['number'] + $data['num'];
-            $old = $oldInfo['number'];
+            $edit_data['number'] = $oldInfo['number'] + $data['number'];
+            $old_number = $oldInfo['number'];
             $edit_data['update_time']  = time();
-            $query->where('uid',$data['uid'])->update($edit_data);
+            $res = $query->where('uid',$data['uid'])->update($edit_data);
+            if (!$res) {
+                throw new Exception();
+            }
             $create_data = [
                 'uid' => $data['uid'],
-                'number' => $data['num'],
-                'old' => $old,
-                'new' => $old + $data['num'],
-                'remark' => $data['remark'],
-                'types' => 13,
+                'number' => $data['number'],
+                'old' => $old_number,
+                'new' => $old_number + $data['number'],
+                'remark' => '下级任务佣金',
+                'types' => 6,
                 'status' => 1,
-                'money_type' => 1,
+                'money_type' => 2,
                 'create_time' => time(),
             ];
-            MyWalletLog::insert($create_data);
+            $res = MyWalletLog::insert($create_data);
+            if (!$res) {
+                throw new Exception();
+            }
             Db::commit();
-            return true;
+//            return true;
         } catch (\Exception $e) {
             Db::rollback();
-            return false;
+//            return false;
         }
     }
 

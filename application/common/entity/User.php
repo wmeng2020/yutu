@@ -71,20 +71,22 @@ class User extends Model
      * @return mixed
      *
      */
-    public function get_superiors($mid, &$result, $i = 3)
+    public function get_superiors($mid, &$result, $i = 4)
     {
         if ($i <= 0) {
             return $result;
         }
-        $field = ['id,user_money,pid,user_level,user_credit'];
+        $field = ['u.id,u.level,u.pid,u.star_level,l.one_level,l.two_level,l.three_level'];
         $superiors = $this
-            ->where('id',$mid)
+            ->alias('u')
+            ->leftJoin('config_user_level l','u.level = l.id')
+            ->where('u.id',$mid)
             ->field($field)
             ->find();
 
         if ($superiors) {
             $i--;
-            if ($i != 2) {
+            if ($i != 3) {
                 $result[] = $superiors;
             }
             $this->get_superiors($superiors['pid'], $result, $i);

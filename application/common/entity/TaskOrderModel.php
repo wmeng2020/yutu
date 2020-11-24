@@ -49,6 +49,9 @@ class TaskOrderModel extends Model {
         if(isset($data['image_id'])) {
             $query->image_id = $data['image_id'];
         }
+        if(isset($data['types'])){
+            $query->types = $data['types'];
+        }
         $query->receivetime = $data['receivetime'];
         if(isset($data['submittime'])){
             $query->submittime = $data['submittime'];
@@ -56,7 +59,10 @@ class TaskOrderModel extends Model {
         if(isset($data['examinetime'])){
             $query->examinetime = $data['examinetime'];
         }
-        return $query->save();
+        $res = $query->save();
+        if($res){
+            return $query->id;
+        }
     }
 
 

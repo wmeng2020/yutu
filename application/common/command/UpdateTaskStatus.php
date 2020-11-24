@@ -77,23 +77,9 @@ class UpdateTaskStatus extends Command
                                 $insert['remark'] = '任务佣金';
                                 $insert['types'] = 5;
                                 $insert['status'] = 1;
-                                $insert['money_type'] = 1;
+                                $insert['money_type'] = 2;
                                 $insert['create_time'] = time();
                                 $result = Db('my_wallet_log')->insertGetId($insert);
-                                if (!$result) {
-                                    throw new \Exception();
-                                }
-                                $insertData = [];
-                                $insertData['uid'] =$item['uid'];
-                                $insertData['number'] = $item['realprice'];
-                                $insertData['old'] = $user['gold'];
-                                $insertData['new'] = $real_gold;
-                                $insertData['remark'] = '任务佣金扣金豆';
-                                $insertData['types'] = 5;
-                                $insertData['status'] = 2;
-                                $insertData['money_type'] = 2;
-                                $insertData['create_time'] = time();
-                                $result = Db('my_wallet_log')->insertGetId($insertData);
                                 if (!$result) {
                                     throw new \Exception();
                                 }

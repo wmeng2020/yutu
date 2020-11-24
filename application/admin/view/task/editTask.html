@@ -35,13 +35,10 @@
                            placeholder="请输入任务总数量">
                 </div>
             </div>
-            <div class="form-group">
-                <label class="col-sm-2 control-label">任务价格</label>
-                <div class="col-sm-5">
-                    <input type="text" value="{$info->task_price}" name="task_price" class="form-control"
-                           placeholder="请输入任务价格">
-                </div>
-            </div>
+
+                <input type="hidden" value="{$info->task_price}" name="task_price" class="form-control"
+                       placeholder="请输入任务价格">
+
             <div class="form-group">
                 <label class="col-sm-2 control-label">任务状态</label>
                 <div class="col-sm-5">
@@ -59,6 +56,9 @@
                 <div class="col-sm-offset-2 col-sm-10">
                     <button type="submit" data-url="{:url('createTask',['id'=>$info.id])}"
                             onclick="main.ajaxPosts(this)" class="btn btn-primary">确定修改
+                    </button>
+                    &nbsp;
+                    <button type="button" onclick="javascript:history.back(-1);" class="btn btn-warning">返回
                     </button>
                 </div>
             </div>
@@ -91,13 +91,10 @@
                            placeholder="请输入任务总数量">
                 </div>
             </div>
-            <div class="form-group">
-                <label class="col-sm-2 control-label">任务价格</label>
-                <div class="col-sm-5">
-                    <input type="text" value="" name="task_price" class="form-control"
+
+                    <input type="hidden" value="1" name="task_price" class="form-control"
                            placeholder="请输入任务价格">
-                </div>
-            </div>
+
             <div class="form-group">
                 <label class="col-sm-2 control-label">任务状态</label>
                 <div class="col-sm-5">

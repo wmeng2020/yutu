@@ -7,6 +7,7 @@ use app\common\entity\Config;
 use app\common\entity\ConfigTeamLevelModel;
 use app\common\entity\TaskModel;
 use app\common\entity\TaskOrderModel;
+use app\common\service\Task\Service;
 use think\Request;
 
 class Task extends Base
@@ -156,6 +157,13 @@ class Task extends Base
         return db('config')
             ->where('key',$key)
             ->value($value);
+    }
+    public function test()
+    {
+        $query = new Service();
+        $aa = $query->retailStore(1877,100);
+//        $aa = $query->doFirst(1877);
+        dump($aa);
     }
 
 }
