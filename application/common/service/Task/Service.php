@@ -6,6 +6,7 @@ namespace app\common\service\Task;
 use app\common\entity\Config;
 use app\common\entity\ConfigTeamLevelModel;
 use app\common\entity\ConfigUserLevelModel;
+use app\common\entity\ManageUser;
 use app\common\entity\MyWallet;
 use app\common\entity\MyWalletLog;
 use app\common\entity\TaskModel;
@@ -41,6 +42,12 @@ class Service
             ->count();
 
         if($has_task_num >= $tasks_num){
+            //修改托管状态
+            Db('deposit')->where('uid',$uid)->update([
+                'status' => 2
+            ]);
+            //结算任务佣金
+            
             return json(['code' => 1, 'msg' => '可接任务数量不足']);
         }
         $surplus = $tasks_num - $has_task_num;
@@ -101,7 +108,7 @@ class Service
     /**
      * 分销
      */
-    public function retailStore($uid,$money)
+    public function retailStore($uid)
     {
         $user = User::where('id',$uid)->find();
         if($user){
@@ -114,11 +121,10 @@ class Service
                     ->whereTime('examinetime','today')
                     ->count();
                 if($has_task == $config['task_num']){
-                   $prizeData = $this->findPrize($uid,$money);
-
+                    //三级分销
+                   $prizeData = $this->findPrize($uid,$has_task);
                    if($prizeData){
                        foreach ($prizeData as $v){
-
                            $data = [
                                 'number' => $v['prize'],
                                 'uid' => $v['uid'],
@@ -126,6 +132,17 @@ class Service
                            $this->sendRetailStore($data);
                        }
                    }
+                   //代理佣金
+                    $agentData = $this->findAgent($uid,$has_task);
+                    if($agentData){
+                        foreach ($agentData as $val){
+                            $data = [
+                                'number' => $val['prize'],
+                                'uid' => $val['uid'],
+                            ];
+                            $this->sendAgentStore($data);
+                        }
+                    }
                 }else{
                     return '今日任务未全部完成';
                 }
@@ -170,6 +187,29 @@ class Service
             return $prize;
         }
     }
+    /**
+     * 查询奖励代理人和奖励金额
+     */
+    public function findAgent($uid,$money=100)
+    {
+        //查询上十二层级
+        $model = new User();
+        $upIdArr = $model->getParents($uid,12);
+        $rate = Config::where('key','agent_profit')
+            ->value('value');
+//        dump($upIdArr);
+        $prize = [];
+        foreach ($upIdArr as $v){
+            $is_agent = ManageUser::where('left_uid',$v)->find();
+            if($is_agent){
+                $prize[] = [
+                    'prize' => $money * $rate * 0.01,
+                    'uid' => $v,
+                ];
+            }
+        }
+        return $prize;
+    }
 
     /**
      *  发放下级任务佣金
@@ -195,6 +235,39 @@ class Service
                 'types' => 6,
                 'status' => 1,
                 'money_type' => 2,
+                'create_time' => time(),
+            ];
+            $res = MyWalletLog::insert($create_data);
+            if (!$res) {
+                throw new Exception();
+            }
+            Db::commit();
+        } catch (\Exception $e) {
+            Db::rollback();
+        }
+    }
+
+    public function sendAgentStore($data)
+    {
+        $oldInfo = MyWallet::where('uid',$data['uid'])->find();
+        Db::startTrans();
+        try {
+            $edit_data['agent'] = $oldInfo['agent'] + $data['number'];
+            $old_number = $oldInfo['number'];
+            $edit_data['update_time']  = time();
+            $res = MyWallet::where('uid',$data['uid'])->update($edit_data);
+            if (!$res) {
+                throw new Exception();
+            }
+            $create_data = [
+                'uid' => $data['uid'],
+                'number' => $data['number'],
+                'old' => $old_number,
+                'new' => $old_number + $data['number'],
+                'remark' => '代理任务佣金',
+                'types' => 7,
+                'status' => 1,
+                'money_type' => 3,
                 'create_time' => time(),
             ];
             $res = MyWalletLog::insert($create_data);

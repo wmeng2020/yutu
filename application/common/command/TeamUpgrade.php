@@ -3,6 +3,7 @@
 namespace app\common\command;
 
 use app\common\entity\ConfigTeamLevelModel;
+use app\common\entity\ConfigUserLevelModel;
 use app\common\entity\User;
 use think\console\Command;
 use think\console\Input;
@@ -22,11 +23,9 @@ class TeamUpgrade extends Command
     //配置
     protected function configure()
     {
-
         $this->setName('team_upgrade')
-            ->setDescription('计算团队升级');
+            ->setDescription('计算会员等级');
     }
-
     /**
      * @param Input $input
      * @param Output $output
@@ -38,9 +37,8 @@ class TeamUpgrade extends Command
     protected function execute(Input $input, Output $output)
     {
         set_time_limit(0);
-        $PlatformSettingLogic = new ConfigTeamLevelModel();
+        $PlatformSettingLogic = new ConfigUserLevelModel();
         $mse = $PlatformSettingLogic;
-
         $start_time=strtotime(date("Y-m-d",time()));
         //当天结束之间
         $end_time=$start_time+60*60*24;
@@ -52,34 +50,31 @@ class TeamUpgrade extends Command
                     $push = 0;
                     $team = false;
                     $query = new User();
-                    //直推人数
-                    $son = $item['invite_count'];
-
-                    for ($x=1; $x<=8; $x++) {
+                    //团队有效人数
+                    $teamRealNum = $query->getChildsRealNum($item['id'],3);
+                    for ($x=1; $x<=7; $x++) {
                         $lv_push = $mse
                             ->where('id',$x)
-                            ->value('team');
-                        if($son >= $lv_push){
+                            ->value('valid_num');
+                        if($teamRealNum >= $lv_push){
                             $push = $x;
                         }
                     }
-//                    dump($push);
-//                    die;
                     if($push){
                         //团队人数
-                        $teamNum = $query->getTeamNum($item['id']);
+                        $teamNum = $query->getChildsInfoNum($item['id'],3);
                         $lv_push = $mse
                             ->where('id',$push)
-                            ->value('team');
+                            ->value('team_num');
                         if($teamNum >= $lv_push){
                             $team = true;
                         }
                         if(!$team && $push > 1){
                             for ($y=1;$y<=$push-1;$y++){
-                                $push1 = $push - $y;
+                                $push = $push - $y;
                                 $lv_push = $mse
                                     ->where('id',$push)
-                                    ->value('team');
+                                    ->value('team_num');
                                 if($teamNum >= $lv_push){
                                     $team = true;
                                     break;
@@ -87,15 +82,17 @@ class TeamUpgrade extends Command
                             }
                         }
                     }
-//                    dump($mse['lv'.$push.'_team']);
-//                    dump($team);
-//                    dump($push1);
-//                    die;
                     if($team){
                         Db('user')
                             ->where('id',$item['id'])
                             ->update([
-                                'star_level' => $push1
+                                'level' => $push
+                            ]);
+                    }else{
+                        Db('user')
+                            ->where('id',$item['id'])
+                            ->update([
+                                'level' => 0
                             ]);
                     }
                     Db('user')
@@ -106,11 +103,6 @@ class TeamUpgrade extends Command
                     dump($item['id'].'完成');
                 }
             },'star_upgrade_time','desc');
-
-        $output->writeln('计算团队升级，执行完成');
-
+        $output->writeln('计算会员等级，执行完成');
     }
-
-
-
 }

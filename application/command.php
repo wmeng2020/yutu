@@ -10,16 +10,11 @@
 // +----------------------------------------------------------------------
 
 return [
-    'app\common\command\OneClick',
-    'app\common\command\VipOrder',
-    'app\common\command\TeamUpgrade',
-    'app\common\command\UpdateTaskStatus',
-    'app\common\command\DistributionReward',
-    'app\common\command\BetweenReward',
-    'app\common\command\TeamReward',
-    'app\common\command\Merits',// 第一步
-    'app\common\command\MeritsSend',// 第二步
-    'app\common\command\MeritsSendTo',// 第三步
-    'app\common\command\SendTeamPrize',// 第四步
+    'app\common\command\OneClick',//任务托管每分钟执行
+    'app\common\command\TeamUpgrade',//计算会员等级
+    'app\common\command\UpdateTaskStatus',//自动审核任务
+    'app\common\command\TeamReward',//任务三级分佣奖励
+
+
 ];
 

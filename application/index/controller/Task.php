@@ -151,7 +151,30 @@ class Task extends Base
         }
         return json(['code' => 1, 'msg' => '提交失败']);
     }
-
+    /**
+     * 一键托管
+     */
+    public function deposit(Request $request)
+    {
+        $user_info = \app\common\entity\User::where('id',$this->userId)
+            ->find();
+        if($user_info['star_level'] < 1){
+            return json(['code' => 0, 'msg' => '无权限使用改功能']);
+        }
+        $config = ConfigTeamLevelModel::where('id',$user_info['star_level'])
+            ->value('deposit_cost');
+        $add_data = [
+            'uid' => $this->userId,
+            'status' => 1,
+            'total' => $config,
+        ];
+        $res = Db('deposit')->insert($add_data);
+        if($res){
+            $info = Config::where('key','deposit_space')
+                ->value('value');
+            return json(['code' => 1, 'msg' => '提交失败','info'=>$info]);
+        }
+    }
     private function getConfigValue($key, $value='value')
     {
         return db('config')
@@ -161,7 +184,7 @@ class Task extends Base
     public function test()
     {
         $query = new Service();
-        $aa = $query->retailStore(1877,100);
+        $aa = $query->findAgent(1877);
 //        $aa = $query->doFirst(1877);
         dump($aa);
     }

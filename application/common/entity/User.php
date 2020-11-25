@@ -326,8 +326,35 @@ class User extends Model
         return $total;
 
     }
+    #获取下级有效数量
+    public function getChildsRealNum($uid, $num = 0, &$childs = [], &$level = 0, &$total = 0)
+    {
+        $ids = [];
+        $real = [];
+        if ($num) {
+            if ($level == $num) {
+                return $total;
+            }
+        }
+        $child = Db::table('user')->whereIn('pid', $uid)->field('id,pid,star_level')->select();
+        if ($child) {
+            $level++;
+            $childs[$level] = $child;
+            foreach ($child as $v) {
+                array_push($ids, $v['id']);
+                if($v['star_level'] > 0){
+                    array_push($real, $v['id']);
+                }
+            }
+            $ids = array_unique($ids);
+            $total += count($real);
 
+            return $this->getChildsRealNum($ids, $num, $childs, $level, $total);
+        }
 
+        return $total;
+
+    }
     #获取下级
     public function getAllChildsInfo($uid)
     {
@@ -484,14 +511,12 @@ class User extends Model
      */
     public function getTeamNum($child, &$count = 1)
     {
-
         $count1 = count($child);
         $count = $count + $count1;
-
         foreach ($child as $v) {
-
-            $cc = User::field('id,status')->where('pid', $v['id'])->select();
-
+            $cc = User::field('id,status')
+                ->where('pid', $v['id'])
+                ->select();
             $this->getTeamNum($cc, $count);
         }
         return $count;
