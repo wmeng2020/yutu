@@ -78,3 +78,7 @@ function authcode($str) {
     $str = substr(md5($str), 8, 10);
     return md5($key . $str);
 }
+function now ()
+{
+    return date('Y-m-d H:i:s',time());
+}

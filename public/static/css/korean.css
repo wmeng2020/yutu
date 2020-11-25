@@ -1,0 +1,645 @@
+.language-baifencai::before {
+    content: '백분위 수';
+}
+.language-daletou::before {
+    content: '큰 로또';
+}
+.language-touziyouxi::before {
+    content: '주사위 게임';
+}
+.language-laohuji::before {
+    content: '슬롯 머신';
+}
+.language-zuixinzhongjiang::before {
+    content: '최우수상';
+}
+.language-zhongjiangjine::before {
+    content: '당첨 금액';
+}
+.language-shouye::before {
+    content: '홈';
+}
+.language-qukuailianyouxi::before {
+    content: '블록 체인 게임';
+}
+.language-shequ::before {
+    content: '커뮤니티';
+}
+.language-gerenzhongxin::before {
+    content: '개인 센터';
+}
+.language-benqijiangchi::before {
+    content: '현재 상금 풀';
+}
+.language-benqiyitouzhuliang::before {
+    content: '이 기간의 베팅 금액';
+}
+.language-qishumaohao::before {
+    content: '기간 수 :';
+}
+.language-woyaotouzhumaohao::before {
+    content: '나는 내기하고 싶다 :';
+}
+.language-querentouzhu::before {
+    content: '내기 확인';
+}
+.language-touzhujilu::before {
+    content: '도박 기록';
+}
+.language-kaijiangjilu::before {
+    content: '복권 기록';
+}
+.language-qishu::before {
+    content: '마침표 수';
+}
+.language-kaijiangshijian::before {
+    content: '복권 시간';
+}
+.language-gengduo::before {
+    content: '기타';
+}
+.language-xuanzebizhong::before {
+    content: '내기 통화를 선택하십시오';
+}
+.language-benqihaiketouzhu::before {
+    content: '현재 추첨은 내기가 가능합니다';
+}
+.language-youxi::before {
+    content: '게임';
+}
+.language-xiazhushijian::before {
+    content: '내기 시간';
+}
+.language-kaijiangzhuangtai::before {
+    content: '복권 현황';
+}
+.language-weikaijiang::before {
+    content: '미개봉';
+}
+.language-weizhongjiang::before {
+    content: '이기지 못함';
+}
+.language-zhongjiang::before {
+    content: '이기는';
+}
+.language-caipiaoxuliehao::before {
+    content: '복권 일련 번호';
+}
+.language-touzhujine::before {
+    content: '내기 금액';
+}
+.language-gong::before {
+    content: '. 총 ';
+}
+.language-zhu::before {
+    content: '주';
+}
+.language-zhongjianxuliehao::before {
+    content: '일련 번호 획득';
+}
+.language-zhongjiangdengji::before {
+    content: '승리 수준';
+}
+.language-zhongjiangyonghu::before {
+    content: '당첨자';
+}
+.language-zhongjiangzongjine::before {
+    content: '총 승리 금액';
+}
+.language-chakangengduo::before {
+    content: '더보기';
+}
+.language-yidengjiang::before {
+    content: '1 등상';
+}
+.language-erdengjiang::before {
+    content: '2 등상';
+}
+.language-sandengjiang::before {
+    content: '3 등상';
+}
+.language-xingyunjiang::before {
+    content: '럭키 상';
+}
+.language-kaijiangxiangqing::before {
+    content: '복권 세부 정보';
+}
+.language-daletoubenqikaijiangxiangqing::before {
+    content: '로또 추첨 세부 정보';
+}
+.language-baifencaibenqikaijiangxiangqing::before {
+    content: '현재 추첨 세부 정보의 백분율';
+}
+.language-benqizongjiangchi::before {
+    content: '현재 상금 풀';
+}
+.language-zhongjieshijianmaohao::before {
+    content: '내기 기간의 끝 :';
+}
+.language-zhongjiegaodumaohao::before {
+    content: '베팅이 끝날 때 Ethereum 블록의 높이 :';
+}
+.language-kaijianggaodumaohao::before {
+    content: 'Ethereum 높이 열기 :';
+}
+.language-kaijianghaxizhimaohao::before {
+    content: 'Ethereum 해쉬 값의 추측 :';
+}
+.language-yonghuming::before {
+    content: '사용자 이름';
+}
+.language-yonghuid::before {
+    content: '사용자 ID';
+}
+.language-zhongjiangxuliehao::before {
+    content: '일련 번호 획득';
+}
+.language-jiangxiang::before {
+    content: '수상';
+}
+.language-jiangjin::before {
+    content: '보너스';
+}
+.language-meiyougengduoshujule::before {
+    content: '데이터가 더 이상 없음';
+}
+.language-baifencaikaijiangxiangqing::before {
+    content: '비율 추첨 세부 정보';
+}
+.language-youxigonglue::before {
+    content: '게임 가이드';
+}
+.language-guanyuwomen::before {
+    content: '회사 소개';
+}
+.language-fabugonggao::before {
+    content: '발표';
+}
+.language-bunengxiaoyuyi::before {
+    content: '베팅 횟수는 1보다 작을 수 없습니다';
+}
+.language-bunengweixiaoshu::before {
+    content: '베팅의 수는 십진수가 될 수 없습니다';
+}
+.language-zuiduoyibai::before {
+    content: '각 베팅은 최대 100 개까지 가능합니다';
+}
+.language-zhengzaitouzhu::before {
+    content: '베팅, 잠시 기다려주십시오 ...';
+}
+.language-gongxininzhongdedaletou::before {
+    content: '큰 추첨 축하합니다';
+}
+.language-dianjichakan::before {
+    content: '보시려면 클릭하십시오';
+}
+.language-qingxiandenglu::before {
+    content: '먼저 로그인하십시오';
+}
+.language-qudenglu::before {
+    content: '로그인으로 이동';
+}
+.language-quxiao::before {
+    content: '취소';
+}
+.language-gongxininzhongdebaifencai::before {
+    content: '위닝 축하해';
+}
+.language-dengdaikaijiangzhong::before {
+    content: '상품을 기다리는 중입니다';
+}
+.language-zuijinyitianzongtouzhu::before {
+    content: '지난 24 시간 총 베팅 금액 USDT';
+}
+.language-zuixinchongzhi::before {
+    content: '최신 재충전';
+}
+.language-chongzhijine::before {
+    content: '충전 금액';
+}
+.language-yaoqingjiangli::before {
+    content: '보상 받기';
+}
+.language-fuwutiaokuan::before {
+    content: '서비스 약관';
+}
+.language-bangzhuzhongxin::before {
+    content: '도움말 센터';
+}
+.language-zaixiankefu::before {
+    content: '온라인 고객 서비스';
+}
+.language-denglu::before {
+    content: '로그인';
+}
+.language-zhuce::before {
+    content: '등록';
+}
+.language-tuichudenglu::before {
+    content: '로그 아웃';
+}
+.language-zhanghuyue::before {
+    content: '계정 잔액';
+}
+.language-youxiang::before {
+    content: '사서함';
+}
+.language-mima::before {
+    content: '비밀번호';
+}
+.language-wangjimima::before {
+    content: '비밀번호 찾기';
+}
+.language-haimeiyouzhanghao::before {
+    content: '아직 계정이 없습니까? ';
+}
+.language-qingshuruyouxiangzhanghao::before {
+    content: '귀하의 이메일 계정을 입력하십시오';
+}
+.language-qingshuruzhengquedeyouxiang::before {
+    content: '올바른 이메일 계정을 입력하십시오.';
+}
+.language-qingshurudenglumima::before {
+    content: '로그인 암호를 입력하십시오';
+}
+.language-shezhizhongxin::before {
+    content: '센터 설정';
+}
+.language-gengxinrizhi::before {
+    content: '업데이트 로그';
+}
+.language-xitonggonggao::before {
+    content: '시스템 발표';
+}
+.language-yonghumingmaohao::before {
+    content: '사용자 이름 :';
+}
+.language-btcqianbaodizhimaohao::before {
+    content: 'BTC 지갑 주소 :';
+}
+.language-wodegonghui::before {
+    content: '내 길드';
+}
+.language-yaoqinghaoyoujiangli::before {
+    content: '친구를 초대하여 보상 받기';
+}
+.language-wodezichan::before {
+    content: '내 자산';
+}
+.language-wodeshouyi::before {
+    content: '내 수입';
+}
+.language-wodeshequ::before {
+    content: '내 커뮤니티';
+}
+.language-anquanzhongxin::before {
+    content: '보안 센터';
+}
+.language-wangluocuowu::before {
+    content: '네트워크 오류! ';
+}
+.language-xiugaijiaoyimima::before {
+    content: '거래 비밀번호 수정';
+}
+.language-yanzhengma::before {
+    content: '인증 코드';
+}
+.language-fasongyanzhengma::before {
+    content: '인증 코드 전송';
+}
+.language-shezhixindejiaoyimima::before {
+    content: '새 거래 암호 설정';
+}
+.language-mimaguize::before {
+    content: '암호는 8-16 자리 숫자, 문자 및 기호로 구성되어야합니다. ';
+}
+.language-querenjiaoyimima::before {
+    content: '거래 비밀번호 확인';
+}
+.language-queding::before {
+    content: '결정';
+}
+.language-chongxinhuoqu::before {
+    content: '회복하다';
+}
+.language-qingxianshuruyouxiangzhanghao::before {
+    content: '이메일 계정을 먼저 입력하십시오';
+}
+.language-youxiangbunengweikong::before {
+    content: '편지함을 비울 수 없습니다';
+}
+.language-yanzhengmabunengweikong::before {
+    content: '인증 코드는 비워 둘 수 없습니다.';
+}
+.language-mimabunengweikong::before {
+    content: '암호는 비워 둘 수 없습니다';
+}
+.language-mimabunengyoukongge::before {
+    content: '암호에는 공백이 없어야합니다.';
+}
+.language-mimaguizetishi::before {
+    content: '암호는 숫자, 문자 및 기호 (기호에는 ~! @ # _ $ % ^ & * () + -. []? {} | / \\)가 포함되어야하며 길이는 8-16 자리' ;
+}
+.language-querenmimabunengweikong::before {
+    content: '비밀번호가 비어있을 수 없음';
+}
+.language-liangcimimabuyizhi::before {
+    content: '두 개의 암호가 일치하지 않습니다.';
+}
+.language-xiugaidenglumima::before {
+    content: '로그인 비밀번호 수정';
+}
+.language-beifenzhujici::before {
+    content: '니모닉 백업';
+}
+.language-gonggaojilu::before {
+    content: '공지 사항 기록';
+}
+.language-gonghuigonggao::before {
+    content: '길드 발표';
+}
+.language-lianjieyaoqinghaoyou::before {
+    content: '친구 초대하기';
+}
+.language-erweimayaoqinghaoyou::before {
+    content: 'QR 코드는 친구를 초대합니다';
+}
+.language-wodexiajimaohao::before {
+    content: '부하 직원 :';
+}
+.language-wodeshangjimaohao::before {
+    content: '내 상급자 :';
+}
+.language-ren::before {
+    content: '사람';
+}
+.language-fuzhichenggong::before {
+    content: '성공을 복사하십시오! ';
+}
+.language-quedingfabu::before {
+    content: '릴리스 확인';
+}
+.language-fabuduixiang::before {
+    content: '객체 게시';
+}
+.language-suoyouchengyuan::before {
+    content: '모든 회원';
+}
+.language-meiyouxiajiwufafabu::before {
+    content: '부하 직원이 없으며 공지 사항을 게시 할 수 없습니다.';
+}
+.language-biaotibunengweikong::before {
+    content: '제목을 비워 둘 수 없습니다';
+}
+.language-gonggaoneirongbunengweikong::before {
+    content: '발표 내용이 비어있을 수 없음';
+}
+.language-qingxuanzefabuduixiang::before {
+    content: '출판물을 선택하십시오';
+}
+.language-wodexiaji::before {
+    content: '내 부하';
+}
+.language-zhuceshijian::before {
+    content: '등록 시간';
+}
+.language-jihuoshijian::before {
+    content: '활성화 시간';
+}
+.language-weijihuo::before {
+    content: '활성화되지 않음';
+}
+.language-zijinjilu::before {
+    content: '기금 ​​기록';
+}
+.language-shuzihuobizichan::before {
+    content: '디지털 화폐 자산';
+}
+.language-yekeszichan::before {
+    content: '자산 YEKES 개';
+}
+.language-zhanghuzongyue::before {
+    content: '계정 잔액';
+}
+.language-yekesbiandong::before {
+    content: 'YEKES 변경';
+}
+.language-jianglishuliang::before {
+    content: '보상 금액';
+}
+.language-shijian::before {
+    content: '시간';
+}
+.language-yue::before {
+    content: '균형';
+}
+.language-tibi::before {
+    content: '동전';
+}
+.language-chongzhi::before {
+    content: '청구';
+}
+.language-fenxiangyouxiaozhuce::before {
+    content: '유효한 등록 공유';
+}
+.language-zhongjiangshequfenxiang::before {
+    content: '커뮤니티 공유하기';
+}
+.language-xianshitouzhujiangli::before {
+    content: '제한된 베팅 보너스';
+}
+.language-qitahuodongjiangli::before {
+    content: '기타 활동 보상';
+}
+.language-zhuanru::before {
+    content: '전송';
+}
+.language-zhuanchu::before {
+    content: '전송';
+}
+.language-saomatianjiekefuweixin::before {
+    content: '고객 서비스를 추가하기위한 코드 스캔';
+}
+.language-yitiantouzhumingxi::before {
+    content: '24 시간 괜찮아요 ';
+}
+.language-zuijinyitianzongtouzhue::before {
+    content: '지난 24 시간 총 내기 금액 USDT ≈';
+}
+.language-hangyezixun::before {
+    content: '산업 정보';
+}
+.language-wodeshangji::before {
+    content: '나의 상사';
+}
+.language-wo::before {
+    content: '나';
+}
+.language-gonggaoxiangqing::before {
+    content: '공지 사항 세부 사항';
+}
+.language-biaoti::before {
+    content: '제목';
+}
+.language-xiangqing::before {
+    content: '세부 사항';
+}
+.language-querenmima::before {
+    content: '비밀번호 확인';
+}
+.language-shezhixindedenglumima::before {
+    content: '새 로그인 암호 설정';
+}
+.language-querendenglumima::before {
+    content: '로그인 비밀번호 확인';
+}
+.language-quanbu::before {
+    content: '모두';
+}
+.language-ershiyidian::before {
+    content: '21 점 ';
+}
+.language-baijiale::before {
+    content: '바카라';
+}
+.language-fenhong::before {
+    content: '배당금';
+}
+.language-zanwushuju::before {
+    content: '데이터 없음';
+}
+.language-zixun::before {
+    content: '정보';
+}
+.language-zijinbiandongxiangqing::before {
+    content: '펀드 변경 내용';
+}
+.language-yonghuidmaohao::before {
+    content: '사용자 ID :';
+}
+.language-xiangmu::before {
+    content: '프로젝트';
+}
+.language-biandongjine::before {
+    content: '금액 변경';
+}
+.language-zuire::before {
+    content: '가장 인기있는';
+}
+.language-zuixin::before {
+    content: '최신';
+}
+.language-zhanghujine::before {
+    content: '계좌 금액';
+}
+.language-tibijine::before {
+    content: '총 금액';
+}
+.language-tixianshouxufeiweitixianjinede::before {
+    content: '인출 수수료는 현금의 금액입니다.';
+}
+.language-quanbutichu::before {
+    content: '모든 제안';
+}
+.language-tibidizhi::before {
+    content: '동전 주소';
+}
+.language-tibitixing::before {
+    content: '유효한 통화 주소를 정확하게 기입하십시오. 주소가 틀리면 손실이 우리와 무관합니다.';
+}
+.language-querentibi::before {
+    content: '동전 확인';
+}
+.language-tibijinebunengweikong::before {
+    content: '동전의 양은 비어있을 수 없습니다! ';
+}
+.language-tibidizhibunengweikong::before {
+    content: '동전 주소는 비워 둘 수 없습니다! ';
+}
+.language-tijiaochenggong::before {
+    content: '제출 완료';
+}
+.language-fasong::before {
+    content: '보내기';
+}
+.language-bangzhuzhongxin::before {
+    content: '도움말 센터';
+}
+.language-redianwenti::before {
+    content: '뜨거운 질문';
+}
+.language-yaoqinghaoyou::before {
+    content: '친구 초대';
+}
+.language-qingjiepingbaocun::before {
+    content: '스크린 샷을 저장하십시오.';
+}
+.language-jintian::before {
+    content: '오늘';
+}
+.language-daishenhe::before {
+    content: '검토 대기 중';
+}
+.language-bohui::before {
+    content: '해산';
+}
+.language-yue::before {
+    content: '월';
+}
+.language-touzhushouyi::before {
+    content: '베팅 소득';
+}
+.language-xiajizhongjiangfanyong::before {
+    content: '종속 배당금';
+}
+.language-yekesfenhong::before {
+    content: 'YEKES 배당금';
+}
+.language-zhongjiangfanyong::before {
+    content: '승리 환불';
+}
+.language-yekesshuliang::before {
+    content: 'YEKES 수량';
+}
+.language-fenhongjine::before {
+    content: '배당액';
+}
+.language-chongzhidizhi::before {
+    content: '청구 주소';
+}
+.language-fuzhidizhi::before {
+    content: '주소 복사';
+}
+.language-xianshierweima::before {
+    content: '디스플레이 QR 코드';
+}
+.language-shishihangqing::before {
+    content: '실시간 견적';
+}
+.language-fabu::before {
+    content: '게시';
+}
+.language-yishangchuanchenggong::before {
+    content: '검토 대기 중입니다.';
+}
+.language-xitonggonggaoxiangqing::before {
+    content: '시스템 공지 사항';
+}
+.language-tuijianren::before {
+    content: '추천 사람';
+}
+.language-wotongyiyekesde::before {
+    content: 'YEKES와 동의합니다.';
+}
+.language-fuwutiaokuan::before {
+    content: "'서비스 약관 '";
+}
+.language-yiyouzhanghao::before {
+    content: '기존 계정입니까? ';
+}
+.language-yaoqingmabunengweikong::before {
+    content: '초대 코드는 비워 둘 수 없습니다';
+}
+.language-qingxiantongyifuwutiaokuan::before {
+    content: '서비스 약관에 동의하십시오';
+}

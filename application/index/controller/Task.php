@@ -167,12 +167,19 @@ class Task extends Base
             'uid' => $this->userId,
             'status' => 1,
             'total' => $config,
+            'create_time' => time(),
         ];
         $res = Db('deposit')->insert($add_data);
         if($res){
-            $info = Config::where('key','deposit_space')
+            $min = Config::where('key','deposit_space')
                 ->value('value');
-            return json(['code' => 1, 'msg' => '提交失败','info'=>$info]);
+            $all = ConfigTeamLevelModel::where('id',$user_info['star_level'])
+                ->value('task_num');
+            $info = [
+                'minute' => $min,
+                'all_num' => $all,
+            ];
+            return json(['code' => 0, 'msg' => '托管成功','info'=>$info]);
         }
     }
     private function getConfigValue($key, $value='value')

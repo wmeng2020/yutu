@@ -1,0 +1,645 @@
+.language-baifencai::before {
+    content: '百分位数';
+}
+.language-daletou::before {
+    content: 'ビッグロト';
+}
+.language-touziyouxi::before {
+    content: 'サイコロゲーム';
+}
+.language-laohuji::before {
+    content: 'スロットマシン';
+}
+.language-zuixinzhongjiang::before {
+    content: '最新の賞';
+}
+.language-zhongjiangjine::before {
+    content: '当選額';
+}
+.language-shouye::before {
+    content: 'ホーム';
+}
+.language-qukuailianyouxi::before {
+    content: 'ブロックチェーンゲーム';
+}
+.language-shequ::before {
+    content: 'コミュニティ';
+}
+.language-gerenzhongxin::before {
+    content: 'パーソナルセンター';
+}
+.language-benqijiangchi::before {
+    content: '現在の賞金プール';
+}
+.language-benqiyitouzhuliang::before {
+    content: 'この期間のベット額';
+}
+.language-qishumaohao::before {
+    content: '期間数：';
+}
+.language-woyaotouzhumaohao::before {
+    content: '賭けたい：';
+}
+.language-querentouzhu::before {
+    content: 'ベットを確認';
+}
+.language-touzhujilu::before {
+    content: '賭け記録';
+}
+.language-kaijiangjilu::before {
+    content: '宝くじ記録';
+}
+.language-qishu::before {
+    content: '期間数';
+}
+.language-kaijiangshijian::before {
+    content: '宝くじの時間';
+}
+.language-gengduo::before {
+    content: 'もっと';
+}
+.language-xuanzebizhong::before {
+    content: 'ベット通貨を選択してください';
+}
+.language-benqihaiketouzhu::before {
+    content: '現在の引き分けも賭けることができます';
+}
+.language-youxi::before {
+    content: 'ゲーム';
+}
+.language-xiazhushijian::before {
+    content: 'ベットタイム';
+}
+.language-kaijiangzhuangtai::before {
+    content: '抽選ステータス';
+}
+.language-weikaijiang::before {
+    content: '未開封';
+}
+.language-weizhongjiang::before {
+    content: '勝っていない';
+}
+.language-zhongjiang::before {
+    content: '勝つ';
+}
+.language-caipiaoxuliehao::before {
+    content: '宝くじのシリアル番号';
+}
+.language-touzhujine::before {
+    content: '金額を賭ける';
+}
+.language-gong::before {
+    content: '合計';
+}
+.language-zhu::before {
+    content: 'ノート';
+}
+.language-zhongjianxuliehao::before {
+    content: '当選番号';
+}
+.language-zhongjiangdengji::before {
+    content: '勝利レベル';
+}
+.language-zhongjiangyonghu::before {
+    content: '当選者';
+}
+.language-zhongjiangzongjine::before {
+    content: '勝利の総額';
+}
+.language-chakangengduo::before {
+    content: 'もっと見る';
+}
+.language-yidengjiang::before {
+    content: '1等賞';
+}
+.language-erdengjiang::before {
+    content: '2等賞';
+}
+.language-sandengjiang::before {
+    content: '3等賞';
+}
+.language-xingyunjiang::before {
+    content: 'ラッキー賞';
+}
+.language-kaijiangxiangqing::before {
+    content: '宝くじ詳細';
+}
+.language-daletoubenqikaijiangxiangqing::before {
+    content: 'ロト宝くじ詳細';
+}
+.language-baifencaibenqikaijiangxiangqing::before {
+    content: '現在の宝くじの詳細の割合';
+}
+.language-benqizongjiangchi::before {
+    content: '現在の賞金プール';
+}
+.language-zhongjieshijianmaohao::before {
+    content: '賭け期間の終わり：';
+}
+.language-zhongjiegaodumaohao::before {
+    content: 'ベット終了時のEthereumブロックの高さ：';
+}
+.language-kaijianggaodumaohao::before {
+    content: 'Ethereumの高さを開く：';
+}
+.language-kaijianghaxizhimaohao::before {
+    content: 'Ethereum Hashを描く：';
+}
+.language-yonghuming::before {
+    content: 'ユーザー名';
+}
+.language-yonghuid::before {
+    content: 'ユーザーID';
+}
+.language-zhongjiangxuliehao::before {
+    content: '当選番号';
+}
+.language-jiangxiang::before {
+    content: '賞';
+}
+.language-jiangjin::before {
+    content: 'ボーナス';
+}
+.language-meiyougengduoshujule::before {
+    content: 'これ以上データなし';
+}
+.language-baifencaikaijiangxiangqing::before {
+    content: '宝くじの割合の詳細';
+}
+.language-youxigonglue::before {
+    content: 'ゲームガイド';
+}
+.language-guanyuwomen::before {
+    content: '私達について';
+}
+.language-fabugonggao::before {
+    content: 'お知らせ';
+}
+.language-bunengxiaoyuyi::before {
+    content: 'ベット数は1未満にはできません';
+}
+.language-bunengweixiaoshu::before {
+    content: 'ベット数は10進数にはできません';
+}
+.language-zuiduoyibai::before {
+    content: '各賭けは100までしかできません';
+}
+.language-zhengzaitouzhu::before {
+    content: '賭けて、お待ちください...';
+}
+.language-gongxininzhongdedaletou::before {
+    content: '大きな宝くじおめでとうございます';
+}
+.language-dianjichakan::before {
+    content: 'クリックして見る';
+}
+.language-qingxiandenglu::before {
+    content: '最初にログインしてください';
+}
+.language-qudenglu::before {
+    content: 'ログインする';
+}
+.language-quxiao::before {
+    content: 'キャンセル';
+}
+.language-gongxininzhongdebaifencai::before {
+    content: '賞金おめでとうございます';
+}
+.language-dengdaikaijiangzhong::before {
+    content: '賞を待っています';
+}
+.language-zuijinyitianzongtouzhu::before {
+    content: '過去24時間の合計ベット額USDT';
+}
+.language-zuixinchongzhi::before {
+    content: '最新のリチャージ';
+}
+.language-chongzhijine::before {
+    content: '充電量';
+}
+.language-yaoqingjiangli::before {
+    content: '招待報酬';
+}
+.language-fuwutiaokuan::before {
+    content: '利用規約';
+}
+.language-bangzhuzhongxin::before {
+    content: 'ヘルプセンター';
+}
+.language-zaixiankefu::before {
+    content: 'オンラインカスタマーサービス';
+}
+.language-denglu::before {
+    content: 'ログイン';
+}
+.language-zhuce::before {
+    content: '登録';
+}
+.language-tuichudenglu::before {
+    content: 'ログアウト';
+}
+.language-zhanghuyue::before {
+    content: '口座残高';
+}
+.language-youxiang::before {
+    content: 'メールボックス';
+}
+.language-mima::before {
+    content: 'パスワード';
+}
+.language-wangjimima::before {
+    content: 'パスワードを忘れた';
+}
+.language-haimeiyouzhanghao::before {
+    content: 'まだアカウントを持っていませんか？';
+}
+.language-qingshuruyouxiangzhanghao::before {
+    content: 'あなたのEメールアカウントを入力してください';
+}
+.language-qingshuruzhengquedeyouxiang::before {
+    content: '正しいメールアカウントを入力してください';
+}
+.language-qingshurudenglumima::before {
+    content: 'ログインパスワードを入力してください';
+}
+.language-shezhizhongxin::before {
+    content: 'セッティングセンター';
+}
+.language-gengxinrizhi::before {
+    content: '更新ログ';
+}
+.language-xitonggonggao::before {
+    content: 'システム発表';
+}
+.language-yonghumingmaohao::before {
+    content: 'ユーザー名：';
+}
+.language-btcqianbaodizhimaohao::before {
+    content: 'BTCウォレットアドレス：';
+}
+.language-wodegonghui::before {
+    content: '私のギルド';
+}
+.language-yaoqinghaoyoudejiangli::before {
+    content: '友達に報酬をもらう';
+}
+.language-wodezichan::before {
+    content: '私の資産';
+}
+.language-wodeshouyi::before {
+    content: '私の収入';
+}
+.language-wodeshequ::before {
+    content: '私のコミュニティ';
+}
+.language-anquanzhongxin::before {
+    content: 'セキュリティセンター';
+}
+.language-wangluocuowu::before {
+    content: 'ネットワークエラーです。';
+}
+.language-xiugaijiaoyimima::before {
+    content: 'トランザクションパスワードを変更する';
+}
+.language-yanzhengma::before {
+    content: '確認コード';
+}
+.language-fasongyanzhengma::before {
+    content: '確認コードを送信する';
+}
+.language-shezhixindejiaoyimima::before {
+    content: '新しい取引パスワードを設定する';
+}
+.language-mimaguize::before {
+    content: 'パスワードは8〜16桁の数字、文字、記号で構成する必要があります。';
+}
+.language-querenjiaoyimima::before {
+    content: '取引パスワード確認';
+}
+.language-queding::before {
+    content: '決定する';
+}
+.language-chongxinhuoqu::before {
+    content: '取り戻す';
+}
+.language-qingxianshuruyouxiangzhanghao::before {
+    content: '最初にあなたのEメールアカウントを入力してください';
+}
+.language-youxiangbunengweikong::before {
+    content: 'メールボックスは空にできません';
+}
+.language-yanzhengmabunengweikong::before {
+    content: '確認コードは空にできません';
+}
+.language-mimabunengweikong::before {
+    content: 'パスワードは空にできません';
+}
+.language-mimabunengyoukongge::before {
+    content: 'パスワードにスペースを含めることはできません';
+}
+.language-mimaguizetishi::before {
+    content: 'パスワードは数字、文字、および記号（記号には~!@#_$%^&*()+-.[]?{}|/\\）でなければならず、長さは8から16桁です。';
+}
+.language-querenmimabunengweikong::before {
+    content: 'パスワードを空にすることはできません';
+}
+.language-liangcimimabuyizhi::before {
+    content: '2つのパスワードが矛盾しています';
+}
+.language-xiugaidenglumima::before {
+    content: 'ログインパスワードを変更する';
+}
+.language-beifenzhujici::before {
+    content: 'バックアップニーモニック';
+}
+.language-gonggaojilu::before {
+    content: '発表記録';
+}
+.language-gonghuigonggao::before {
+    content: 'ギルド発表';
+}
+.language-lianjieyaoqinghaoyou::before {
+    content: '友達を招待する';
+}
+.language-erweimayaoqinghaoyou::before {
+    content: 'QRコードで友達を招待';
+}
+.language-wodexiajimaohao::before {
+    content: '私の部下：';
+}
+.language-wodeshangjimaohao::before {
+    content: '私の上司：';
+}
+.language-ren::before {
+    content: '人';
+}
+.language-fuzhichenggong::before {
+    content: 'コピーが成功しました。';
+}
+.language-quedingfabu::before {
+    content: 'リリースを確認';
+}
+.language-fabuduixiang::before {
+    content: '公開オブジェクト';
+}
+.language-suoyouchengyuan::before {
+    content: '全メンバー';
+}
+.language-meiyouxiajiwufafabu::before {
+    content: 'あなたにはまだ部下がいないため、アナウンスを投稿することはできません。';
+}
+.language-biaotibunengweikong::before {
+    content: 'タイトルは空にできません';
+}
+.language-gonggaoneirongbunengweikong::before {
+    content: '発表内容は空にできません';
+}
+.language-qingxuanzefabuduixiang::before {
+    content: '公開オブジェクトを選択してください';
+}
+.language-wodexiaji::before {
+    content: '私の部下';
+}
+.language-zhuceshijian::before {
+    content: '登録時間';
+}
+.language-jihuoshijian::before {
+    content: '起動時間';
+}
+.language-weijihuo::before {
+    content: '起動していない';
+}
+.language-zijinjilu::before {
+    content: '資金レコード';
+}
+.language-shuzihuobizichan::before {
+    content: 'デジタル通貨資産';
+}
+.language-yekeszichan::before {
+    content: 'YEKESの資産';
+}
+.language-zhanghuzongyue::before {
+    content: '口座残高';
+}
+.language-yekesbiandong::before {
+    content: 'YEKESの変化';
+}
+.language-jianglishuliang::before {
+    content: '報酬の数';
+}
+.language-shijian::before {
+    content: '時間';
+}
+.language-yue::before {
+    content: 'バランス';
+}
+.language-tibi::before {
+    content: 'コイン';
+}
+.language-chongzhi::before {
+    content: '再充電';
+}
+.language-fenxiangyouxiaozhuce::before {
+    content: '有効な登録を共有する';
+}
+.language-zhongjiangshequfenxiang::before {
+    content: 'コミュニティ共有の獲得';
+}
+.language-xianshitouzhujiangli::before {
+    content: '期間限定のベット報酬';
+}
+.language-qitahuodongjiangli::before {
+    content: 'その他の活動報酬';
+}
+.language-zhuanru::before {
+    content: '転送する';
+}
+.language-zhuanchu::before {
+    content: '転送する';
+}
+.language-saomatianjiekefuweixin::before {
+    content: 'カスタマーサービスWeChatを追加するためのコードをスキャン';
+}
+.language-yitiantouzhumingxi::before {
+    content: '24時間キャスト'
+}
+.language-zuijinyitianzongtouzhue::before {
+    content: '過去24時間の合計ベット額USDT≈';
+}
+.language-hangyezixun::before {
+    content: '業界情報'
+}
+.language-wodeshangji::before {
+    content: '私の上司';
+}
+.language-wo::before {
+    content: '私';
+}
+.language-gonggaoxiangqing::before {
+    content: '発表の詳細';
+}
+.language-biaoti::before {
+    content: 'タイトル';
+}
+.language-xiangqing::before {
+    content: '詳細';
+}
+.language-querenmima::before {
+    content: 'パスワードの確認';
+}
+.language-shezhixindedenglumima::before {
+    content: '新しいログインパスワードを設定してください';
+}
+.language-querendenglumima::before {
+    content: 'ログインパスワードの確認';
+}
+.language-quanbu::before {
+    content: '全部';
+}
+.language-ershiyidian::before {
+    content: '21ポイント'。
+}
+.language-baijiale::before {
+    content: 'バカラ';
+}
+.language-fenhong::before {
+    content: '配当';
+}
+.language-zanwushuju::before {
+    content: 'まだデータがありません';
+}
+.language-zixun::before {
+    content: '情報';
+}
+.language-zijinbiandongxiangqing::before {
+    content: '資金変更の詳細'
+}
+.language-yonghuidmaohao::before {
+    content: 'ユーザーID：';
+}
+.language-xiangmu::before {
+    content: 'プロジェクト';
+}
+.language-biandongjine::before {
+    content: '金額の変更';
+}
+.language-zuire::before {
+    content: '一番ホット'
+}
+.language-zuixin::before {
+    content: '最新の';
+}
+.language-zhanghujine::before {
+    content: 'アカウントの金額';
+}
+.language-tibijine::before {
+    content: '合計金額';
+}
+.language-tixianshouxufeiweitixianjinede::before {
+    content: '引き出し手数料は現金の金額です。';
+}
+.language-quanbutichu::before {
+    content: 'すべて提案';
+}
+.language-tibidizhi::before {
+    content: 'コインアドレス';
+}
+.language-tibitixing::before {
+    content: '有効な通貨の住所を正確に記入してください。住所が間違っている場合、損失はGoogleには関係ありません。';
+}
+.language-querentibi::before {
+    content: 'コインを確認します';
+}
+.language-tibijinebunengweikong::before {
+    content: 'コインの量は空にできません！ ';
+}
+.language-tibidizhibunengweikong::before {
+    content: 'コインアドレスは空にできません！ ';
+}
+.language-tijiaochenggong::before {
+    content: '送信に成功しました';
+}
+.language-fasong::before {
+    content: '送る';
+}
+.language-bangzhuzhongxin::before {
+    content: 'ヘルプセンター';
+}
+.language-redianwenti::before {
+    content: 'ホットイシュー';
+}
+.language-yaoqinghaoyou::before {
+    content: '友達を招待する';
+}
+.language-qingjiepingbaocun::before {
+    content: 'スクリーンショットを保存してください';
+}
+.language-jintian::before {
+    content: '今日';
+}
+.language-daishenhe::before {
+    content: 'レビュー待ち';
+}
+.language-bohui::before {
+    content: '解雇された';
+}
+.language-yue::before {
+    content: '月';
+}
+.language-touzhushouyi::before {
+    content: 'ベット収入';
+}
+.language-xiajizhongjiangfanyong::before {
+    content: '従属勝ちリベート';
+}
+.language-yekesfenhong::before {
+    content: 'YEKESの配当';
+}
+.language-zhongjiangfanyong::before {
+    content: '優勝リベート';
+}
+.language-yekesshuliang::before {
+    content: 'YEKESの量';
+}
+.language-fenhongjine::before {
+    content: '配当金額';
+}
+.language-chongzhidizhi::before {
+    content: '請求先住所';
+}
+.language-fuzhidizhi::before {
+    content: '住所のコピー';
+}
+.language-xianshierweima::before {
+    content: 'QRコードを表示';
+}
+.language-shishihangqing::before {
+    content: 'リアルタイム見積もり';
+}
+.language-fabu::before {
+    content: '発行';
+}
+.language-yishangchuanchenggong::before {
+    content: 'アップロードが完了しました。レビュー待ち';
+}
+.language-xitonggonggaoxiangqing::before {
+    content: 'システム発表の詳細';
+}
+.language-tuijianren::before {
+    content: 'おすすめの人';
+}
+.language-wotongyiyekesde::before {
+    content: '私はYEKESに同意します';
+}
+.language-fuwutiaokuan::before {
+    content: "'利用規約 '";
+}
+.language-yiyouzhanghao::before {
+    content: '既存のアカウントですか？ ';
+}
+.language-yaoqingmabunengweikong::before {
+    content: '招待コードは空にできません';
+}
+.language-qingxiantongyifuwutiaokuan::before {
+    content: '最初に利用規約に同意してください';
+}

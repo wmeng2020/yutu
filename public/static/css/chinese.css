@@ -1,0 +1,659 @@
+.language-baifencai::before {
+    content: '百分彩';
+}
+.language-daletou::before {
+    content: '大乐透';
+}
+.language-touziyouxi::before {
+    content: '骰子游戏';
+}
+.language-laohuji::before {
+    content: '老虎机';
+}
+.language-zuixinzhongjiang::before {
+    content: '最新中奖';
+}
+.language-zhongjiangjine::before {
+    content: '中奖金额';
+}
+.language-shouye::before {
+    content: '首页';
+}
+.language-qukuailianyouxi::before {
+    content: '区块链游戏';
+}
+.language-shequ::before {
+    content: '社区';
+}
+.language-gerenzhongxin::before {
+    content: '个人中心';
+}
+.language-benqijiangchi::before {
+    content: '本期奖池';
+}
+.language-benqiyitouzhuliang::before {
+    content: '本期已投注量';
+}
+.language-qishumaohao::before {
+    content: '期数：';
+}
+.language-woyaotouzhumaohao::before {
+    content: '我要投注：';
+}
+.language-querentouzhu::before {
+    content: '确认投注';
+}
+.language-touzhujilu::before {
+    content: '投注记录';
+}
+.language-kaijiangjilu::before {
+    content: '开奖记录';
+}
+.language-qishu::before {
+    content: '期数';
+}
+.language-kaijiangshijian::before {
+    content: '开奖时间';
+}
+.language-gengduo::before {
+    content: '更多';
+}
+.language-xuanzebizhong::before {
+    content: '请选择投注币种';
+}
+.language-benqihaiketouzhu::before {
+    content: '本期距开奖还可投注量';
+}
+.language-youxi::before {
+    content: '游戏';
+}
+.language-xiazhushijian::before {
+    content: '下注时间';
+}
+.language-kaijiangzhuangtai::before {
+    content: '开奖状态';
+}
+.language-weikaijiang::before {
+    content: '未开奖';
+}
+.language-weizhongjiang::before {
+    content: '未中奖';
+}
+.language-zhongjiang::before {
+    content: '中奖';
+}
+.language-caipiaoxuliehao::before {
+    content: '彩票序列号';
+}
+.language-touzhujine::before {
+    content: '投注金额';
+}
+.language-gong::before {
+    content: '共';
+}
+.language-zhu::before {
+    content: '注';
+}
+.language-zhongjianxuliehao::before {
+    content: '中奖序列号';
+}
+.language-zhongjiangdengji::before {
+    content: '中奖等级';
+}
+.language-zhongjiangyonghu::before {
+    content: '中奖用户';
+}
+.language-zhongjiangzongjine::before {
+    content: '中奖总金额';
+}
+.language-chakangengduo::before {
+    content: '查看更多';
+}
+.language-yidengjiang::before {
+    content: '一等奖';
+}
+.language-erdengjiang::before {
+    content: '二等奖';
+}
+.language-sandengjiang::before {
+    content: '三等奖';
+}
+.language-xingyunjiang::before {
+    content: '幸运奖';
+}
+.language-kaijiangxiangqing::before {
+    content: '开奖详情';
+}
+.language-daletoubenqikaijiangxiangqing::before {
+    content: '大乐透本期开奖详情';
+}
+.language-baifencaibenqikaijiangxiangqing::before {
+    content: '百分彩本期开奖详情';
+}
+.language-benqizongjiangchi::before {
+    content: '本期总奖池';
+}
+.language-zhongjieshijianmaohao::before {
+    content: '本期投注终结时间：';
+}
+.language-zhongjiegaodumaohao::before {
+    content: '投注终结时以太坊区块高度：';
+}
+.language-kaijianggaodumaohao::before {
+    content: '开奖以太坊高度：';
+}
+.language-kaijianghaxizhimaohao::before {
+    content: '开奖以太坊哈希值：';
+}
+.language-yonghuming::before {
+    content: '用户名';
+}
+.language-yonghuid::before {
+    content: '用户ID';
+}
+.language-zhongjiangxuliehao::before {
+    content: '中奖序列号';
+}
+.language-jiangxiang::before {
+    content: '奖项';
+}
+.language-jiangjin::before {
+    content: '奖金';
+}
+.language-meiyougengduoshujule::before {
+    content: '没有更多数据了';
+}
+.language-baifencaikaijiangxiangqing::before {
+    content: '百分彩开奖详情';
+}
+.language-youxigonglue::before {
+    content: '游戏攻略';
+}
+.language-guanyuwomen::before {
+    content: '关于我们';
+}
+.language-fabugonggao::before {
+    content: '确定发布';
+}
+.language-bunengxiaoyuyi::before {
+    content: '投注数量不能小于1';
+}
+.language-bunengweixiaoshu::before {
+    content: '投注数量不能为小数';
+}
+.language-zuiduoyibai::before {
+    content: '每次投注量最多只能为100';
+}
+.language-zhengzaitouzhu::before {
+    content: '正在投注，请等待……';
+}
+.language-gongxininzhongdedaletou::before {
+    content: '恭喜您中得大乐透';
+}
+.language-dianjichakan::before {
+    content: '点击查看';
+}
+.language-qingxiandenglu::before {
+    content: '请先登录';
+}
+.language-qudenglu::before {
+    content: '去登录';
+}
+.language-quxiao::before {
+    content: '取消';
+}
+.language-gongxininzhongdebaifencai::before {
+    content: '恭喜您中得百分彩';
+}
+.language-dengdaikaijiangzhong::before {
+    content: '等待开奖中';
+}
+.language-benqitouzhumingxi::before {
+    content: '本期投注明细';
+}
+.language-zuijinyitianzongtouzhu::before {
+    content: '最近24小时总投注额USDT';
+}
+.language-zuixinchongzhi::before {
+    content: '最新充值';
+}
+.language-chongzhijine::before {
+    content: '充值金额';
+}
+.language-yaoqingjiangli::before {
+    content: '邀请奖励';
+}
+.language-fuwutiaokuan::before {
+    content: '服务条款';
+}
+.language-bangzhuzhongxin::before {
+    content: '帮助中心';
+}
+.language-zaixiankefu::before {
+    content: '在线客服';
+}
+
+.language-bangdindizhi::before {
+    content: '绑定地址';
+}
+
+.language-denglu::before {
+    content: '登录';
+}
+.language-zhuce::before {
+    content: '注册';
+}
+.language-tuichudenglu::before {
+    content: '退出登录';
+}
+.language-zhanghuyue::before {
+    content: '账户余额';
+}
+.language-youxiang::before {
+    content: '邮箱';
+}
+.language-mima::before {
+    content: '密码';
+}
+.language-wangjimima::before {
+    content: '忘记密码';
+}
+.language-haimeiyouzhanghao::before {
+    content: '还没有账号？';
+}
+.language-qingshuruyouxiangzhanghao::before {
+    content: '请输入邮箱账号';
+}
+.language-qingshuruzhengquedeyouxiang::before {
+    content: '请输入正确的邮箱账号';
+}
+.language-qingshurudenglumima::before {
+    content: '请输入登录密码';
+}
+.language-shezhizhongxin::before {
+    content: '设置中心';
+}
+.language-gengxinrizhi::before {
+    content: '更新日志';
+}
+.language-lishizixun::before {
+    content: '历史资讯';
+}
+.language-xitongxiaoxi::before {
+    content: '系统消息';
+}
+.language-yonghumingmaohao::before {
+    content: '用户名：';
+}
+.language-btcqianbaodizhimaohao::before {
+    content: 'BTC钱包地址：';
+}
+.language-wodegonghui::before {
+    content: '我的公会';
+}
+.language-yaoqinghaoyoudejiangli::before {
+    content: '邀请好友得奖励';
+}
+.language-wodezichan::before {
+    content: '我的资产';
+}
+.language-wodeshouyi::before {
+    content: '我的收益';
+}
+.language-wodeshequ::before {
+    content: '我的社区';
+}
+.language-anquanzhongxin::before {
+    content: '安全中心';
+}
+.language-wangluocuowu::before {
+    content: '网络错误！';
+}
+.language-xiugaijiaoyimima::before {
+    content: '修改交易密码';
+}
+.language-yanzhengma::before {
+    content: '验证码';
+}
+.language-fasongyanzhengma::before {
+    content: '发送验证码';
+}
+.language-shezhixindejiaoyimima::before {
+    content: '设置新的交易密码';
+}
+.language-mimaguize::before {
+    content: '密码必须由8-16位数字、字母及符号三种组成。';
+}
+.language-querenjiaoyimima::before {
+    content: '确认交易密码';
+}
+.language-queding::before {
+    content: '确定';
+}
+.language-chongxinhuoqu::before {
+    content: '重新获取';
+}
+.language-qingxianshuruyouxiangzhanghao::before {
+    content: '请先输入邮箱账号';
+}
+.language-youxiangbunengweikong::before {
+    content: '邮箱不能为空';
+}
+.language-yanzhengmabunengweikong::before {
+    content: '验证码不能为空';
+}
+.language-mimabunengweikong::before {
+    content: '密码不能为空';
+}
+.language-mimabunengyoukongge::before {
+    content: '密码不能有空格';
+}
+.language-mimaguizetishi::before {
+    content: '密码必须为数字、字母及符号(符号包括~!@#_$%^&*()+-.[]?{}|/\\)三种组成，长度为8-16位';
+}
+.language-querenmimabunengweikong::before {
+    content: '确认密码不能为空';
+}
+.language-liangcimimabuyizhi::before {
+    content: '两次密码不一致';
+}
+.language-xiugaidenglumima::before {
+    content: '修改登录密码';
+}
+.language-beifenzhujici::before {
+    content: '备份助记词';
+}
+.language-gonggaojilu::before {
+    content: '公会消息';
+}
+.language-gonghuigonggao::before {
+    content: '公会公告';
+}
+.language-lianjieyaoqinghaoyou::before {
+    content: '链接邀请好友';
+}
+.language-erweimayaoqinghaoyou::before {
+    content: '二维码邀请好友';
+}
+.language-wodexiajimaohao::before {
+    content: '我的下级：';
+}
+.language-wodeshangjimaohao::before {
+    content: '我的上级：';
+}
+.language-ren::before {
+    content: '人';
+}
+.language-fuzhichenggong::before {
+    content: '复制成功！';
+}
+.language-quedingfabu::before {
+    content: '确定发布';
+}
+.language-fabuduixiang::before {
+    content: '发布对象';
+}
+.language-suoyouchengyuan::before {
+    content: '所有成员';
+}
+.language-meiyouxiajiwufafabu::before {
+    content: '你还没有下级，无法发布公告';
+}
+.language-biaotibunengweikong::before {
+    content: '标题不能为空';
+}
+.language-gonggaoneirongbunengweikong::before {
+    content: '公告内容不能为空';
+}
+.language-qingxuanzefabuduixiang::before {
+    content: '请选择发布对象';
+}
+.language-wodexiaji::before {
+    content: '我的下级';
+}
+.language-zhuceshijian::before {
+    content: '注册时间';
+}
+.language-jihuoshijian::before {
+    content: '激活时间';
+}
+.language-weijihuo::before {
+    content: '未激活';
+}
+.language-zijinjilu::before {
+    content: '资金记录';
+}
+.language-shuzihuobizichan::before {
+    content: '数字货币资产';
+}
+.language-yekeszichan::before {
+    content: 'YEKES资产';
+}
+.language-zhanghuzongyue::before {
+    content: '账户总余额';
+}
+.language-yekesbiandong::before {
+    content: 'YEKES变动';
+}
+.language-jianglishuliang::before {
+    content: '奖励数量';
+}
+.language-shijian::before {
+    content: '时间';
+}
+.language-yue::before {
+    content: '余额';
+}
+.language-tibi::before {
+    content: '提币';
+}
+.language-chongzhi::before {
+    content: '充值';
+}
+.language-fenxiangyouxiaozhuce::before {
+    content: '分享有效注册';
+}
+.language-zhongjiangshequfenxiang::before {
+    content: '中奖社区分享';
+}
+.language-xianshitouzhujiangli::before {
+    content: '限时投注奖励';
+}
+.language-qitahuodongjiangli::before {
+    content: '其他活动奖励';
+}
+.language-zhuanru::before {
+    content: '转入';
+}
+.language-zhuanchu::before {
+    content: '转出';
+}
+.language-saomatianjiekefuweixin::before {
+    content: '扫码添加客服微信';
+}
+.language-yitiantouzhumingxi::before {
+    content: '24小时投注明细';
+}
+.language-zuijinyitianzongtouzhue::before {
+    content: '最近24小时总投注额USDT≈';
+}
+.language-hangyezixun::before {
+    content: '行业资讯';
+}
+.language-wodeshangji::before {
+    content: '我的上级';
+}
+.language-wo::before {
+    content: '我';
+}
+.language-gonggaoxiangqing::before {
+    content: '公告详情';
+}
+.language-biaoti::before {
+    content: '标题';
+}
+.language-xiangqing::before {
+    content: '详情';
+}
+.language-querenmima::before {
+    content: '确认密码';
+}
+.language-shezhixindedenglumima::before {
+    content: '设置新的登录密码';
+}
+.language-querendenglumima::before {
+    content: '确认登录密码';
+}
+.language-quanbu::before {
+    content: '全部';
+}
+.language-ershiyidian::before {
+    content: '21点';
+}
+.language-baijiale::before {
+    content: '百家乐';
+}
+.language-fenhong::before {
+    content: '分红';
+}
+.language-zanwushuju::before {
+    content: '暂无数据';
+}
+.language-zixun::before {
+    content: '资讯';
+}
+.language-zijinbiandongxiangqing::before {
+    content: '资金变动详情';
+}
+.language-yonghuidmaohao::before {
+    content: '用户ID：';
+}
+.language-xiangmu::before {
+    content: '项目';
+}
+.language-biandongjine::before {
+    content: '变动金额';
+}
+.language-zuire::before {
+    content: '最热';
+}
+.language-zuixin::before {
+    content: '最新';
+}
+.language-zhanghujine::before {
+    content: '账户金额';
+}
+.language-tibijine::before {
+    content: '提币金额';
+}
+.language-tixianshouxufeiweitixianjinede::before {
+    content: '提现手续费为提现金额的';
+}
+.language-quanbutichu::before {
+    content: '全部提出';
+}
+.language-tibidizhi::before {
+    content: '提币地址';
+}
+.language-tibitixing::before {
+    content: '请您务必准确填写有效的提币地址，如果地址有误产生的损失与我方无关';
+}
+.language-querentibi::before {
+    content: '确认提币';
+}
+.language-tibijinebunengweikong::before {
+    content: '提币金额不能为空！';
+}
+.language-tibidizhibunengweikong::before {
+    content: '提币地址不能为空！';
+}
+.language-tijiaochenggong::before {
+    content: '提交成功';
+}
+.language-fasong::before {
+    content: '发送';
+}
+.language-bangzhuzhongxin::before {
+    content: '帮助中心';
+}
+.language-redianwenti::before {
+    content: '热点问题';
+}
+.language-yaoqinghaoyou::before {
+    content: '邀请好友';
+}
+.language-qingjiepingbaocun::before {
+    content: '请截屏保存';
+}
+.language-jintian::before {
+    content: '今天';
+}
+.language-daishenhe::before {
+    content: '待审核';
+}
+.language-bohui::before {
+    content: '驳回';
+}
+.language-yuef::before {
+    content: '月';
+}
+.language-laiyuan::before{
+	content:'来源';
+}
+.language-touzhushouyi::before {
+    content: '投注收益';
+}
+.language-xiajizhongjiangfanyong::before {
+    content: '下级中奖返佣';
+}
+.language-yekesfenhong::before {
+    content: 'YEKES分红';
+}
+.language-zhongjiangfanyong::before {
+    content: '中奖返佣';
+}
+.language-yekesshuliang::before {
+    content: 'YEKES数量';
+}
+.language-fenhongjine::before {
+    content: '分红金额';
+}
+.language-chongzhidizhi::before {
+    content: '充值地址';
+}
+.language-fuzhidizhi::before {
+    content: '复制地址';
+}
+.language-xianshierweima::before {
+    content: '显示二维码';
+}
+.language-shishihangqing::before {
+    content: '实时行情';
+}
+.language-fabu::before {
+    content: '发布';
+}
+.language-yishangchuanchenggong::before {
+    content: '已上传成功，待审核';
+}
+.language-xitonggonggaoxiangqing::before {
+    content: '历史资讯详情';
+}
+.language-tuijianren::before {
+    content: '推荐人';
+}
+.language-wotongyiyekesde::before {
+    content: '我同意YEKES的';
+}
+.language-fuwutiaokuan::before {
+    content: '服务条款';
+}
+.language-yiyouzhanghao::before {
+    content: '已有账号？';
+}
+.language-yaoqingmabunengweikong::before {
+    content: '邀请码不能为空';
+}
+.language-qingxiantongyifuwutiaokuan::before {
+    content: '请先同意《服务条款》';
+}

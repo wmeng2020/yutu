@@ -1,0 +1,651 @@
+.language-baifencai::before {
+    content: 'Percentile Lottery';
+}
+.language-daletou::before {
+    content: 'Great lotto';
+}
+.language-touziyouxi::before {
+    content: 'Dice game';
+}
+.language-laohuji::before {
+    content: 'One-arm bandit';
+}
+.language-zuixinzhongjiang::before {
+    content: 'The latest prize';
+}
+.language-zhongjiangjine::before {
+    content: 'Winning amount';
+}
+.language-shouye::before {
+    content: 'Home';
+}
+.language-qukuailianyouxi::before {
+    content: 'Block Chain Game';
+}
+.language-shequ::before {
+    content: 'Community';
+}
+.language-gerenzhongxin::before {
+    content: 'Personal Center';
+}
+.language-benqijiangchi::before {
+    content: 'This award pool';
+}
+.language-benqiyitouzhuliang::before {
+    content: 'Volume of bets made in the current period';
+}
+.language-qishumaohao::before {
+    content: 'Number of periods:';
+}
+.language-woyaotouzhumaohao::before {
+    content: 'I want to bet:';
+}
+.language-querentouzhu::before {
+    content: 'Confirm bet';
+}
+.language-touzhujilu::before {
+    content: 'Betting record';
+}
+.language-kaijiangjilu::before {
+    content: 'Lottery record';
+}
+.language-qishu::before {
+    content: 'Number of periods';
+}
+.language-kaijiangshijian::before {
+    content: 'Lottery time';
+}
+.language-gengduo::before {
+    content: 'More';
+}
+.language-xuanzebizhong::before {
+    content: 'Please choose the currency to bet on';
+}
+.language-benqihaiketouzhu::before {
+    content: 'There are still bets to be made before the prize is awarded';
+}
+.language-youxi::before {
+    content: 'Game';
+}
+.language-xiazhushijian::before {
+    content: 'Bet time';
+}
+.language-kaijiangzhuangtai::before {
+    content: 'Lottery status';
+}
+.language-weikaijiang::before {
+    content: 'No award';
+}
+.language-weizhongjiang::before {
+    content: 'No prize';
+}
+.language-zhongjiang::before {
+    content: 'Winning the prize';
+}
+.language-caipiaoxuliehao::before {
+    content: 'Lottery serial number';
+}
+.language-touzhujine::before {
+    content: 'Betting amount';
+}
+.language-gong::before {
+    content: 'A total of ';
+}
+.language-zhu::before {
+    content: ' notes';
+}
+.language-zhongjianxuliehao::before {
+    content: 'Winning serial number';
+}
+.language-zhongjiangdengji::before {
+    content: 'Winning rank';
+}
+.language-zhongjiangyonghu::before {
+    content: 'Winning user';
+}
+.language-zhongjiangzongjine::before {
+    content: 'Total Amount of Winning Prize';
+}
+.language-chakangengduo::before {
+    content: 'View more';
+}
+.language-yidengjiang::before {
+    content: 'The first prize';
+}
+.language-erdengjiang::before {
+    content: 'Second award';
+}
+.language-sandengjiang::before {
+    content: 'Third Award';
+}
+.language-xingyunjiang::before {
+    content: 'Lucky prize';
+}
+.language-kaijiangxiangqing::before {
+    content: 'Lottery details';
+}
+.language-daletoubenqikaijiangxiangqing::before {
+    content: 'Lotto lottery details';
+}
+.language-baifencaibenqikaijiangxiangqing::before {
+    content: 'Percentage of the current lottery details';
+}
+.language-benqizongjiangchi::before {
+    content: "This issue's pool of awards";
+}
+.language-zhongjieshijianmaohao::before {
+    content: 'Ending time of betting in this period:';
+}
+.language-zhongjiegaodumaohao::before {
+    content: 'At the end of the betting, the height of the Taifang block:';
+}
+.language-kaijianggaodumaohao::before {
+    content: 'Award-opening height of ETF:';
+}
+.language-kaijianghaxizhimaohao::before {
+    content: 'Award-winning Ethernet square hash value:';
+}
+.language-yonghuming::before {
+    content: 'User name';
+}
+.language-yonghuid::before {
+    content: 'User ID';
+}
+.language-zhongjiangxuliehao::before {
+    content: 'Winning serial number';
+}
+.language-jiangxiang::before {
+    content: 'Prize';
+}
+.language-jiangjin::before {
+    content: 'Bonus';
+}
+.language-meiyougengduoshujule::before {
+    content: 'No more data';
+}
+.language-baifencaikaijiangxiangqing::before {
+    content: 'Details of Percentile Lottery Opening';
+}
+.language-youxigonglue::before {
+    content: 'Walkthrough';
+}
+.language-guanyuwomen::before {
+    content: 'About us';
+}
+.language-fabugonggao::before {
+    content: 'Announcement';
+}
+.language-bunengxiaoyuyi::before {
+    content: 'The number of bets cannot be less than 1';
+}
+.language-bunengweixiaoshu::before {
+    content: 'The number of bets cannot be decimal';
+}
+.language-zuiduoyibai::before {
+    content: 'Each bet can only be up to 100';
+}
+.language-zhengzaitouzhu::before {
+    content: 'Betting, please wait...';
+}
+.language-gongxininzhongdedaletou::before {
+    content: 'Congratulations on your big lottery';
+}
+.language-dianjichakan::before {
+    content: 'Click to view';
+}
+.language-qingxiandenglu::before {
+    content: 'please log in first';
+}
+.language-qudenglu::before {
+    content: 'Go to login';
+}
+.language-quxiao::before {
+    content: 'Cancel';
+}
+.language-gongxininzhongdebaifencai::before {
+    content: 'Congratulations on your winnings';
+}
+.language-dengdaikaijiangzhong::before {
+    content: 'Waiting for the prize';
+}
+.language-zuijinyitianzongtouzhu::before {
+    content: 'Last 24 hours total bet amount USDT';
+}
+.language-zuixinchongzhi::before {
+    content: 'Latest recharge';
+}
+.language-chongzhijine::before {
+    content: 'Recharge amount';
+}
+.language-yaoqingjiangli::before {
+    content: 'Invitation reward';
+}
+.language-fuwutiaokuan::before {
+    content: 'Terms of Service';
+}
+.language-bangzhuzhongxin::before {
+    content: 'Help center';
+}
+.language-zaixiankefu::before {
+    content: 'Online service';
+}
+.language-denglu::before {
+    content: 'Login';
+}
+.language-zhuce::before {
+    content: 'Register';
+}
+.language-tuichudenglu::before {
+    content: 'Sign out';
+}
+.language-zhanghuyue::before {
+    content: 'Account Balance';
+}
+.language-youxiang::before {
+    content: 'mailbox';
+}
+.language-mima::before {
+    content: 'Password';
+}
+.language-wangjimima::before {
+    content: 'Forget password';
+}
+.language-haimeiyouzhanghao::before {
+    content: "Don't have an account yet?";
+}
+.language-qingshuruyouxiangzhanghao::before {
+    content: 'Please enter your email account';
+}
+.language-qingshuruzhengquedeyouxiang::before {
+    content: 'Please enter the correct email account';
+}
+.language-qingshurudenglumima::before {
+    content: 'Please enter your password';
+}
+.language-shezhizhongxin::before {
+    content: 'Setting center';
+}
+.language-gengxinrizhi::before {
+    content: 'Update log';
+}
+.language-xitonggonggao::before {
+    content: 'System notification';
+}
+.language-xitongxiaoxi::before {
+    content: 'System Information';
+}
+.language-yonghumingmaohao::before {
+    content: 'Username: ';
+}
+.language-btcqianbaodizhimaohao::before {
+    content: 'BTC wallet address: ';
+}
+.language-wodegonghui::before {
+    content: 'My guild';
+}
+.language-yaoqinghaoyoudejiangli::before {
+    content: 'Invite friends to reward';
+}
+.language-wodezichan::before {
+    content: 'My assets';
+}
+.language-wodeshouyi::before {
+    content: 'My income';
+}
+.language-wodeshequ::before {
+    content: 'My community';
+}
+.language-anquanzhongxin::before {
+    content: 'Security center';
+}
+.language-wangluocuowu::before {
+    content: 'Network Error!';
+}
+.language-xiugaijiaoyimima::before {
+    content: 'Modify transaction password';
+}
+.language-yanzhengma::before {
+    content: 'Verification code';
+}
+.language-fasongyanzhengma::before {
+    content: 'Send the verification code';
+}
+.language-shezhixindejiaoyimima::before {
+    content: 'Set a new transaction password';
+}
+.language-mimaguize::before {
+    content: 'The password must consist of 8-16 digits, letters and symbols.';
+}
+.language-querenjiaoyimima::before {
+    content: 'Confirm transaction password';
+}
+.language-queding::before {
+    content: 'Determine';
+}
+.language-chongxinhuoqu::before {
+    content: 'Reacquire';
+}
+.language-qingxianshuruyouxiangzhanghao::before {
+    content: 'Please enter your email account first';
+}
+.language-youxiangbunengweikong::before {
+    content: 'E-mail can not be empty';
+}
+.language-yanzhengmabunengweikong::before {
+    content: 'Verification code must be filled';
+}
+.language-mimabunengweikong::before {
+    content: 'Password can not be blank';
+}
+.language-mimabunengyoukongge::before {
+    content: 'Password cannot have spaces';
+}
+.language-mimaguizetishi::before {
+    content: 'The password must be a number, a letter and a symbol (the symbol includes ~!@#_$%^&*()+-.[]?{}|/\\), and the length is 8-16 digits.';
+}
+.language-querenmimabunengweikong::before {
+    content: 'Confirm password can not be blank';
+}
+.language-liangcimimabuyizhi::before {
+    content: 'Two passwords are inconsistent';
+}
+.language-xiugaidenglumima::before {
+    content: 'Modify the login password';
+}
+.language-beifenzhujici::before {
+    content: 'Backup mnemonic';
+}
+.language-gonggaojilu::before {
+    content: 'Announcement record';
+}
+.language-gonghuigonggao::before {
+    content: 'Guild announcement';
+}
+.language-lianjieyaoqinghaoyou::before {
+    content: 'Link invite friends';
+}
+.language-erweimayaoqinghaoyou::before {
+    content: 'QR code invites friends';
+}
+.language-wodexiajimaohao::before {
+    content: 'My subordinates: ';
+}
+.language-wodeshangjimaohao::before {
+    content: 'My superior: ';
+}
+.language-ren::before {
+    content: ' people';
+}
+.language-fuzhichenggong::before {
+    content: 'Successful copy!';
+}
+.language-quedingfabu::before {
+    content: 'Confirm release';
+}
+.language-fabuduixiang::before {
+    content: 'Publishing object';
+}
+.language-suoyouchengyuan::before {
+    content: 'All members';
+}
+.language-meiyouxiajiwufafabu::before {
+    content: 'You still have no subordinates and cannot post announcements.';
+}
+.language-biaotibunengweikong::before {
+    content: 'The title can not be blank';
+}
+.language-gonggaoneirongbunengweikong::before {
+    content: 'Announcement content cannot be empty';
+}
+.language-qingxuanzefabuduixiang::before {
+    content: 'Please select the publishing object';
+}
+.language-wodexiaji::before {
+    content: 'My subordinate';
+}
+.language-zhuceshijian::before {
+    content: 'Registration time';
+}
+.language-jihuoshijian::before {
+    content: 'Activation time';
+}
+.language-weijihuo::before {
+    content: 'Inactivated';
+}
+.language-zijinjilu::before {
+    content: 'Fund record';
+}
+.language-shuzihuobizichan::before {
+    content: 'Digital currency asset';
+}
+.language-yekeszichan::before {
+    content: 'YEKES assets';
+}
+.language-zhanghuzongyue::before {
+    content: 'Total account balance ';
+}
+.language-yekesbiandong::before {
+    content: 'YEKES change';
+}
+.language-jianglishuliang::before {
+    content: 'Number of rewards';
+}
+.language-shijian::before {
+    content: 'Time';
+}
+.language-yue::before {
+    content: 'Balance';
+}
+.language-tibi::before {
+    content: 'Coin';
+}
+.language-laiyuan::before{
+	content:'source';
+}
+.language-chongzhi::before {
+    content: 'Recharge';
+}
+.language-fenxiangyouxiaozhuce::before {
+    content: 'Share valid registration';
+}
+.language-zhongjiangshequfenxiang::before {
+    content: 'Winning community sharing';
+}
+.language-xianshitouzhujiangli::before {
+    content: 'Limited time bet reward';
+}
+.language-qitahuodongjiangli::before {
+    content: 'Other activity rewards';
+}
+.language-zhuanru::before {
+    content: 'Transfer';
+}
+.language-zhuanchu::before {
+    content: 'Transfer out';
+}
+.language-saomatianjiekefuweixin::before {
+    content: 'Scan code to add customer service WeChat';
+}
+.language-yitiantouzhumingxi::before {
+    content: '24 hours cast fine';
+}
+.language-zuijinyitianzongtouzhue::before {
+    content: 'The last 24 hours total bet amount USDT≈';
+}
+.language-hangyezixun::before {
+    content: 'Industry information';
+}
+.language-wodeshangji::before {
+    content: 'My superior';
+}
+.language-wo::before {
+    content: 'I';
+}
+.language-gonggaoxiangqing::before {
+    content: 'Announcement details';
+}
+.language-biaoti::before {
+    content: 'Title';
+}
+.language-xiangqing::before {
+    content: 'Details';
+}
+.language-querenmima::before {
+    content: 'Confirm password';
+}
+.language-shezhixindedenglumima::before {
+    content: 'Set new login password';
+}
+.language-querendenglumima::before {
+    content: 'Confirm login password';
+}
+.language-quanbu::before {
+    content: 'All';
+}
+.language-ershiyidian::before {
+    content: '21 points';
+}
+.language-baijiale::before {
+    content: 'Baccarat';
+}
+.language-fenhong::before {
+    content: 'Dividend';
+}
+.language-zanwushuju::before {
+    content: 'No data yet';
+}
+.language-zixun::before {
+    content: 'Information';
+}
+.language-zijinbiandongxiangqing::before {
+    content: 'Details of fund changes';
+}
+.language-yonghuidmaohao::before {
+    content: 'User ID:';
+}
+.language-xiangmu::before {
+    content: 'Project';
+}
+.language-biandongjine::before {
+    content: 'Change amount';
+}
+.language-zuire::before {
+    content: 'The hottest';
+}
+.language-zuixin::before {
+    content: 'Latest';
+}
+.language-zhanghujine::before {
+    content: 'Account amount';
+}
+.language-tibijine::before {
+    content: 'Token amount';
+}
+.language-tixianshouxufeiweitixianjinede::before {
+    content: 'Withdrawal fee is the amount of cash';
+}
+.language-quanbutichu::before {
+    content: 'All proposed';
+}
+.language-tibidizhi::before {
+    content: 'Tifter address';
+}
+.language-tibitixing::before {
+    content: 'Please be sure to fill in the valid currency address accurately. If the address is incorrect, the loss will be irrelevant to us';
+}
+.language-querentibi::before {
+    content: 'confirm the coin';
+}
+.language-tibijinebunengweikong::before {
+    content: 'The amount of the coin cannot be empty! ';
+}
+.language-tibidizhibunengweikong::before {
+    content: 'The coin address cannot be empty! ';
+}
+.language-tijiaochenggong::before {
+    content: 'Submit successfully';
+}
+.language-fasong::before {
+    content: 'Send';
+}
+.language-bangzhuzhongxin::before {
+    content: 'Help Center';
+}
+.language-redianwenti::before {
+    content: 'Hot question';
+}
+.language-yaoqinghaoyou::before {
+    content: 'Invite friends';
+}
+.language-qingjiepingbaocun::before {
+    content: 'Please take a screenshot save';
+}
+.language-jintian::before {
+    content: 'Today';
+}
+.language-daishenhe::before {
+    content: 'Pending review';
+}
+.language-bohui::before {
+    content: 'Dismissed';
+}
+.language-yuef::before {
+    content: 'month';
+}
+.language-touzhushouyi::before {
+    content: 'Betting income';
+}
+.language-xiajizhongjiangfanyong::before {
+    content: 'Subordinate winning rebate';
+}
+.language-yekesfenhong::before {
+    content: 'YEKES dividends';
+}
+.language-zhongjiangfanyong::before {
+    content: 'Winning rebate';
+}
+.language-yekesshuliang::before {
+    content: 'YEKES quantity';
+}
+.language-fenhongjine::before {
+    content: 'Dividend amount';
+}
+.language-chongzhidizhi::before {
+    content: 'Charge address';
+}
+.language-fuzhidizhi::before {
+    content: 'Copy address';
+}
+.language-xianshierweima::before {
+    content: 'Display QR code';
+}
+.language-shishihangqing::before {
+    content: 'Real time quote';
+}
+.language-fabu::before {
+    content: 'Publish';
+}
+.language-yishangchuanchenggong::before {
+    content: 'Uploaded successfully, pending review';
+}
+.language-xitonggonggaoxiangqing::before {
+    content: 'System announcement details';
+}
+.language-tuijianren::before {
+    content: 'Recommended person';
+}
+.language-wotongyiyekesde::before {
+    content: 'I agree with YEKES';
+}
+.language-fuwutiaokuan::before {
+    content: '"Terms of Service"';
+}
+.language-yiyouzhanghao::before {
+    content: 'Existing account? ';
+}
+.language-yaoqingmabunengweikong::before {
+    content: 'The invitation code cannot be empty';
+}
+.language-qingxiantongyifuwutiaokuan::before {
+    content: "Please agree to the Terms of Service' first";
+}
