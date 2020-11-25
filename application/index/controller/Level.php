@@ -130,4 +130,21 @@ class Level extends Base
         }
         return json(['code' => 1, 'msg' => '操作失败']);
     }
+    /**
+     * 购买最新信息
+     */
+    public function newList(Request $request)
+    {
+        $limit = $request->param('limit',5);
+        $list = LevelUpLogModel::alias('l')
+            ->field('u.avatar,u.mobile,c.assure_money,l.*')
+            ->leftJoin('user u','u.star_level = l.level')
+            ->leftJoin('config_team_level c','c.id = l.level')
+            ->limit($limit)
+            ->select();
+        foreach ($list as $v){
+            $v['mobile'] = substr_replace($v['mobile'],'****',3,4);
+        }
+        return json(['code' => 0, 'msg' => '请求成功','info' => $list]);
+    }
 }

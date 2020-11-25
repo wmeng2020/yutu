@@ -167,7 +167,7 @@ class Task extends Base
             'uid' => $this->userId,
             'status' => 1,
             'total' => $config,
-            'create_time' => time(),
+            'create_time' => now(),
         ];
         $res = Db('deposit')->insert($add_data);
         if($res){
