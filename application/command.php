@@ -14,6 +14,7 @@ return [
     'app\common\command\TeamUpgrade',//计算会员等级
     'app\common\command\UpdateTaskStatus',//自动审核任务
     'app\common\command\TeamReward',//任务三级分佣奖励
+    'app\common\command\UpdateTiktokStatus',//抖音信息自动审核
 
 
 ];
