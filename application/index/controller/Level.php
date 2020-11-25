@@ -17,7 +17,7 @@ class Level extends Base
    {
        $user_info = \app\common\entity\User::alias('u')
            ->field('u.id,u.mobile,l.level_name,u.avatar')
-           ->leftJoin('config_user_level l','l.id = u.level')
+           ->leftJoin('config_user_level l','l.id = u.star_level')
            ->where('u.id',$this->userId)
            ->find();
 
