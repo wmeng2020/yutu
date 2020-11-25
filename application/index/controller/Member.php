@@ -4,6 +4,7 @@ namespace app\index\controller;
 
 
 use app\common\entity\Config;
+use app\common\entity\ManageUser;
 use app\common\entity\MyWalletLog;
 use app\common\entity\RechargeModel;
 use app\common\entity\TaskOrderModel;
@@ -55,6 +56,13 @@ class Member extends Base
                 ->where('money_type',1)
                 ->whereTime('create_time','tomorrow')
                 ->sum('number');
+        //是否代理
+        $is_agent = ManageUser::where('left_uid',$this->userId)->find();
+        if($is_agent){
+            $userInfo['is_agent'] = 1;
+        }else{
+            $userInfo['is_agent'] = 0;
+        }
         return json(['code' => 0, 'msg' => '请求成功', 'info' => [
             'userInfo' => $userInfo,
             'today_profit' => $today_profit ,

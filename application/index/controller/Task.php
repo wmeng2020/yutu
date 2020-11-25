@@ -164,24 +164,36 @@ class Task extends Base
 
         $config = ConfigTeamLevelModel::where('id',$user_info['star_level'])
             ->value('deposit_cost');
-        $add_data = [
-            'uid' => $this->userId,
-            'status' => 1,
-            'total' => $config,
-            'create_time' => now(),
-        ];
-        $res = Db('deposit')->insert($add_data);
-        if($res){
-            $min = Config::where('key','deposit_space')
-                ->value('value');
-            $all = ConfigTeamLevelModel::where('id',$user_info['star_level'])
-                ->value('task_num');
-            $now =  strtotime(date ( "Y-m-d H:i" , strtotime ( "+1 minute" )));
+        $is_deposit = Db('deposit')->where('uid',$this->userId)
+            ->where('status',1)
+            ->find();
+        $min = Config::where('key','deposit_space')
+            ->value('value');
+        $all = ConfigTeamLevelModel::where('id',$user_info['star_level'])
+            ->value('task_num');
+        if($is_deposit){
+            $now = strtotime($is_deposit['create_time']);
             $add = ceil($all/$min);
-
             $info = $add * 60 + $now;
-            return json(['code' => 0, 'msg' => '托管成功','info'=>$info]);
+            return json(['code' => 0, 'msg' => '托管中','info'=>$info,'status'=>1]);
+        }else{
+            $add_data = [
+                'uid' => $this->userId,
+                'status' => 1,
+                'total' => $config,
+                'create_time' => date ( "Y-m-d H:i" , strtotime ( "+1 minute" )),
+            ];
+            $res = Db('deposit')->insertGetId($add_data);
+            if($res){
+
+                $now =  strtotime(date ( "Y-m-d H:i" , strtotime ( "+1 minute" )));
+                $add = ceil($all/$min);
+
+                $info = $add * 60 + $now;
+                return json(['code' => 0, 'msg' => '托管成功','info'=>$info]);
+            }
         }
+
     }
     private function getConfigValue($key, $value='value')
     {
