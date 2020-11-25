@@ -164,39 +164,24 @@ class MyWallet extends Model {
        Db::startTrans();
        try {
            $edit_data['number'] = $oldInfo['number'] + $data['number'];
-           $edit_data['gold'] = $oldInfo['gold'] - $data['gold'];
            $old_number = $oldInfo['number'];
-           $old_gold = $oldInfo['gold'];
            $edit_data['update_time']  = time();
            $res = $query->where('uid',$data['uid'])->update($edit_data);
            if (!$res) {
                throw new Exception();
            }
            $create_data = [
-               [
-                   'uid' => $data['uid'],
-                   'number' => $data['number'],
-                   'old' => $old_number,
-                   'new' => $old_number + $data['number'],
-                   'remark' => '任务佣金增加增加余额',
-                   'types' => 5,
-                   'status' => 2,
-                   'money_type' => 1,
-                   'create_time' => time(),
-               ],
-               [
-                   'uid' => $data['uid'],
-                   'number' => $data['gold'],
-                   'old' => $old_gold,
-                   'new' => $old_gold - $data['gold'],
-                   'remark' => '任务结算佣金扣除金豆',
-                   'types' => 5,
-                   'status' => 2,
-                   'money_type' => 2,
-                   'create_time' => time(),
-               ],
+               'uid' => $data['uid'],
+               'number' => $data['number'],
+               'old' => $old_number,
+               'new' => $old_number + $data['number'],
+               'remark' => '任务佣金增加增加余额',
+               'types' => 5,
+               'status' => 2,
+               'money_type' => 1,
+               'create_time' => time(),
            ];
-           $res = MyWalletLog::insertAll($create_data);
+           $res = MyWalletLog::insert($create_data);
            if (!$res) {
                throw new Exception();
            }

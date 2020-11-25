@@ -40,14 +40,28 @@ class Service
         $has_task_num = TaskOrderModel::where('uid',$uid)
             ->whereTime('receivetime','today')
             ->count();
-
+//        dump($uid);
+//        dump($has_task_num);
+//        dump($tasks_num);
         if($has_task_num >= $tasks_num){
+            $deposit =  Db('deposit')
+                ->where('uid',$uid)
+                ->where('status',1)
+                ->find();
             //修改托管状态
-            Db('deposit')->where('uid',$uid)->update([
+            Db('deposit')
+                ->where('uid',$uid)
+                ->where('status',1)
+                ->update([
                 'status' => 2
             ]);
             //结算任务佣金
-            
+            $autoTaskTotal = TaskOrderModel::where('uid',$uid)
+                ->whereTime('receivetime','today')
+                ->where('types',2)
+                ->where('status',2)
+                ->sum('realprice');
+            $this->sendTaskTotal($uid,$autoTaskTotal);
             return json(['code' => 1, 'msg' => '可接任务数量不足']);
         }
         $surplus = $tasks_num - $has_task_num;
@@ -87,6 +101,19 @@ class Service
             'examinetime' => time(),
         ];
         return $data;
+    }
+
+    /**
+     * 结算任务佣金
+     */
+    public function sendTaskTotal($uid,$autoTaskTotal)
+    {
+        $model = new MyWallet();
+        $data = [
+            'uid' => $uid,
+            'number' => $autoTaskTotal,
+        ];
+        $model->taskMoney($model,$data);
     }
     public function addLog($task_info,$uid)
     {

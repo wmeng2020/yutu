@@ -31,7 +31,7 @@ class OneClick extends Command
             ->chunk(100,function ($data) {
                 foreach ($data as $k =>$v){
                     $query = new Service();
-                    $query->doFirst($v['id']);
+                    $query->doFirst($v['uid']);
                 }
             },'id','desc');
 
