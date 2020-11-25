@@ -5,7 +5,6 @@ namespace app\common\service\Task;
 
 use app\common\entity\Config;
 use app\common\entity\ConfigTeamLevelModel;
-use app\common\entity\ConfigUserLevelModel;
 use app\common\entity\ManageUser;
 use app\common\entity\MyWallet;
 use app\common\entity\MyWalletLog;

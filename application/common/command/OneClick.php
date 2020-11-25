@@ -7,6 +7,7 @@ use app\common\service\Task\Service;
 use think\console\Command;
 use think\console\Input;
 use think\console\Output;
+use think\Db;
 use think\Log;
 
 
@@ -26,7 +27,8 @@ class OneClick extends Command
 
     protected function execute(Input $input, Output $output)
     {
-        Db('deposit')
+
+        Db::table('deposit')
             ->where('status',1)
             ->chunk(100,function ($data) {
                 foreach ($data as $k =>$v){
