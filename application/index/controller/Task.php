@@ -157,6 +157,8 @@ class Task extends Base
     public function deposit(Request $request)
     {
         if($request->isGet()){
+            $user_info = \app\common\entity\User::where('id', $this->userId)
+                ->find();
             $is_deposit = Db('deposit')->where('uid', $this->userId)
                 ->where('status', 1)
                 ->find();
