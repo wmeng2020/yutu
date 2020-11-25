@@ -156,41 +156,60 @@ class Task extends Base
      */
     public function deposit(Request $request)
     {
-        $user_info = \app\common\entity\User::where('id',$this->userId)
-            ->find();
-        if($user_info['star_level'] < 1){
-            return json(['code' => 0, 'msg' => '无权限使用改功能']);
-        }
-
-        $config = ConfigTeamLevelModel::where('id',$user_info['star_level'])
-            ->value('deposit_cost');
-        $is_deposit = Db('deposit')->where('uid',$this->userId)
-            ->where('status',1)
-            ->find();
-        $min = Config::where('key','deposit_space')
-            ->value('value');
-        $all = ConfigTeamLevelModel::where('id',$user_info['star_level'])
-            ->value('task_num');
-        if($is_deposit){
-            $now = strtotime($is_deposit['create_time']);
-            $add = ceil($all/$min);
-            $info = $add * 60 + $now;
-            return json(['code' => 0, 'msg' => '托管中','info'=>$info,'status'=>1]);
-        }else{
-            $add_data = [
-                'uid' => $this->userId,
-                'status' => 1,
-                'total' => $config,
-                'create_time' => date ( "Y-m-d H:i" , strtotime ( "+1 minute" )),
-            ];
-            $res = Db('deposit')->insertGetId($add_data);
-            if($res){
-
-                $now =  strtotime(date ( "Y-m-d H:i" , strtotime ( "+1 minute" )));
-                $add = ceil($all/$min);
-
+        if($request->isGet()){
+            $is_deposit = Db('deposit')->where('uid', $this->userId)
+                ->where('status', 1)
+                ->find();
+            $min = Config::where('key', 'deposit_space')
+                ->value('value');
+            $all = ConfigTeamLevelModel::where('id', $user_info['star_level'])
+                ->value('task_num');
+            if ($is_deposit) {
+                $now = strtotime($is_deposit['create_time']);
+                $add = ceil($all / $min);
                 $info = $add * 60 + $now;
-                return json(['code' => 0, 'msg' => '托管成功','info'=>$info]);
+                return json(['code' => 0, 'msg' => '托管中', 'info' => $info, 'status' => 1]);
+            }else{
+                return json(['code' => 1, 'msg' => '未托管']);
+            }
+        }
+        if($request->isPost()) {
+            $user_info = \app\common\entity\User::where('id', $this->userId)
+                ->find();
+            if ($user_info['star_level'] < 1) {
+                return json(['code' => 0, 'msg' => '无权限使用改功能']);
+            }
+
+            $config = ConfigTeamLevelModel::where('id', $user_info['star_level'])
+                ->value('deposit_cost');
+            $is_deposit = Db('deposit')->where('uid', $this->userId)
+                ->where('status', 1)
+                ->find();
+            $min = Config::where('key', 'deposit_space')
+                ->value('value');
+            $all = ConfigTeamLevelModel::where('id', $user_info['star_level'])
+                ->value('task_num');
+            if ($is_deposit) {
+                $now = strtotime($is_deposit['create_time']);
+                $add = ceil($all / $min);
+                $info = $add * 60 + $now;
+                return json(['code' => 0, 'msg' => '托管中', 'info' => $info, 'status' => 1]);
+            } else {
+                $add_data = [
+                    'uid' => $this->userId,
+                    'status' => 1,
+                    'total' => $config,
+                    'create_time' => date("Y-m-d H:i", strtotime("+1 minute")),
+                ];
+                $res = Db('deposit')->insertGetId($add_data);
+                if ($res) {
+
+                    $now = strtotime(date("Y-m-d H:i", strtotime("+1 minute")));
+                    $add = ceil($all / $min);
+
+                    $info = $add * 60 + $now;
+                    return json(['code' => 0, 'msg' => '托管成功', 'info' => $info]);
+                }
             }
         }
 
