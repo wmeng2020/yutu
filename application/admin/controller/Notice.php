@@ -4,10 +4,6 @@ namespace app\admin\controller;
 
 use app\admin\exception\AdminException;
 use app\common\entity\Export;
-use app\common\entity\Video;
-use app\common\entity\WordsConfig;
-use app\common\entity\ServiceInfo;
-use service\LogService;
 use think\Db;
 use think\Request;
 use app\common\entity\User;
@@ -80,7 +76,6 @@ class Notice extends Admin {
 //        if($request->post('category')==1 && $request->post('status')==1){
 //            User::update(['notice'=>1],['notice' => 0]);
 //        }
-        LogService::write('咨询管理', '用户添加咨询');
         return json(['code' => 0, 'toUrl' => url('/admin/Notice/index')]);
     }
 
@@ -100,8 +95,6 @@ class Notice extends Admin {
 
         $service = new \app\common\entity\Article();
         $result = $service->updateArticle($entity, $request->post());
-        LogService::write('资讯管理', '用户编辑咨询');
-
         if (!$result) {
             throw new AdminException('保存失败');
         }
@@ -190,7 +183,6 @@ class Notice extends Admin {
          }
 
         $res = Video::insert($add_data);
-        LogService::write('咨询管理', '用户添加视频');
         if($res){
             return json(['code' => 0, 'message' => '添加成功']);
         }
