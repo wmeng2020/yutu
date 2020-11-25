@@ -161,6 +161,7 @@ class Task extends Base
         if($user_info['star_level'] < 1){
             return json(['code' => 0, 'msg' => '无权限使用改功能']);
         }
+
         $config = ConfigTeamLevelModel::where('id',$user_info['star_level'])
             ->value('deposit_cost');
         $add_data = [
@@ -175,10 +176,10 @@ class Task extends Base
                 ->value('value');
             $all = ConfigTeamLevelModel::where('id',$user_info['star_level'])
                 ->value('task_num');
-            $info = [
-                'minute' => $min,
-                'all_num' => $all,
-            ];
+            $now =  strtotime(date ( "Y-m-d H:i" , strtotime ( "+1 minute" )));
+            $add = ceil($all/$min);
+
+            $info = $add * 60 + $now;
             return json(['code' => 0, 'msg' => '托管成功','info'=>$info]);
         }
     }
