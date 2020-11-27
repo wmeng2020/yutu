@@ -39,6 +39,9 @@
                         <div class="form-group">
                             <input type="password" id="password" class="form-control" placeholder="登录密码">
                         </div>
+                        <div class="form-group">
+                            <input type="password" id="key" class="form-control" placeholder="登录秘钥">
+                        </div>
                         <div class="form-group clearfix" style="margin-top: 25px">
                             <a type="button" onclick="login()" class="btn btn-purple pull-right ">登 录</a>
                         </div>
@@ -66,7 +69,12 @@
             main.waringAlert('请填写登录密码');
             return false;
         }
-        main.ajaxPost({username: username, password: password},"{:url('login/login')}");
+        var key = $("#key").val();
+        if (key == '') {
+            main.waringAlert('请填写秘钥');
+            return false;
+        }
+        main.ajaxPost({username: username, password: password,key:key,},"{:url('login/login')}");
     }
 </script>
 </html>
