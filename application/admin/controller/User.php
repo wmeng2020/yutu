@@ -3,6 +3,7 @@
 namespace app\admin\controller;
 
 use app\admin\exception\AdminException;
+use app\common\entity\ConfigTeamLevelModel;
 use app\common\entity\GoodsModel;
 use app\common\entity\ManageUser;
 use app\common\entity\MyWallet;
@@ -200,13 +201,13 @@ class User extends Admin
         $types = $request->post('types');
 
         if ($types == '1') {
-            $types1 = 'gold';
-            $remark = $remark1 . '金豆';
-            $types2 = 2;
+            $types1 = 'bond';
+            $remark = $remark1 . '保证金账户';
+            $types2 = 1;
         } elseif ($types == '2') {
             $types1 = 'number';
-            $remark = $remark1 . '余额';
-            $types2 = 1;
+            $remark = $remark1 . '佣金账户';
+            $types2 = 2;
         }
         $hasNum = MyWallet::where('uid', $id)->value($types1);
         $wallet_data = [
@@ -224,6 +225,23 @@ class User extends Admin
         $inslog = $my_wallet_log->addNew($my_wallet_log, $wallet_data);
 
         MyWallet::where('uid', $id)->setInc($types1, $number);
+        if($types == 1){//保证金
+            $configList = ConfigTeamLevelModel::order('id')->select();
+            foreach ($configList as $k => $v){
+                if(isset($configList[$k+1]['assure_money'])){
+                    $max = $configList[$k+1]['assure_money'];
+                }else{
+                    $max = $v['assure_money'] + 1;
+                }
+                if($number >= $v['assure_money']  && $number < $max){
+                    $star_level = $v['id'];
+
+                }
+            }
+        }
+       if(isset($star_level)){
+            userModel::where('id',$id)->setField('star_level',$star_level);
+       }
         if (!$inslog) {
             return ['code' => 1, 'message' => '充值失败'];
         }
