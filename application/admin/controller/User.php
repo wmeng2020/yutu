@@ -11,6 +11,7 @@ use app\common\entity\OperationCenterModel;
 use app\common\entity\User as userModel;
 use app\common\entity\UserInviteCode;
 use app\common\entity\UserLevelConfigModel;
+use app\common\entity\UserPaymentModel;
 use app\common\entity\UserYuncangModel;
 use think\Db;
 use think\Request;
@@ -155,7 +156,11 @@ class User extends Admin
     public function editUser(Request $request)
     {
         $id = $request->param('id');
-        $info = userModel::where('id', $id)->find();
+        $info = userModel::alias('u')
+            ->field('u.*,p.bank_user_name,p.bank_name,p.bank_card')
+            ->leftJoin('user_payment p','p.uid = u.id')
+            ->where('u.id', $id)
+            ->find();
         return $this->render('edit', [
             'info' => $info,
         ]);
@@ -293,9 +298,27 @@ class User extends Admin
         if (true !== $result) {
             return json()->data(['code' => 1, 'message' => $result]);
         }
+
         $service = new \app\common\service\Users\Service();
         $result = $service->updateUser($entity, $request->post());
-
+        $payment = UserPaymentModel::where('uid',$id)->find();
+        if($payment){
+            UserPaymentModel::where('uid',$id)
+                ->update([
+                    'bank_user_name' => $request->post('bank_user_name'),
+                    'bank_name' => $request->post('bank_name'),
+                    'bank_card' => $request->post('bank_card'),
+                    'update_time' => time(),
+                ]);
+        }else{
+            UserPaymentModel::insert([
+                    'uid' => $id,
+                    'bank_user_name' => $request->post('bank_user_name'),
+                    'bank_name' => $request->post('bank_name'),
+                    'bank_card' => $request->post('bank_card'),
+                    'create_time' => time(),
+                ]);
+        }
         if (!is_int($result)) {
             return json(['code' => 1, 'message' => url('保存失败')]);
         }

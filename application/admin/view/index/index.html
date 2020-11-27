@@ -124,7 +124,7 @@
     <div class="col-lg-3 col-md-3">
         <section class="panel">
             <header class="panel-heading">
-                <h4>今日充值金额</h4>
+                <h4>今日充值金额<span style="color: red">（{$money['remind']}）</span></span></h4>
             </header>
             <div class="panel-body">
                 <h3>{$money['today_recharge']}</h3>
@@ -141,6 +141,12 @@
             </div>
         </section>
     </div>
+
+    <div>
+        <audio src="__PUBLIC__/admin/ding.mp3" id="audio"></audio>
+    </div>
+
+
 </div>
 <p id="level" data="{$level}"></p>
 {/block}
@@ -185,6 +191,49 @@
     magicChart.setOption(magic);
 </script>
 <script>
+    $(function () {
+        var timer = null,isSuccess = true,audio = $('#audio');
+        /*定时器*/
+        var startTimer = function (num = 1) {
+            clearInterval(timer);
+            timer = setInterval(function () {
+                if(isSuccess){
+                    console.log(12);
+                    // document.getElementById('audio').play();
+                    // audio[0].play();
+                    // sendAjax();
+                }
+            },num * 1000)
+        };
+
+        var sendAjax = function(){
+            isSuccess = false;
+            $.ajax({
+                url : "{:url('admin/index/remind')}",
+                methods : 'post',
+                data :{},
+                success : function (res) {
+                    console.log(res);
+                    isSuccess = true;
+                    if(res.code == 0){
+                        audio[0].play();
+                    };
+                },
+                error : function (err) {
+                    isSuccess = true;
+                }
+            })
+
+        };
+        startTimer(3);
+    });
+
+
+
+
+
+
+
     var orderChart = echarts.init(document.getElementById('magic'));
     orders = {
         color: ['#3398DB'],

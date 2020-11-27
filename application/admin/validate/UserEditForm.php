@@ -13,6 +13,9 @@ class UserEditForm extends Validate
         're_password' => 'min:6|confirm:password',
         'trad_password' => 'min:6',
         're_trad_password' => 'min:6|confirm:trad_password',
+        'bank_user_name' => 'require',
+        'bank_name' => 'require',
+        'bank_card' => 'require',
 
     ];
 
@@ -22,6 +25,9 @@ class UserEditForm extends Validate
         're_password.confirm' => '两次登录密码不一致',
         'trad_password.min' => '交易密码至少6位数',
         're_trad_password.confirm' => '两次交易密码不一致',
+        'bank_user_name.require' => '开户人不能为空',
+        'bank_name.require' => '开户行不能为空',
+        'bank_card.require' => '银行卡号不能为空',
     ];
     protected function isMobile($value)
     {

@@ -627,4 +627,12 @@ class Member extends Base
         }
         return $date;
     }
+    public function spreadImage(Request $request)
+    {
+        $limit = $request->param('limit',3);
+        $list = Db::table('spread_image')
+            ->limit($limit)
+            ->select();
+        return json(['code' => 0, 'msg' => '获取成功', 'info' => $list]);
+    }
 }

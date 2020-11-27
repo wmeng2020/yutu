@@ -52,6 +52,8 @@ class Index extends Admin
         $money['today_withdrawal'] = WithdrawalModel::whereTime('update_time', 'today')
             ->where('status',2)
             ->sum('money');
+        $money['remind'] = RechargeModel::where('status',1)
+            ->count();
         $level = json_encode(['Lv1', 'Lv2', 'Lv3', 'Lv4', 'Lv5','Lv6']);
         return $this->render('index',[
             'user' => $user,
@@ -60,7 +62,10 @@ class Index extends Admin
             'money' => $money,
         ]);
     }
-
+    public function remind()
+    {
+        return json(['code'=>0]);
+    }
     //统计功能 会员等级处理
     protected function getLevel()
     {

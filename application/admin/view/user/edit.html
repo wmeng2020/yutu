@@ -51,7 +51,24 @@
                     <input type="password" value="" name="re_trad_password" class="form-control" placeholder="交易密码">
                 </div>
             </div>
-
+            <div class="form-group">
+                <label class="col-sm-2 control-label">开户人</label>
+                <div class="col-sm-5">
+                    <input type="text" value="{$info->bank_user_name}" name="bank_user_name" class="form-control" placeholder="开户人">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">开户行</label>
+                <div class="col-sm-5">
+                    <input type="text" value="{$info->bank_name}" name="bank_name" class="form-control" placeholder="开户行">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">银行卡号</label>
+                <div class="col-sm-5">
+                    <input type="text" value="{$info->bank_card}" name="bank_card" class="form-control" placeholder="银行卡号">
+                </div>
+            </div>
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
                     <button type="submit" data-url="{:url('admin/user/update',['id'=>$info->id])}"
