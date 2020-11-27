@@ -285,54 +285,64 @@ class User extends Base {
      */
     public function exchange(Request $request)
     {
-        $validate = $this->validate($request->post(), '\app\index\validate\Exchange');
-        if ($validate !== true) {
-            return json(['code' => 1, 'msg' => $validate]);
-        }
-        $types = $request->post('types');
-        $total = $request->post('total');
-        $myWallet = \app\common\entity\MyWallet::where('uid',$this->userId)
-            ->find();
-
-        if($types == 1){//保证金
-            if($total > $myWallet['bond']){
-                return json(['code'=>1,'msg'=>'保证金不足']);
-            }
-            $assure_transfer_start_time = $this->getConfigValue('assure_transfer_start_time');
-            $assure_transfer_end_time = $this->getConfigValue('assure_transfer_end_time');
-            if(time() < strtotime($assure_transfer_start_time) || time() > strtotime($assure_transfer_end_time)){
-                return json(['code' => 1, 'msg' => '未开始']);
-            }
-            $hasTask = TaskOrderModel::where('uid',$this->userId)
-                ->whereTime('receivetime','today')
-                ->find();
-            if($hasTask){
-                return json(['code' => 1, 'msg' => '明日才可兑换']);
-            }
-
-        }elseif ($types == 2){//代理账户
-            if($total > $myWallet['agent']){
-                return json(['code'=>1,'msg'=>'代理账户金额不足']);
-            }
-        }
-        //转账流水
-        $log_data = [
-            'uid'  => $this->userId,
-            'types'  => $types,
-            'num'  => $request->post('total'),
-            'my_remark'  => '用户兑换扣款',
-            'to_remark'  => '用户兑换收款',
+        $assure_transfer_start_time = $this->getConfigValue('assure_transfer_start_time');
+        $assure_transfer_end_time = $this->getConfigValue('assure_transfer_end_time');
+        $data = [
+            'start_time' => $assure_transfer_start_time,
+            'end_time' => $assure_transfer_end_time
         ];
-        try {
-            $model = new \app\common\entity\MyWallet();
-            $model->transfer($model,$log_data);
-            if($types == 1){//保证金
-                    \app\common\entity\User::where('id',$this->userId)
-                    ->setField('star_level',0);
+        if($request->isGet()) {
+            return json(['code' => 0, 'msg' => '转账成功', 'info' => $data]);
+        }
+        if($request->isPost()) {
+            $validate = $this->validate($request->post(), '\app\index\validate\Exchange');
+            if ($validate !== true) {
+                return json(['code' => 1, 'msg' => $validate]);
             }
-            return json(['code'=>0,'msg'=>'兑换成功']);
-        }catch (Exception $e){
-            return json(['code'=>1,'msg'=>$e]);
+            $types = $request->post('types');
+            $total = $request->post('total');
+            $myWallet = \app\common\entity\MyWallet::where('uid', $this->userId)
+                ->find();
+
+            if ($types == 1) {//保证金
+                if ($total > $myWallet['bond']) {
+                    return json(['code' => 1, 'msg' => '保证金不足']);
+                }
+
+                if (time() < strtotime($assure_transfer_start_time) || time() > strtotime($assure_transfer_end_time)) {
+                    return json(['code' => 1, 'msg' => '未开始']);
+                }
+                $hasTask = TaskOrderModel::where('uid', $this->userId)
+                    ->whereTime('receivetime', 'today')
+                    ->find();
+                if ($hasTask) {
+                    return json(['code' => 1, 'msg' => '明日才可兑换']);
+                }
+
+            } elseif ($types == 2) {//代理账户
+                if ($total > $myWallet['agent']) {
+                    return json(['code' => 1, 'msg' => '代理账户金额不足']);
+                }
+            }
+            //转账流水
+            $log_data = [
+                'uid' => $this->userId,
+                'types' => $types,
+                'num' => $request->post('total'),
+                'my_remark' => '用户兑换扣款',
+                'to_remark' => '用户兑换收款',
+            ];
+            try {
+                $model = new \app\common\entity\MyWallet();
+                $model->transfer($model, $log_data);
+                if ($types == 1) {//保证金
+                    \app\common\entity\User::where('id', $this->userId)
+                        ->setField('star_level', 0);
+                }
+                return json(['code' => 0, 'msg' => '兑换成功']);
+            } catch (Exception $e) {
+                return json(['code' => 1, 'msg' => $e]);
+            }
         }
     }
     /**
