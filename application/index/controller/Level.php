@@ -49,7 +49,7 @@ class Level extends Base
            ->value('number');
 
        if($money < $team_info['assure_money']){
-           return json(['code' => 1, 'msg' => '余额不足']);
+           return json(['code' => 0, 'msg' => '余额不足','toUrl'=>1]);
        }
        //自己等级
        $star_level = \app\common\entity\User::where('id',$this->userId)
