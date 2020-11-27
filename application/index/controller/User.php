@@ -160,15 +160,23 @@ class User extends Base {
             ->value('number');
         //手续费率
         $rate = Config::getValue('withdrawa_fee');
+        $commission_start_time = Config::getValue('commission_start_time');
+        $commission_end_time = Config::getValue('commission_end_time');
         if($request->isGet()){
             return json(['code' => 0, 'msg' => '请求成功','info'=>[
                 'money' => $user_money,
-                'rate' => $rate
+                'rate' => $rate,
+                'start_time' => $commission_start_time,
+                'end_time' => $commission_end_time,
             ]]);
         }
         if($request->isPost()){
             $types = $request->post('types');
             if(!$types)return json(['code' => 1, 'msg' => '参数错误']);
+
+            if(time() < strtotime($commission_start_time) || time() > strtotime($commission_end_time)){
+                return json(['code' => 1, 'msg' => '未开始']);
+            }
             if($types == 1){//支付宝
                 $validate = $this->validate($request->post(), '\app\index\validate\UserWithdrawalZfb');
                 if ($validate !== true) {
