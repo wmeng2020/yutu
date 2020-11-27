@@ -107,35 +107,41 @@ class MyWallet extends Model {
     // 转账
     public function transfer($query,$data)
     {
+
         $myInfo = $this->where('uid',$data['uid'])->find();
-        $toInfo = $this->where('uid',$data['toUid'])->find();
         Db::startTrans();
         try {
-            //转账人余额
-            $my_edit['number'] = $myInfo['number'] - $data['num'];
-            $my_old = $myInfo['number'];
+
+            if($data['types'] == 1){
+                //兑换兑出余额
+                $my_edit['bond'] = $myInfo['bond'] - $data['num'];
+                $my_old = $myInfo['bond'];
+                $money_type = 1;
+            }else{
+                $my_edit['agent'] = $myInfo['agent'] - $data['num'];
+                $my_old = $myInfo['agent'];
+                $money_type = 3;
+            }
+            $to_old = $myInfo['number'];
             $my_edit['update_time']  = time();
+            $my_edit['number']  =  $myInfo['number'] + $data['num'];
             $query->where('uid',$data['uid'])->update($my_edit);
-            //收款人余额
-            $to_edit['number'] = $toInfo['number'] + $data['num'];
-            $to_old = $toInfo['number'];
-            $to_edit['update_time']  = time();
-            $query->where('uid',$data['toUid'])->update($to_edit);
-            //转账人流水详细
+
+            //兑换兑出流水详细
             $my_data = [
                 'uid' => $data['uid'],
-                'from' => $data['toUid'],
+                'from' => $data['uid'],
                 'number' => $data['num'],
                 'old' => $my_old,
                 'new' => $my_old - $data['num'],
                 'remark' => $data['my_remark'],
                 'types' => 4,
                 'status' => 2,
-                'money_type' => 1,
+                'money_type' => $money_type,
                 'create_time' => time(),
             ];
             $to_data = [
-                'uid' => $data['toUid'],
+                'uid' => $data['uid'],
                 'from' => $data['uid'],
                 'number' => $data['num'],
                 'old' => $to_old,
@@ -143,9 +149,10 @@ class MyWallet extends Model {
                 'remark' => $data['to_remark'],
                 'types' => 4,
                 'status' => 1,
-                'money_type' => 1,
+                'money_type' => 2,
                 'create_time' => time(),
             ];
+
             MyWalletLog::insert($my_data);
             MyWalletLog::insert($to_data);
             Db::commit();
@@ -155,6 +162,7 @@ class MyWallet extends Model {
             return false;
         }
     }
+
    /**
     * 任务结算佣金
     */

@@ -272,6 +272,51 @@ class User extends Base {
         }
     }
     /**
+     * 兑换
+     */
+    public function exchange(Request $request)
+    {
+        $validate = $this->validate($request->post(), '\app\index\validate\Exchange');
+        if ($validate !== true) {
+            return json(['code' => 1, 'msg' => $validate]);
+        }
+        $types = $request->post('types');
+        $total = $request->post('total');
+        $myWallet = \app\common\entity\MyWallet::where('uid',$this->userId)
+            ->find();
+
+        if($types == 1){//保证金
+            if($total > $myWallet['bond']){
+                return json(['code'=>1,'msg'=>'保证金不足']);
+            }
+            $assure_transfer_start_time = $this->getConfigValue('assure_transfer_start_time');
+            $assure_transfer_end_time = $this->getConfigValue('assure_transfer_end_time');
+            if(time() < strtotime($assure_transfer_start_time) || time() > strtotime($assure_transfer_end_time)){
+                return json(['code' => 1, 'msg' => '未开始']);
+            }
+
+        }elseif ($types == 2){//代理账户
+            if($total > $myWallet['agent']){
+                return json(['code'=>1,'msg'=>'代理账户金额不足']);
+            }
+        }
+        //转账流水
+        $log_data = [
+            'uid'  => $this->userId,
+            'types'  => $types,
+            'num'  => $request->post('total'),
+            'my_remark'  => '用户兑换扣款',
+            'to_remark'  => '用户兑换收款',
+        ];
+        try {
+            $model = new \app\common\entity\MyWallet();
+            $model->transfer($model,$log_data);
+            return json(['code'=>0,'msg'=>'兑换成功']);
+        }catch (Exception $e){
+            return json(['code'=>1,'msg'=>$e]);
+        }
+    }
+    /**
      * 资金流水
      */
     public function walletLog(Request $request)
@@ -412,6 +457,12 @@ class User extends Base {
         $b=$radLng1-$radLng2;//两经度之差纬度<180
         $s=2*asin(sqrt(pow(sin($a/2),2)+cos($radLat1)*cos($radLat2)*pow(sin($b/2),2)))*6378.137;
         return $s;
+    }
+    private function getConfigValue($key, $value='value')
+    {
+        return db('config')
+            ->where('key',$key)
+            ->value($value);
     }
 
 }
