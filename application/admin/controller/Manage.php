@@ -5,7 +5,6 @@ use app\admin\exception\AdminException;
 use app\common\entity\ManageGroup;
 use app\common\entity\ManageUser;
 use app\common\entity\ManageUserGroup;
-use service\LogService;
 use think\Db;
 use think\Request;
 
@@ -22,7 +21,7 @@ class Manage extends Admin
         if ($keyword = $request->get('keyword')) {
             $entity->where('manage_name', $keyword);
         }
-        LogService::write('后台首页|系统用户管理','访问系统用户管理页面');
+
         return $this->render('index', [
             'list' => $entity->paginate(15)
         ]);
@@ -33,7 +32,7 @@ class Manage extends Admin
      */
     public function create()
     {
-        LogService::write('后台首页|系统用户管理','访问添加用户页面');
+
         return $this->render('edit', [
             'groups' => ManageGroup::all()
         ]);
@@ -95,7 +94,7 @@ class Manage extends Admin
                 }
             }
             Db::commit();
-            LogService::write('后台首页|系统用户管理','添加用户'.json_encode($request->post()));
+
             return json(['code' => 0, 'toUrl' => url('/admin/manage')]);
         } catch (\Exception $e) {
             Db::rollback();
@@ -147,7 +146,7 @@ class Manage extends Admin
             }
 
             Db::commit();
-            LogService::write('后台首页|系统用户管理','修改'.$request->post('name').'用户'.json_encode($request->post()));
+
             return json(['toUrl' => url('/admin/manage')]);
         } catch (\Exception $e) {
             Db::rollback();
@@ -169,7 +168,7 @@ class Manage extends Admin
 
             return json(['code' => 1 ,'message' => '禁用失败']);
         }
-        LogService::write('后台首页|系统用户管理','封禁用户'.json_encode($entity));
+
         return json(['code' => 0, 'message' => 'success']);
     }
     /**
@@ -182,7 +181,7 @@ class Manage extends Admin
         if (!$res) {
             return json(['code' => 1 ,'message' => '删除失败']);
         }
-        LogService::write('后台首页|系统用户管理','删除用户'.json_encode($entity));
+
         return json(['code' => 0, 'message' => 'success']);
     }
     /**
@@ -198,7 +197,7 @@ class Manage extends Admin
         if (!$entity->save()) {
             return json(['code' => 1 ,'message' => '解禁失败']);
         }
-        LogService::write('后台首页|系统用户管理','解禁用户'.json_encode($entity));
+
         return json(['code' => 0, 'message' => 'success']);
     }
 
