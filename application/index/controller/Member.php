@@ -42,7 +42,7 @@ class Member extends Base
                 mw.bond,
                 mw.agent,
                 c.task_num，
-                l.level_name，
+                l.level_name
             ')
             ->where('u.id', $this->userId)
             ->find();
