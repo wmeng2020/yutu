@@ -29,6 +29,7 @@ class Member extends Base
         //获取缓存用户详细信息
         $userInfo = User::alias('u')
             ->leftJoin('my_wallet mw','u.id=mw.uid')
+            ->leftJoin('config_team_level c','u.star_level=c.id')
             ->field('
                 u.id,
                 u.level,
@@ -38,7 +39,8 @@ class Member extends Base
                 u.star_level,
                 mw.number,
                 mw.bond,
-                mw.agent
+                mw.agent,
+                c.task_num
             ')
             ->where('u.id', $this->userId)
             ->find();
