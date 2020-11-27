@@ -44,7 +44,9 @@ class Member extends Base
             ')
             ->where('u.id', $this->userId)
             ->find();
-
+        if(!$userInfo['task_num']){
+            $userInfo['task_num'] = Config::getValue('free_task_num');
+        }
         //今日收益
         $today_profit = MyWalletLog::where('uid',$this->userId)
                 ->where('types',5)
