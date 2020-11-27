@@ -64,7 +64,13 @@ class Index extends Admin
     }
     public function remind()
     {
-        return json(['code'=>0]);
+        $remind = RechargeModel::where('status',1)
+            ->count();
+        if($remind > 0){
+            return json(['code'=>0]);
+        }else{
+            return json(['code'=>1]);
+        }
     }
     //统计功能 会员等级处理
     protected function getLevel()

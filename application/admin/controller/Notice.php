@@ -191,7 +191,7 @@ class Notice extends Admin {
     }
     #内容管理|图片列表
     public function image(){
-        $list = Db::table('image')->select();
+        $list = Db::table('spread_image')->select();
         return $this->render('imagelist',[
             'list' => $list
         ]);
@@ -200,7 +200,7 @@ class Notice extends Admin {
     #内容管理|图片编辑
     public function imageedit(Request $request){
         $id = $request->param('id');
-        $list = Db::table('image')->where('id',$id)->find();
+        $list = Db::table('spread_image')->where('id',$id)->find();
 
         return $this->render('imageedit',[
             'info' => $list
@@ -223,10 +223,10 @@ class Notice extends Admin {
             'update_time' => time()
         ];
 
-        $updphoto = Db::table('image')->where('id',$id)->update($data);
+        $updphoto = Db::table('spread_image')->where('id',$id)->update($data);
         if ($updphoto){
 
-            return json(['code' => 0, 'message' => '修改成功','toUrl'=>url('article/image')]);
+            return json(['code' => 0, 'message' => '修改成功','toUrl'=>url('image')]);
 
         }
 
@@ -253,11 +253,11 @@ class Notice extends Admin {
             'create_time' => time()
         ];
 
-        $insphoto = Db::table('image')->insert($data);
+        $insphoto = Db::table('spread_image')->insert($data);
 
         if ($insphoto){
 
-            return json(['code' => 0, 'message' => '添加成功','toUrl' => url('article/image')]);
+            return json(['code' => 0, 'message' => '添加成功','toUrl' => url('image')]);
 
         }
 
@@ -270,7 +270,7 @@ class Notice extends Admin {
 
         $uid = $request->param('id');
 
-        $del = Db::table('image')->where('id',$uid)->delete();
+        $del = Db::table('spread_image')->where('id',$uid)->delete();
 
         if ($del){
 

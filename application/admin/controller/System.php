@@ -2,10 +2,9 @@
 namespace app\admin\controller;
 
 
-use app\common\entity\ConfigPublishModel;
+
 use app\common\entity\ConfigTeamLevelModel;
 use app\common\entity\ConfigUserLevelModel;
-use app\common\entity\PlatformSettingModel;
 use think\Db;
 use think\Request;
 
@@ -104,6 +103,13 @@ class System extends Admin
             'list' => $list,
         ]);
     }
+    public function image()
+    {
+        $list = Db::table('spread_image')->order('id')->select();
+        return $this->render('imagelist', [
+            'list' => $list,
+        ]);
+    }
     #内容管理|图片添加
     public function imageadd()
     {
@@ -136,6 +142,7 @@ class System extends Admin
     #图片修改
     public function updimage(Request $request)
     {
+
         $id = $request->param('id');
         $title = $request->post('title');
         $photo = $request->post('photo');
@@ -146,6 +153,7 @@ class System extends Admin
             'title' => $title,
             'update_time' => time()
         ];
+
         $updphoto = Db::table('spread_image')->where('id',$id)->update($data);
         if ($updphoto){
             return json(['code' => 0, 'message' => '修改成功','toUrl'=>url('System/publishSet')]);

@@ -38,7 +38,7 @@
                 <td class="text-center">{:date('Y-m-d H:i:s',$entity.create_time)}</td>
                 <td class="text-center">
                     <a href="{:url('System/imageedit',['id'=>$entity['id']])}" class="btn btn-xs btn-info">编辑</a>
-                    <a data-url="{:url('article/imagedel',['id'=>$entity.id])}" onclick="main.ajaxDelete(this)"
+                    <a data-url="{:url('System/imagedel',['id'=>$entity.id])}" onclick="main.ajaxDelete(this)"
                        data-msg="确定要删除该公告吗？" class="btn btn-xs btn-danger">删除</a>
                 </td>
             </tr>
