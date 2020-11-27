@@ -10,6 +10,7 @@ use app\common\entity\PrizeLogModel;
 use app\common\entity\PrizePublicTotalModel;
 use app\common\entity\PrizeSeePointModel;
 use app\common\entity\RechargeModel;
+use app\common\entity\TaskOrderModel;
 use app\common\entity\UserAddressModel;
 use app\common\entity\UserInviteCode;
 use app\common\entity\UserLevelConfigModel;
@@ -294,6 +295,12 @@ class User extends Base {
             if(time() < strtotime($assure_transfer_start_time) || time() > strtotime($assure_transfer_end_time)){
                 return json(['code' => 1, 'msg' => '未开始']);
             }
+            $hasTask = TaskOrderModel::where('uid',$this->userId)
+                ->whereTime('receivetime','today')
+                ->find();
+            if($hasTask){
+                return json(['code' => 1, 'msg' => '明日才可兑换']);
+            }
 
         }elseif ($types == 2){//代理账户
             if($total > $myWallet['agent']){
@@ -311,6 +318,10 @@ class User extends Base {
         try {
             $model = new \app\common\entity\MyWallet();
             $model->transfer($model,$log_data);
+            if($types == 1){//保证金
+                    \app\common\entity\User::where('id',$this->userId)
+                    ->setField('star_level',0);
+            }
             return json(['code'=>0,'msg'=>'兑换成功']);
         }catch (Exception $e){
             return json(['code'=>1,'msg'=>$e]);
