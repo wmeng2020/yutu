@@ -38,6 +38,7 @@ class TeamReward extends Command
         $end_time=$start_time+60*60*24;
         Db('reward_user')
             ->field('id,uid,count_time')
+            ->field('status',1)
             ->whereTime('count_time','not between',[$start_time,$end_time])
             ->chunk(100,function ($data){
                 foreach ($data as $k =>$v){
@@ -46,7 +47,8 @@ class TeamReward extends Command
                     Db('reward_user')
                         ->where('id',$v['id'])
                         ->update([
-                            'count_time' => time()
+                            'count_time' => time(),
+                            'status' => 2
                         ]);
                     dump($v['id'].'完成');
                 }
