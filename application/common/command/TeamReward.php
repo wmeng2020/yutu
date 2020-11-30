@@ -46,7 +46,7 @@ class TeamReward extends Command
                     Db('reward_user')
                         ->where('id',$v['id'])
                         ->update([
-                            'reward_time' => time()
+                            'count_time' => time()
                         ]);
                     dump($v['id'].'完成');
                 }
