@@ -186,6 +186,69 @@ class User extends Admin
             'info' => $info,
         ]);
     }
+    public function takeOff(Request $request)
+    {
+        $id = $request->param('id');
+        $info = userModel::where('id', $id)->find();
+        return $this->render('takeOff', [
+            'info' => $info,
+        ]);
+    }
+    public function buckle($id, Request $request)
+    {
+        $number = $request->post('number');
+        if (!preg_match('/^[0-9]+.?[0-9]*$/', $number)) {
+            return json()->data(['code' => 1, 'message' => '输入的数量必须为正整数或者小数']);
+        }
+        $remark1 = $request->post("remark");
+        $types = $request->post('types');
+
+        if ($types == '1') {
+            $types1 = 'bond';
+            $remark = $remark1 . '保证金账户';
+            $types2 = 1;
+        } elseif ($types == '2') {
+            $types1 = 'number';
+            $remark = $remark1 . '佣金账户';
+            $types2 = 2;
+        }
+        $hasNum = MyWallet::where('uid', $id)->value($types1);
+        $wallet_data = [
+            'uid' => $id,
+            'number' => $number,
+            'old' => $hasNum,
+            'new' => $hasNum - $number,
+            'remark' => $remark,
+            'types' => 9,
+            'status' => 2,
+            'money_type' => $types2,
+        ];
+        $newNum = $hasNum - $number;
+        $my_wallet_log = new MyWalletLog();
+        $inslog = $my_wallet_log->addNew($my_wallet_log, $wallet_data);
+
+        MyWallet::where('uid', $id)->setDec($types1, $number);
+        if($types == 1){//保证金
+            $configList = ConfigTeamLevelModel::order('id')->select();
+            foreach ($configList as $k => $v){
+                if(isset($configList[$k+1]['assure_money'])){
+                    $max = $configList[$k+1]['assure_money'];
+                }else{
+                    $max = $v['assure_money'] + 1;
+                }
+                if($newNum >= $v['assure_money']  && $newNum < $max){
+                    $star_level = $v['id'];
+                }
+            }
+        }
+        if(isset($star_level)){
+            userModel::where('id',$id)->setField('star_level',$star_level);
+        }
+        if (!$inslog) {
+            return ['code' => 1, 'message' => '充值失败'];
+        }
+        return ['code' => 0, 'toUrl' => url('user/index')];
+    }
 
     /**
      * @power 会员管理|会员列表@充值

@@ -108,6 +108,7 @@
                     <td style="vertical-align: middle" class="text-center">
                         <a href="{:url('user/editUser',['id'=>$entity->id])}" class="btn btn-xs btn-info">修改</a>
                         <a href="{:url('user/recharge',['id'=>$entity->id])}" class="btn btn-xs btn-primary">充值</a>
+                        <a href="{:url('user/takeOff',['id'=>$entity->id])}" class="btn btn-xs btn-default">扣款</a>
                             {if $entity->status == -1}
                                 <a data-url="{:url('user/activation',['id'=>$entity->id])}" onclick="main.ajaxDelete(this)" data-msg="确定要激活此会员吗？" class="btn btn-xs btn-success">激活</a>
                             {else /}
