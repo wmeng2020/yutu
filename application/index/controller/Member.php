@@ -47,25 +47,33 @@ class Member extends Base
         if(!$userInfo['task_num']){
             $userInfo['task_num'] = Config::getValue('free_task_num');
         }
-        switch ($userInfo['star_level']) {
+        switch ($userInfo['star_level']){
             case 0:
                 $userInfo['level_name'] = '普通会员';
+                break;
             case 1:
                 $userInfo['level_name'] =  'VIP1';
+                break;
             case 2:
                 $userInfo['level_name'] =  'VIP2';
+                break;
             case 3:
                 $userInfo['level_name'] =  'VIP3';
+                break;
             case 4:
                 $userInfo['level_name'] = 'VIP4';
+                break;
             case 5:
                 $userInfo['level_name'] =  'VIP5';
+                break;
             case 6:
                 $userInfo['level_name'] =  'VIP6';
+                break;
             default:
                 $userInfo['level_name'] =  '普通会员';
-            
+                break;
         }
+       
         //今日收益
         $today_profit = MyWalletLog::where('uid',$this->userId)
                 ->where('types',5)
