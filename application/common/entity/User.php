@@ -77,13 +77,23 @@ class User extends Model
             return $result;
         }
         $field = ['u.id,u.level,u.pid,u.star_level,l.one_level,l.two_level,l.three_level'];
+
         $superiors = $this
             ->alias('u')
             ->leftJoin('config_user_level l','u.level = l.id')
             ->where('u.id',$mid)
             ->field($field)
             ->find();
-
+      $is_vip = $this
+          ->field('id,star_level,level')
+          ->where('id',$mid)
+          ->find();
+      if($is_vip['star_level'] > 0 && $is_vip['level'] == 0){
+          $newConfig = ConfigUserLevelModel::where('id',1)->find();
+          $superiors['one_level'] = $newConfig['one_level'];
+          $superiors['two_level'] = $newConfig['two_level'];
+          $superiors['three_level'] = $newConfig['three_level'];
+      }
         if ($superiors) {
             $i--;
             if ($i != 3) {
