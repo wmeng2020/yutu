@@ -179,9 +179,14 @@ class Task extends Base
             $user_info = \app\common\entity\User::where('id', $this->userId)
                 ->find();
             if ($user_info['star_level'] < 1) {
-                return json(['code' => 0, 'msg' => '无权限使用改功能']);
+                return json(['code' => 1, 'msg' => '无权限使用改功能']);
             }
-
+            $is_use = Db('deposit')->where('uid', $this->userId)
+                ->whereTime('create_time','today')
+                ->find();
+            if($is_use){
+                return json(['code' => 1, 'msg' => '今日已托管']);
+            }
             $config = ConfigTeamLevelModel::where('id', $user_info['star_level'])
                 ->value('deposit_cost');
             $is_deposit = Db('deposit')->where('uid', $this->userId)
