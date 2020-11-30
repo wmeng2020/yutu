@@ -144,8 +144,9 @@ class Service
                 //已做任务
                 $has_task = TaskOrderModel::where('uid',$uid)
                     ->where('status',2)
-                    ->whereTime('examinetime','today')
+                    ->whereTime('examinetime','yesterday')
                     ->count();
+
                 if($has_task == $config['task_num']){
                     //三级分销
                    $prizeData = $this->findPrize($uid,$has_task);
@@ -154,6 +155,7 @@ class Service
                            $data = [
                                 'number' => $v['prize'],
                                 'uid' => $v['uid'],
+                                'from' => $uid,
                            ];
                            $this->sendRetailStore($data);
                        }
@@ -165,6 +167,7 @@ class Service
                             $data = [
                                 'number' => $val['prize'],
                                 'uid' => $val['uid'],
+                                'from' => $uid,
                             ];
                             $this->sendAgentStore($data);
                         }
@@ -258,6 +261,7 @@ class Service
                 'old' => $old_number,
                 'new' => $old_number + $data['number'],
                 'remark' => '下级任务佣金',
+                'from' => $data['from'],
                 'types' => 6,
                 'status' => 1,
                 'money_type' => 2,
@@ -291,6 +295,7 @@ class Service
                 'old' => $old_number,
                 'new' => $old_number + $data['number'],
                 'remark' => '代理任务佣金',
+                'from' => $data['from'],
                 'types' => 7,
                 'status' => 1,
                 'money_type' => 3,
