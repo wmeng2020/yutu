@@ -30,7 +30,6 @@ class Member extends Base
         $userInfo = User::alias('u')
             ->leftJoin('my_wallet mw','u.id=mw.uid')
             ->leftJoin('config_team_level c','u.star_level=c.id')
-            ->leftJoin('config_user_level l','u.level=l.id')
             ->field('
                 u.id,
                 u.level,
@@ -41,13 +40,29 @@ class Member extends Base
                 mw.number,
                 mw.bond,
                 mw.agent,
-                c.task_num,
-                l.level_name
+                c.task_num
             ')
             ->where('u.id', $this->userId)
             ->find();
         if(!$userInfo['task_num']){
             $userInfo['task_num'] = Config::getValue('free_task_num');
+        }
+        switch ($userInfo['star_level']) {
+            case 0:
+                $userInfo['level_name'] = '普通会员';
+            case 1:
+                $userInfo['level_name'] =  'VIP1';
+            case 2:
+                $userInfo['level_name'] =  'VIP2';
+            case 3:
+                $userInfo['level_name'] =  'VIP3';
+            case 4:
+                $userInfo['level_name'] = 'VIP4';
+            case 5:
+                $userInfo['level_name'] =  'VIP5';
+            case 6:
+                $userInfo['level_name'] =  'VIP6';
+            
         }
         //今日收益
         $today_profit = MyWalletLog::where('uid',$this->userId)

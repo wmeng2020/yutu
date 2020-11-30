@@ -183,7 +183,7 @@ class User extends Base {
             $cutNum = WithdrawalModel::where('uid',$this->userId)
                 ->whereTime('create_time','today')
                 ->count();
-        
+
             $allNum = Config::getValue('commission_withdraw_num');
             if($cutNum > $allNum){
                 return json(['code' => 1, 'msg' => '今日提现次数已用完']);
