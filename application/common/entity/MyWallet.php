@@ -192,8 +192,8 @@ class MyWallet extends Model {
                'new' => $old_number + $data['number'],
                'remark' => '任务佣金增加增加余额',
                'types' => 5,
-               'status' => 2,
-               'money_type' => 1,
+               'status' => 1,
+               'money_type' => 2,
                'create_time' => time(),
            ];
            $res = MyWalletLog::insert($create_data);
