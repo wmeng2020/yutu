@@ -43,13 +43,8 @@ class TeamReward extends Command
             ->chunk(100,function ($data){
                 foreach ($data as $k =>$v){
                     $query = new Service();
-                    $query->retailStore($v['uid']);
-                    Db('reward_user')
-                        ->where('id',$v['id'])
-                        ->update([
-                            'count_time' => time(),
-                            'status' => 2
-                        ]);
+                    $query->retailStore($v['uid'],$v['id']);
+
                     dump($v['id'].'完成');
                 }
             },'count_time','desc');

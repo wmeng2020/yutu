@@ -139,7 +139,7 @@ class Service
     /**
      * 分销
      */
-    public function retailStore($uid)
+    public function retailStore($uid,$id)
     {
         $user = User::where('id',$uid)->find();
         if($user){
@@ -181,6 +181,12 @@ class Service
                             }
                         }
                     }
+                    Db('reward_user')
+                        ->where('id',$id)
+                        ->update([
+                            'count_time' => time(),
+                            'status' => 2
+                        ]);
                 }else{
                     return '今日任务未全部完成';
                 }
