@@ -37,13 +37,13 @@ class TeamReward extends Command
         //当天结束之间
         $end_time=$start_time+60*60*24;
         Db('reward_user')
-            ->field('id,count_time')
+            ->field('id,uid,count_time')
             ->whereTime('count_time','not between',[$start_time,$end_time])
             ->chunk(100,function ($data){
                 foreach ($data as $k =>$v){
                     $query = new Service();
-                    $query->retailStore($v['id']);
-                    Db('user')
+                    $query->retailStore($v['uid']);
+                    Db('reward_user')
                         ->where('id',$v['id'])
                         ->update([
                             'reward_time' => time()
