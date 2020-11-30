@@ -62,6 +62,8 @@ class Member extends Base
                 $userInfo['level_name'] =  'VIP5';
             case 6:
                 $userInfo['level_name'] =  'VIP6';
+            default:
+                $userInfo['level_name'] =  '普通会员';
             
         }
         //今日收益
