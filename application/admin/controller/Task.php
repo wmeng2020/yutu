@@ -4,6 +4,8 @@ namespace app\admin\controller;
 
 
 
+use app\common\entity\ConfigTeamLevelModel;
+use app\common\entity\ConfigUserLevelModel;
 use app\common\entity\ManageUser;
 use app\common\entity\MyWallet;
 use app\common\entity\MyWalletLog;
@@ -371,7 +373,27 @@ class Task extends Admin {
         ];
         $res = TaskOrderModel::where('id',$data['id'])
             ->update($edit_data);
+
         if($res){
+            $uid = TaskOrderModel::where('id',$data['id'])
+                ->value('uid');
+            $user = \app\common\entity\User::where('id',$uid)->find();
+
+            if($user['star_level'] > 0) {
+                $config = ConfigTeamLevelModel::where('id', $user['star_level'])
+                    ->find();
+                //已做任务
+                $has_task = TaskOrderModel::where('uid', $uid)
+                    ->where('status', 2)
+                    ->whereTime('examinetime', 'today')
+                    ->count();
+                if($has_task == $config['task_num']){
+                    Db('reward_user')->insert([
+                        'uid' => $uid,
+                        'create_time' => time(),
+                    ]);
+                }
+            }
             return json(['code' => 0, 'toUrl' => url('/admin/Task/taskExamine')]);
         }
         return json()->data(['code' => 1, 'message' => '操作失败']);

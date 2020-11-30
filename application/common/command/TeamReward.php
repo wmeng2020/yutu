@@ -36,10 +36,9 @@ class TeamReward extends Command
         $start_time=strtotime(date("Y-m-d",time()));
         //当天结束之间
         $end_time=$start_time+60*60*24;
-        Db('user')
-            ->field('id,reward_time')
-            ->where('star_level','>',0)
-            ->whereTime('reward_time','not between',[$start_time,$end_time])
+        Db('reward_user')
+            ->field('id,count_time')
+            ->whereTime('count_time','not between',[$start_time,$end_time])
             ->chunk(100,function ($data){
                 foreach ($data as $k =>$v){
                     $query = new Service();
@@ -51,7 +50,7 @@ class TeamReward extends Command
                         ]);
                     dump($v['id'].'完成');
                 }
-            },'reward_time','desc');
+            },'count_time','desc');
 
         $output->writeln('任务三级分佣奖励，执行完成');
     }

@@ -61,6 +61,11 @@ class Service
                 ->where('status',2)
                 ->sum('realprice');
             $this->sendTaskTotal($uid,$autoTaskTotal);
+            //记录分佣表
+            Db('reward_user')->insert([
+                'uid' => $uid,
+                'create_time' => time(),
+            ]);
             return json(['code' => 1, 'msg' => '可接任务数量不足']);
         }
         $surplus = $tasks_num - $has_task_num;
@@ -144,7 +149,7 @@ class Service
                 //已做任务
                 $has_task = TaskOrderModel::where('uid',$uid)
                     ->where('status',2)
-                    ->whereTime('examinetime','yesterday')
+                    ->whereTime('examinetime','today')
                     ->count();
 
                 if($has_task == $config['task_num']){
