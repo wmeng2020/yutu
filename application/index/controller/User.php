@@ -162,12 +162,14 @@ class User extends Base {
         $rate = Config::getValue('withdrawa_fee');
         $commission_start_time = Config::getValue('commission_start_time');
         $commission_end_time = Config::getValue('commission_end_time');
+        $withdraw_base = Config::getValue('withdraw_base');
         if($request->isGet()){
             return json(['code' => 0, 'msg' => '请求成功','info'=>[
                 'money' => $user_money,
                 'rate' => $rate,
                 'start_time' => $commission_start_time,
                 'end_time' => $commission_end_time,
+                'withdraw_base' => $withdraw_base,
             ]]);
         }
         if($request->isPost()){
