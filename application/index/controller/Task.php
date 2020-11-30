@@ -118,7 +118,9 @@ class Task extends Base
             ->page($page)
             ->paginate($limit);
         foreach ($list as $v){
-            $v['examinetime'] = date('Y-m-d H:i:s',$v['examinetime']);
+            if($v['examinetime']){
+                $v['examinetime'] = date('Y-m-d H:i:s',$v['examinetime']);
+            }
         }
 
         return json(['code' => 0, 'msg' => '获取成功', 'info' => $list]);
