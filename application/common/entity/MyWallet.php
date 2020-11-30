@@ -24,7 +24,7 @@ class MyWallet extends Model {
         $oldInfo = $this->where('uid',$data['uid'])->find();
         Db::startTrans();
         try {
-            $edit_data['number'] = $data['num'] + $oldInfo['number'];
+            $edit_data['bond'] = $data['num'] + $oldInfo['bond'];
             $edit_data['update_time']  = time();
             $query->where('uid',$data['uid'])->update($edit_data);
             $create_data = [
@@ -39,6 +39,13 @@ class MyWallet extends Model {
                 'create_time' => time(),
             ];
             MyWalletLog::insert($create_data);
+            $star_level = ConfigTeamLevelModel::where('assure_money',$data['num'])
+                ->value('id');
+            if($star_level){
+                User::where('id',$data['uid'])->update([
+                    'star_level' => $star_level,
+                ]);
+            }
             Db::commit();
             return true;
         } catch (\Exception $e) {
