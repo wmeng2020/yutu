@@ -55,7 +55,7 @@ class Member extends Base
                 case 0:
                     $userInfo['level_name'] = "普通会员";
                     break;
-                case 1:
+                default:
                     $userInfo['level_name'] = "VIP";
                     break;
             }
