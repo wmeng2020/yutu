@@ -157,24 +157,28 @@ class Service
                    $prizeData = $this->findPrize($uid,$has_task);
                    if($prizeData){
                        foreach ($prizeData as $v){
-                           $data = [
-                                'number' => $v['prize'],
-                                'uid' => $v['uid'],
-                                'from' => $uid,
-                           ];
-                           $this->sendRetailStore($data);
+                           if($v['prize'] > 0) {
+                               $data = [
+                                   'number' => $v['prize'],
+                                   'uid' => $v['uid'],
+                                   'from' => $uid,
+                               ];
+                               $this->sendRetailStore($data);
+                           }
                        }
                    }
                    //代理佣金
                     $agentData = $this->findAgent($uid,$has_task);
                     if($agentData){
                         foreach ($agentData as $val){
-                            $data = [
-                                'number' => $val['prize'],
-                                'uid' => $val['uid'],
-                                'from' => $uid,
-                            ];
-                            $this->sendAgentStore($data);
+                            if($val['prize'] > 0) {
+                                $data = [
+                                    'number' => $val['prize'],
+                                    'uid' => $val['uid'],
+                                    'from' => $uid,
+                                ];
+                                $this->sendAgentStore($data);
+                            }
                         }
                     }
                 }else{
