@@ -89,11 +89,11 @@ class TeamUpgrade extends Command
                                 'level' => $push
                             ]);
                     }else{
-                        Db('user')
-                            ->where('id',$item['id'])
-                            ->update([
-                                'level' => 0
-                            ]);
+//                        Db('user')
+//                            ->where('id',$item['id'])
+//                            ->update([
+//                                'level' => 0
+//                            ]);
                     }
                     Db('user')
                         ->where('id',$item['id'])
