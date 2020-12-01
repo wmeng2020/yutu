@@ -5,6 +5,7 @@ namespace app\common\service\Task;
 
 use app\common\entity\Config;
 use app\common\entity\ConfigTeamLevelModel;
+use app\common\entity\ConfigUserLevelModel;
 use app\common\entity\ManageUser;
 use app\common\entity\MyWallet;
 use app\common\entity\MyWalletLog;
@@ -355,6 +356,71 @@ class Service
             Db::commit();
         } catch (\Exception $e) {
             Db::rollback();
+        }
+    }
+    /**
+     * 升级会员等级
+     */
+    public function upgrade($all_user)
+    {
+        $PlatformSettingLogic = new ConfigUserLevelModel();
+        $mse = $PlatformSettingLogic;
+        foreach ($all_user as $item) {
+
+            $push = 0;
+            $team = false;
+            $query = new User();
+            //团队有效人数
+            $teamRealNum = $query->getChildsRealNum($item,3);
+            for ($x=1; $x<=7; $x++) {
+                $lv_push = $mse
+                    ->where('id',$x)
+                    ->value('valid_num');
+                if($teamRealNum >= $lv_push){
+                    $push = $x;
+                }
+            }
+            if($push){
+                //团队人数
+                $teamNum = $query->getChildsInfoNum($item,3);
+                $lv_push = $mse
+                    ->where('id',$push)
+                    ->value('team_num');
+                if($teamNum >= $lv_push){
+                    $team = true;
+                }
+                if(!$team && $push > 1){
+                    for ($y=1;$y<=$push-1;$y++){
+                        $push = $push - $y;
+                        $lv_push = $mse
+                            ->where('id',$push)
+                            ->value('team_num');
+                        if($teamNum >= $lv_push){
+                            $team = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            if($team){
+                Db('user')
+                    ->where('id',$item)
+                    ->update([
+                        'level' => $push
+                    ]);
+            }else{
+                Db('user')
+                    ->where('id',$item)
+                    ->update([
+                        'level' => 0
+                    ]);
+            }
+            Db('user')
+                ->where('id',$item)
+                ->update([
+                    'star_upgrade_time' => time()
+                ]);
+//            dump($item['id'].'完成');
         }
     }
 }

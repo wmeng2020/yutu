@@ -8,7 +8,7 @@ use app\common\entity\MyWallet;
 use app\common\entity\RechargeModel;
 use app\common\entity\UserOtherModel;
 use app\common\entity\WithdrawalModel;
-use app\common\PHPMailer\Exception;
+use app\common\service\Task\Service;
 use app\common\entity\Export;
 use think\Db;
 use think\Request;
@@ -159,6 +159,11 @@ class Apply extends Admin {
                     'status' => 2,
                     'update_time' => time(),
                 ]);
+                $userModel = new \app\common\entity\User();
+                $all_user = $userModel->getParents($info['uid'],3);
+
+                $service = new Service();
+                $aa = $service->upgrade($all_user);
                 Db::commit();
                 return json(['code' => 0, 'toUrl' => url('/admin/Apply/recharge')]);
             }catch (\Exception $e){
