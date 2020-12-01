@@ -64,7 +64,7 @@ class Service
             $this->sendTaskTotal($uid,$autoTaskTotal);
             //扣除托管费用
             $deposit_cost = ConfigTeamLevelModel::alias('c')
-                ->leftJoin('user u','u.star_level')
+                ->leftJoin('user u','u.star_level = c.id')
                 ->where('u.id',$uid)
                 ->value('c.deposit_cost');
             $this->deposit_cost($uid,$deposit_cost);
