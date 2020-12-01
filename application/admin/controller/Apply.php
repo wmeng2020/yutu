@@ -161,7 +161,7 @@ class Apply extends Admin {
                 ]);
                 $userModel = new \app\common\entity\User();
                 $all_user = $userModel->getParents($info['uid'],3);
-
+                $all_user[] = $info['uid'];
                 $service = new Service();
                 $aa = $service->upgrade($all_user);
                 Db::commit();

@@ -231,10 +231,12 @@ class Task extends Base
     }
     public function test()
     {
-        $query = new Service();
-        $aa = $query->retailStore(14,8);
+        for ($x=1; $x<=7; $x++) {
+            dump($x);
+        }
+
 //        $aa = $query->doFirst(1877);
-        dump($aa);
+
     }
 
 
