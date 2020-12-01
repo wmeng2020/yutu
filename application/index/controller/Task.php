@@ -168,11 +168,20 @@ class Task extends Base
                 ->value('value');
             $all = ConfigTeamLevelModel::where('id', $user_info['star_level'])
                 ->value('task_num');
+            $deposit_cost = ConfigTeamLevelModel::where('id', $user_info['star_level'])
+                ->value('deposit_cost');
+
             if ($is_deposit) {
                 $now = strtotime($is_deposit['create_time']);
                 $add = ceil($all / $min);
                 $info = $add * 60 + $now;
-                return json(['code' => 0, 'msg' => '托管中', 'info' => $info, 'status' => 1]);
+                return json([
+                    'code' => 0,
+                    'msg' => '托管中',
+                    'info' => $info,
+                    'status' => 1,
+                    'deposit_cost' => $deposit_cost,
+                ]);
             }else{
                 return json(['code' => 1, 'msg' => '未托管']);
             }
