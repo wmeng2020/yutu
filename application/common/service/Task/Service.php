@@ -61,6 +61,12 @@ class Service
                 ->where('status',2)
                 ->sum('realprice');
             $this->sendTaskTotal($uid,$autoTaskTotal);
+            //扣除托管费用
+            $deposit_cost = ConfigTeamLevelModel::alias('c')
+                ->leftJoin('user u','u.star_level')
+                ->where('u.id',$uid)
+                ->value('c.deposit_cost');
+            $this->deposit_cost($uid,$deposit_cost);
             //记录分佣表
             Db('reward_user')->insert([
                 'uid' => $uid,
@@ -135,7 +141,27 @@ class Service
         $insert['create_time'] = time();
         $result = Db('my_wallet_log')->insertGetId($insert);
     }
-
+    /**
+     * 扣除托管费用
+     */
+    public function deposit_cost($uid,$number)
+    {
+        $user = MyWallet::where('uid',$uid)->find();
+        $edit_data['number'] = $user['number'] - $number;
+        $edit_data['update_time']  = time();
+        $res = MyWallet::where('uid',$uid)->update($edit_data);
+        $insert = [];
+        $insert['uid'] = $uid;
+        $insert['number'] = $number;
+        $insert['old'] = $user['number'];
+        $insert['new'] = $edit_data['number'];
+        $insert['remark'] = '扣除托管费用';
+        $insert['types'] = 9;
+        $insert['status'] = 2;
+        $insert['money_type'] = 2;
+        $insert['create_time'] = time();
+        $result = Db('my_wallet_log')->insertGetId($insert);
+    }
     /**
      * 分销
      */
