@@ -230,7 +230,6 @@ class Service
      */
     public function findPrize($uid,$money)
     {
-        dump($uid);
         //查询上三级
         $model = new User();
         $upIdArr = [];

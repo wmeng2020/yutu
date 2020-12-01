@@ -73,6 +73,7 @@ class User extends Model
      */
     public function get_superiors($mid, &$result, $i = 4)
     {
+        dump($mid);
         if ($i <= 0) {
             return $result;
         }
