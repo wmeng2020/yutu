@@ -73,7 +73,7 @@ class User extends Model
      */
     public function get_superiors($mid, &$result, $i = 4)
     {
-        dump($mid);
+
         if ($i <= 0) {
             return $result;
         }
@@ -85,16 +85,19 @@ class User extends Model
             ->where('u.id',$mid)
             ->field($field)
             ->find();
+
       $is_vip = $this
           ->field('id,star_level,level')
           ->where('id',$mid)
           ->find();
-      if($is_vip['star_level'] > 0 && $is_vip['level'] == 0){
-          $newConfig = ConfigUserLevelModel::where('id',1)->find();
-          $superiors['one_level'] = $newConfig['one_level'];
-          $superiors['two_level'] = $newConfig['two_level'];
-          $superiors['three_level'] = $newConfig['three_level'];
-      }
+        if($is_vip) {
+            if ($is_vip['star_level'] > 0 && $is_vip['level'] == 0) {
+                $newConfig = ConfigUserLevelModel::where('id', 1)->find();
+                $superiors['one_level'] = $newConfig['one_level'];
+                $superiors['two_level'] = $newConfig['two_level'];
+                $superiors['three_level'] = $newConfig['three_level'];
+            }
+        }
         if ($superiors) {
             $i--;
             if ($i != 3) {
