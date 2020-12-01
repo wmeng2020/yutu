@@ -339,18 +339,21 @@ class Apply extends Admin {
         }elseif ($types == 'refuse'){//拒绝申请
             $info = WithdrawalModel::where('id',$id)->find();
             $way = WithdrawalModel::getAllTypes()[$info['types']];
+
             Db::startTrans();
             try {
+
                 $data = [
-                    'num'  => $info['total'],
+                    'num'  => $info['money'],
                     'uid'  => $info['uid'],
                     'remark'  => '拒绝会员'.$way.'提现，退还',
                 ];
                 $query = new MyWallet();
                 $res = $query->refuseWithdrawal($query,$data);
+
                 if(!$res){
                     Db::rollback();
-                    return json()->data(['code' => 1, 'message' => '审核失败']);
+                    return json()->data(['code' => 1, 'message' => $res]);
                 }
                 WithdrawalModel::where('id',$id)->update([
                     'status' => 3,

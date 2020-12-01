@@ -92,6 +92,7 @@ class MyWallet extends Model {
             $old = $oldInfo['number'];
             $edit_data['update_time']  = time();
             $query->where('uid',$data['uid'])->update($edit_data);
+
             $create_data = [
                 'uid' => $data['uid'],
                 'number' => $data['num'],
@@ -100,10 +101,11 @@ class MyWallet extends Model {
                 'remark' => $data['remark'],
                 'types' => 3,
                 'status' => 1,
-                'money_type' => 1,
+                'money_type' => 2,
                 'create_time' => time(),
             ];
             MyWalletLog::insert($create_data);
+
             Db::commit();
             return true;
         } catch (\Exception $e) {
