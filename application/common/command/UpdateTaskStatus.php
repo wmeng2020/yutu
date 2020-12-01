@@ -85,10 +85,13 @@ class UpdateTaskStatus extends Command
                                     ->count();
                                 if ($has_task == $config['task_num']) {
                                     //记录分佣表
-                                    Db('reward_user')->insert([
+                                    $result = Db('reward_user')->insert([
                                         'uid' => $item['uid'],
                                         'create_time' => time(),
                                     ]);
+                                    if (!$result) {
+                                        throw new \Exception();
+                                    }
                                 }
                             }
                         }else{
