@@ -286,7 +286,7 @@ class User extends Admin
 
         $my_wallet_log = new MyWalletLog();
         $inslog = $my_wallet_log->addNew($my_wallet_log, $wallet_data);
-
+        $newNum = $hasNum + $number;
         MyWallet::where('uid', $id)->setInc($types1, $number);
         if($types == 1){//保证金
             $configList = ConfigTeamLevelModel::order('id')->select();
@@ -296,7 +296,7 @@ class User extends Admin
                 }else{
                     $max = $v['assure_money'] + 1;
                 }
-                if($number >= $v['assure_money']  && $number < $max){
+                if($newNum >= $v['assure_money']  && $newNum < $max){
                     $star_level = $v['id'];
 
                 }
