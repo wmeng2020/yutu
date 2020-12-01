@@ -182,8 +182,9 @@ class Service
 
                 if($has_task == $config['task_num']){
                     //三级分销
+                    dump(11);
                    $prizeData = $this->findPrize($uid,$has_task);
-                    dump($prizeData);
+
                    if($prizeData){
                        foreach ($prizeData as $v){
                            if($v['prize'] > 0) {
