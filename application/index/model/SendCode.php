@@ -60,7 +60,7 @@ class SendCode
         Session::set($this->getSessionName(), $this->code);
     }
 
-    private function sendCode()
+    private function sendCode1()
     {
 
         $restult = $this->sendAliDaYuAuthCode($this->mobile,$this->code);
@@ -68,6 +68,40 @@ class SendCode
             return true;
         }else{
             return $restult;
+        }
+    }
+    private function sendCode()
+    {
+
+        $sms_setting = [
+            'userid' => '66316',
+            'account' => 'gd009555',
+            'password' => 'gd00955555',
+        ];
+
+        $body=array(
+            'action'=>'send',
+            'userid'=>$sms_setting['userid'],
+            'account'=>$sms_setting['account'],
+            'password'=>$sms_setting['password'],
+            'mobile'=>$this->mobile,
+            'content'=>'【泰华科技】您的验证码:'.$this->code.',如非本人操作请立即更改账户密码',
+        );
+        $ch=curl_init();
+        curl_setopt($ch, CURLOPT_URL,"https://dx.ipyy.net/smsJson.aspx");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER,false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+        $result = curl_exec($ch);
+        curl_close($ch);
+        $result_data = json_decode($result, true);
+//        dump($result_data);
+//        die;
+        if (isset($result_data['returnstatus']) && $result_data['returnstatus'] === 'Success') {
+            return true;
+        }else{
+            return $result_data;
         }
     }
     public function checkCode($code)
