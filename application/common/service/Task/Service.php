@@ -168,6 +168,7 @@ class Service
     public function retailStore($uid,$id)
     {
         $user = User::where('id',$uid)->find();
+        dump($user);
         if($user){
             if($user['star_level'] > 0){
                 $config = ConfigTeamLevelModel::where('id',$user['star_level'])
