@@ -1,7 +1,9 @@
 <?php
 namespace app\common\command;
 
+use app\common\entity\ConfigTeamLevelModel;
 use app\common\entity\MyWallet;
+use app\common\entity\TaskOrderModel;
 use app\common\entity\User;
 use think\console\Command;
 use think\console\Input;
@@ -46,7 +48,7 @@ class UpdateTaskStatus extends Command
                         $result = Db('task_order')->where(['id'=>$item['id']])->update($data);
                         if($result){
                             $user = User::alias('u')
-                                ->field('mw.number')
+                                ->field('mw.number,u.star_level')
                                 ->leftJoin('my_wallet mw','u.id = mw.uid')
                                 ->where('u.id',$item['uid'])
                                 ->find();
@@ -72,6 +74,22 @@ class UpdateTaskStatus extends Command
                             $result = Db('my_wallet_log')->insertGetId($insert);
                             if (!$result) {
                                 throw new \Exception();
+                            }
+                            if($user['star_level'] > 0) {
+                                $config = ConfigTeamLevelModel::where('id', $user['star_level'])
+                                    ->find();
+                                //已做任务
+                                $has_task = TaskOrderModel::where('uid', $item['uid'])
+                                    ->where('status', 2)
+                                    ->whereTime('examinetime', 'today')
+                                    ->count();
+                                if ($has_task == $config['task_num']) {
+                                    //记录分佣表
+                                    Db('reward_user')->insert([
+                                        'uid' => $item['uid'],
+                                        'create_time' => time(),
+                                    ]);
+                                }
                             }
                         }else{
                             throw new \Exception();
