@@ -173,7 +173,7 @@ class Service
             if($user['star_level'] > 0){
                 $config = ConfigTeamLevelModel::where('id',$user['star_level'])
                     ->find();
-                dump($config);
+
                 //已做任务
                 $has_task = TaskOrderModel::where('uid',$uid)
                     ->where('status',2)
@@ -183,6 +183,7 @@ class Service
                 if($has_task == $config['task_num']){
                     //三级分销
                    $prizeData = $this->findPrize($uid,$has_task);
+                    dump($prizeData);
                    if($prizeData){
                        foreach ($prizeData as $v){
                            if($v['prize'] > 0) {
