@@ -26,16 +26,6 @@ class TeamReward extends Command
     }
     protected function execute(Input $input, Output $output)
     {
-        $h = date('H');
-        $h = 1;
-        if ($h != 1){
-            echo "结算时间未到";
-            die;
-        }
-        set_time_limit(0);
-        $start_time=strtotime(date("Y-m-d",time()));
-        //当天结束之间
-        $end_time=$start_time+60*60*24;
         Db('reward_user')
             ->field('id,uid,status,count_time')
             ->where('status',1)
