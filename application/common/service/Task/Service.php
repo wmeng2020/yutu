@@ -182,7 +182,7 @@ class Service
 
                 if($has_task == $config['task_num']){
                     //三级分销
-                    dump(11);
+
                    $prizeData = $this->findPrize($uid,$has_task);
 
                    if($prizeData){
@@ -230,6 +230,7 @@ class Service
      */
     public function findPrize($uid,$money)
     {
+        dump($uid);
         //查询上三级
         $model = new User();
         $upIdArr = [];
