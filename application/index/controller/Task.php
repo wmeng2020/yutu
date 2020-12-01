@@ -232,9 +232,10 @@ class Task extends Base
     public function test()
     {
         $query = new Service();
-        $aa = $query->findAgent(1877);
+        $aa = $query->retailStore(4,1);
 //        $aa = $query->doFirst(1877);
         dump($aa);
     }
+
 
 }

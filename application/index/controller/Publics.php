@@ -4,7 +4,7 @@ namespace app\index\controller;
 
 use app\common\entity\Config;
 use app\common\entity\MyWalletLog;
-use app\common\entity\OperationCenterModel;
+
 use app\common\entity\User;
 use app\common\service\Users\Service;
 use app\index\model\SendCode;
@@ -227,5 +227,6 @@ class Publics extends Controller
         return $res;    //返回json对象
 
     }
+
 
 }

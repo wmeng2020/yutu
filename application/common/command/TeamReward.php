@@ -32,10 +32,13 @@ class TeamReward extends Command
 //            ->whereTime('count_time','not between',[$start_time,$end_time])
             ->chunk(100,function ($data){
                 foreach ($data as $k =>$v){
-                    $query = new Service();
-                    $query->retailStore($v['uid'],$v['id']);
+                    if($v['uid']){
+                        $query = new Service();
+                        $query->retailStore($v['uid'],$v['id']);
 
-                    dump($v['id'].'完成');
+                        dump($v['id'].'完成');
+                    }
+
                 }
             },'id','desc');
 
