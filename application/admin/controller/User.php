@@ -33,7 +33,7 @@ class User extends Admin
         $next_id = $this->getNext($left_uid);
 
         $entity = userModel::alias('u')
-            ->field('u.*,mw.number,mw.bond,mw.agent,uic.invite_code');
+            ->field('u.*,mw.number,mw.bond,mw.agent,uic.invite_code,l.level_name');
         if ($keyword = $request->get('keyword')) {
             $type = $request->get('type');
             switch ($type) {
@@ -70,6 +70,7 @@ class User extends Admin
         $list = $entity
             ->leftJoin('my_wallet mw', 'mw.uid = u.id')
             ->leftJoin('user_invite_code uic', 'u.id = uic.user_id')
+            ->leftJoin('config_user_level l', 'u.level = l.id')
             ->order($orderStr)
             ->distinct(true)
             ->paginate(15, false, [

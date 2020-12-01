@@ -403,11 +403,17 @@ class Service
                 }
             }
             if($team){
-                Db('user')
+                $star_level = Db('user')
                     ->where('id',$item)
-                    ->update([
-                        'level' => $push
-                    ]);
+                    ->value('star_level');
+                if($star_level > 0){
+                    Db('user')
+                        ->where('id',$item)
+                        ->update([
+                            'level' => $push
+                        ]);
+                }
+
             }else{
 //                Db('user')
 //                    ->where('id',$item)
