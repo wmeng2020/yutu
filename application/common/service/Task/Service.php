@@ -234,7 +234,7 @@ class Service
         $model = new User();
         $upIdArr = [];
         $model->get_superiors($uid,$upIdArr);
-        dump($upIdArr);
+//        dump($upIdArr);
 //        die;
         if($upIdArr){
             $prize = [];
