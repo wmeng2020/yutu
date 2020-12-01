@@ -198,6 +198,10 @@ class Task extends Base
             if($is_use){
                 return json(['code' => 1, 'msg' => '今日已托管']);
             }
+
+            if($user_info['tiktok_status'] != 3){
+                return json(['code' => 1, 'msg' => '请绑定抖音账号','toUrl'=>1]);
+            }
             $config = ConfigTeamLevelModel::where('id', $user_info['star_level'])
                 ->value('deposit_cost');
             $is_deposit = Db('deposit')->where('uid', $this->userId)
