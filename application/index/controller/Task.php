@@ -183,7 +183,7 @@ class Task extends Base
                     'deposit_cost' => $deposit_cost,
                 ]);
             }else{
-                return json(['code' => 1, 'msg' => '未托管', 'deposit_cost' => $deposit_cost,]);
+                return json(['code' => 0, 'msg' => '未托管', 'deposit_cost' => $deposit_cost,]);
             }
         }
         if($request->isPost()) {
