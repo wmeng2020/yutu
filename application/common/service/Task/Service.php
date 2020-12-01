@@ -409,11 +409,11 @@ class Service
                         'level' => $push
                     ]);
             }else{
-                Db('user')
-                    ->where('id',$item)
-                    ->update([
-                        'level' => 0
-                    ]);
+//                Db('user')
+//                    ->where('id',$item)
+//                    ->update([
+//                        'level' => 0
+//                    ]);
             }
             Db('user')
                 ->where('id',$item)
