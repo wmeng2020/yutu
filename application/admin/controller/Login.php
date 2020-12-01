@@ -1,6 +1,7 @@
 <?php
 namespace app\admin\controller;
 
+use app\common\entity\ManageUser;
 use app\common\entity\Name;
 use think\Controller;
 use think\Db;
@@ -33,8 +34,13 @@ class Login extends Controller
 
             $power = new \app\admin\service\rbac\Power\Service();
             $power->delCache();
-
-            return json()->data(['toUrl' => url('index/index')]);
+            $id = $service->getManageId();
+            $left_uid = ManageUser::where('id',$id)->value('left_uid');
+            if($left_uid){
+                return json()->data(['toUrl' => url('User/index')]);
+            }else{
+                return json()->data(['toUrl' => url('index/index')]);
+            }
         }else{
             return json()->data(['code'=>1,'message'=>$validate]);
         }
