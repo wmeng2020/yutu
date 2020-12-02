@@ -43,6 +43,12 @@ class Task extends Base
         if(!$id){
             return json(['code' => 1, 'msg' => '非法操作']);
         }
+        $is_use = Db('deposit')->where('uid', $this->userId)
+            ->whereTime('create_time','today')
+            ->find();
+        if($is_use){
+            return json(['code' => 1, 'msg' => '托管中，无法领取']);
+        }
 //        $task_start_time = $this->getConfigValue('task_start_time');
 //        $task_end_time = $this->getConfigValue('task_end_time');
 //        if(time() < strtotime($task_start_time) || time() > strtotime($task_end_time)){
@@ -111,7 +117,7 @@ class Task extends Base
             $query->where('to.status',$status);
         }
         $list = $query->alias('to')
-            ->field('to.id,to.realprice,to.status,t.demand_side,examinetime')
+            ->field('to.id,to.realprice,to.status,t.demand_side,examinetime,t.task_url')
             ->leftJoin('task t','t.id = to.task_id')
             ->where('to.uid',$this->userId)
             ->order('to.receivetime','desc')

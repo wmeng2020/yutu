@@ -3,6 +3,8 @@
 namespace app\admin\controller;
 
 
+use app\common\entity\ConfigTeamLevelModel;
+use app\common\entity\LevelUpLogModel;
 use app\common\entity\ManageUser;
 use app\common\entity\MyWallet;
 use app\common\entity\RechargeModel;
@@ -163,7 +165,17 @@ class Apply extends Admin {
                 $all_user = $userModel->getParents($info['uid'],3);
                 $all_user[] = $info['uid'];
                 $service = new Service();
-                $aa = $service->upgrade($all_user);
+                $service->upgrade($all_user);
+
+                $entry = new LevelUpLogModel();
+
+                $star_level = ConfigTeamLevelModel::where('assure_money',$info['total'])
+                    ->value('id');
+                $entry->addNew([
+                    'uid' => $info['uid'],
+                    'level' => $star_level,
+                    'status' => 1,
+                ]);
                 Db::commit();
                 return json(['code' => 0, 'toUrl' => url('/admin/Apply/recharge')]);
             }catch (\Exception $e){
