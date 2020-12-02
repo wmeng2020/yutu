@@ -171,7 +171,7 @@ class Apply extends Admin {
 
                 $star_level = ConfigTeamLevelModel::where('assure_money',$info['total'])
                     ->value('id');
-                $entry->addNew([
+                $entry->addNew($entry,[
                     'uid' => $info['uid'],
                     'level' => $star_level,
                     'status' => 1,

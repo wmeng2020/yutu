@@ -138,8 +138,9 @@ class Level extends Base
         $limit = $request->param('limit',5);
         $list = LevelUpLogModel::alias('l')
             ->field('u.avatar,u.mobile,c.assure_money,l.*')
-            ->leftJoin('user u','u.star_level = l.level')
+            ->leftJoin('user u','u.id = l.uid')
             ->leftJoin('config_team_level c','c.id = l.level')
+            ->group('l.id')
             ->limit($limit)
             ->select();
         foreach ($list as $v){
