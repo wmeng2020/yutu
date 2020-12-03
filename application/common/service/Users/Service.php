@@ -62,6 +62,7 @@ class Service
             $user->trad_password = $this->getPassword($data['trad_password']);
         }
         $user->mobile = $data['mobile'] ;
+        $user->pid = $data['pid'] ;
 
 
         return $user->save();

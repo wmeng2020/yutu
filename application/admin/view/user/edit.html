@@ -13,6 +13,13 @@
     <div class="panel-body" style="padding-bottom: 50px">
         <form class="form-horizontal" method="post" onsubmit="return false" role="form">
             <div class="form-group">
+                <label class="col-sm-2 control-label">上级ID</label>
+                <div class="col-sm-5">
+                    <input type="text" value="{$info->pid}" name="pid" class="form-control"
+                           placeholder="上级ID">
+                </div>
+            </div>
+            <div class="form-group">
                 <label class="col-sm-2 control-label">手机号</label>
                 <div class="col-sm-5">
                     <input type="text" value="{$info->mobile}" name="mobile" class="form-control"
