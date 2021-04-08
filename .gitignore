@@ -5,9 +5,6 @@ thinkphp
 runtime
 /README.md
 /LICENSE.txt
-/application/database.php
 /public/static/webuploader
-/application/config.php
-/application/route.php
 /public/uploads
 /public/h5
