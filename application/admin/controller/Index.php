@@ -42,16 +42,24 @@ class Index extends Admin
             ->count();
         $task['not_pass'] = TaskOrderModel::where('status',-1)
             ->count();
-        $money['recharge'] = RechargeModel::where('status',2)
-            ->sum('total');
-        $money['withdrawal'] = WithdrawalModel::where('status',2)
+        $money['recharge'] = RechargeModel::where('status',1)
             ->sum('money');
-        $money['today_recharge'] = RechargeModel::whereTime('update_time', 'today')
-            ->where('status',2)
-            ->sum('total');
-        $money['today_withdrawal'] = WithdrawalModel::whereTime('update_time', 'today')
-            ->where('status',2)
+        $money['withdrawal'] = WithdrawalModel::where('status',1)
             ->sum('money');
+        $money['today_recharge'] = RechargeModel::whereTime('createtime', 'today')
+            ->where('status',1)
+            ->sum('money');
+        $money['today_withdrawal'] = WithdrawalModel::whereTime('examinetime', 'today')
+            ->where('status',1)
+            ->sum('money');
+        $money['yesterday_withdrawal'] = WithdrawalModel::whereTime('examinetime', 'yesterday')
+            ->where('status',1)
+            ->sum('money');
+
+        $total_bonus = Db::name('bounty_list')->whereTime('createtime','today')->sum('bonus');
+
+        $participate_game_num = Db::name('user_participate_game_list')->whereTime('createtime',"today")->count();
+
         $money['remind'] = RechargeModel::where('status',1)
             ->count();
         $level = json_encode(['Lv1', 'Lv2', 'Lv3', 'Lv4', 'Lv5','Lv6']);
@@ -60,6 +68,8 @@ class Index extends Admin
             'level' => $level,
             'task' => $task,
             'money' => $money,
+            'participate_game_num' => $participate_game_num,
+            'total_bonus' => $total_bonus,
         ]);
     }
     public function remind()
@@ -111,7 +121,7 @@ SQL;
             if ($user->save() === false) {
                 throw new AdminException('修改失败');
             }
-            LogService::write('后台首页|修改密码','修改个人登录密码');
+//            LogService::write('后台首页|修改密码','修改个人登录密码');
             return json(['code' => 0, 'message' => '修改成功', 'toUrl' => url('login/index')]);
         }
         return $this->render('change');

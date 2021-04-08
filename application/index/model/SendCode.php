@@ -74,9 +74,9 @@ class SendCode
     {
 
         $sms_setting = [
-            'userid' => '66316',
-            'account' => 'gd009555',
-            'password' => 'gd00955555',
+            'userid' => '66618',
+            'account' => '10B00556',
+            'password' => 'dx7890',
         ];
 
         $body=array(
@@ -85,7 +85,7 @@ class SendCode
             'account'=>$sms_setting['account'],
             'password'=>$sms_setting['password'],
             'mobile'=>$this->mobile,
-            'content'=>'【泰华科技】您的验证码:'.$this->code.',如非本人操作请立即更改账户密码',
+            'content'=>'【咚咚电竞】您正在申请手机注册,验证码为:'.$this->code.',5分钟内有效!',
         );
         $ch=curl_init();
         curl_setopt($ch, CURLOPT_URL,"https://dx.ipyy.net/smsJson.aspx");

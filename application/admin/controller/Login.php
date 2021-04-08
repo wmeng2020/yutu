@@ -27,7 +27,7 @@ class Login extends Controller
         }
         $key = $request->post('key');
         if($key != 'z#vHFzQXA@Sbm6H$h5coKjQGcu2g8**A'){
-            return json()->data(['code'=>1,'message'=>'秘钥错误']);
+            // return json()->data(['code'=>1,'message'=>'秘钥错误']);
         }
         $validate = $service->doLogin($request->post('username'), $request->post('password'));
         if (true === $validate) {

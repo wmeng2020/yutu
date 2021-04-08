@@ -29,18 +29,25 @@
                     <input type="text" id="keyword" value="{$Request.get.keyword}" name="keyword" class="form-control" placeholder="请输入关键词搜索">
                 </div>
                 <div class="col-xs-1 no-pd-r">
+                    <select name="op_type" id="op_type" class="form-control">
+                        <option  value="" >提现币种</option>
+                        {foreach $allOpTypes as $k => $status}
+                        <option {if $Request.get.op_type == $k && $Request.get.op_type !=''} selected {/if} value="{$k}">{$status}</option>
+                        {/foreach}
+                    </select>
+                </div>
+                <div class="col-xs-1 no-pd-r">
                     <select name="types" id="types" class="form-control">
                         <option  value="" >提现方式</option>
-                        {foreach $allTypes as $k => $status}
-                        <option {if $Request.get.types == $k} selected {/if} value="{$k}">{$status}</option>
-                        {/foreach}
+                        <option {if $Request.get.types == 1} selected {/if} value="1">支付宝</option>
+                        <option {if $Request.get.types == 2} selected {/if} value="2">银行卡</option>
                     </select>
                 </div>
                 <div class="col-xs-1 no-pd-r">
                     <select name="status" id="status" class="form-control">
                         <option  value="" >审核状态</option>
                         {foreach $allStatus as $k => $status}
-                        <option {if $Request.get.status == $k} selected {/if} value="{$k}">{$status}</option>
+                        <option {if $Request.get.status == $k && $Request.get.status != ""} selected {/if} value="{$k}">{$status}</option>
                         {/foreach}
                     </select>
                 </div>
@@ -60,13 +67,14 @@
                 <th class="text-center">ID</th>
                 <th class="text-center">用户信息</th>
                 <th class="text-center">提现方式</th>
+                <th class="text-center">提现币种</th>
                 <th class="text-center">提现金额</th>
                 <th class="text-center">实际到账金额</th>
-                <th class="text-center">收款人名称</th>
-                <th class="text-center">开户行</th>
-                <th class="text-center">银行卡号</th>
                 <th class="text-center">支付宝姓名</th>
                 <th class="text-center">支付宝帐号</th>
+                <th class="text-center">开户行</th>
+                <th class="text-center">开户人</th>
+                <th class="text-center">银行卡号</th>
                 <th class="text-center">审核状态</th>
                 <th class="text-center">时间</th>
                 <th class="text-center">操作</th>
@@ -87,10 +95,20 @@
                         {$allTypes[$entity->types]}
                     </td>
                     <td style="vertical-align: middle" class="text-center">
+                        {$allOpTypes[$entity->op_type]}
+                    </td>
+                    <td style="vertical-align: middle" class="text-center">
                         {$entity->money}
                     </td>
                     <td style="vertical-align: middle" class="text-center">
                         {$entity->realmoney}
+                    </td>
+
+                    <td style="vertical-align: middle" class="text-center">
+                        {$entity->alipay_name}
+                    </td>
+                    <td style="vertical-align: middle" class="text-center">
+                        {$entity->alipay_account}
                     </td>
                     <td style="vertical-align: middle" class="text-center">
                         {$entity->bank_user_name}
@@ -102,22 +120,16 @@
                         {$entity->bank_card}
                     </td>
                     <td style="vertical-align: middle" class="text-center">
-                        {$entity->alipay_name}
-                    </td>
-                    <td style="vertical-align: middle" class="text-center">
-                        {$entity->alipay_account}
-                    </td>
-                    <td style="vertical-align: middle" class="text-center">
                         {$allStatus[$entity->status]}
                     </td>
                     <td style="vertical-align: middle" class="text-center">
-                        申请时间：{$entity->create_time}<br>
+                        申请时间：{$entity->createtime}<br>
                         {if $entity->status != 1}
-                        审核时间：{$entity->update_time}
+                        审核时间：{$entity->examinetime}
                         {/if}
                     </td>
                     <td style="vertical-align: middle" class="text-center">
-                        {if $entity->status == 1}
+                        {if $entity->status == 0}
                             <a data-url="{:url('examineWithdrawal',['id'=>$entity->id,'types'=>'pass'])}" onclick="main.ajaxDelete(this)" data-msg="确定要通过此申请吗？" class="btn btn-xs btn-success">通过</a>
                             <a data-url="{:url('examineWithdrawal',['id'=>$entity->id,'types'=>'refuse'])}" onclick="main.ajaxDelete(this)" data-msg="确定要拒绝此申请吗？" class="btn btn-xs btn-warning">拒绝</a>
                         {/if}

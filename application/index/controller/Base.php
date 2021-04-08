@@ -41,7 +41,7 @@ class Base extends Controller
             $_SERVER['REQUEST_URI'] != '/index/Article/articleList'
         ) {
             if (!$userId) {
-                echo json_encode(['code' => -2, 'msg' => '请先登录','toUrl'=>'login']);
+                echo json_encode(['code' => 500, 'msg' => '请先登录','data'=>[]]);
                 die;
             }
         }
@@ -57,7 +57,7 @@ class Base extends Controller
                 $_SERVER['REQUEST_URI'] != '/index/Article/articleList'
             ) {
                 if ($userInfo->status == -1) {
-                    echo json_encode(['code' => -2, 'msg' => '请先登录','toUrl'=>'login']);
+                    echo json_encode(['code' => 500, 'msg' => '请先登录','data'=>[]]);
                     die;
                 }
             }
@@ -65,7 +65,7 @@ class Base extends Controller
             $info = User::where('id', $userId)->find();
             Session::set('username', $this->userInfo->nick_name);
             if ($info['login_time'] != session_id()) {
-                echo json_encode(['code' => -2, 'msg' => '请先登录','toUrl'=>'login']);
+                echo json_encode(['code' => 500, 'msg' => '请先登录','data'=>[]]);
                 die;
             }
 
@@ -77,7 +77,7 @@ class Base extends Controller
     {
         $switch = SiteAuth::checkSite();
         if ($switch !== true) {
-            return json(['code' => 1, 'msg' => $switch]);
+            echo json_encode(['code' => 500, 'msg' => $switch,'data'=>[]]);
         }
     }
     //检查token
@@ -87,12 +87,12 @@ class Base extends Controller
         $request = Request::instance();
         $token = $request->param('token');
         if(!$token){
-            echo json_encode(['code' => 1, 'msg' => 'token错误']);
+            echo json_encode(['code' => 500, 'msg' => 'token错误','data'=>[]]);
             die;
         }
         $res = checkToken($token);
         if(!$res){
-            echo json_encode(['code' => 1, 'msg' => 'token错误']);
+            echo json_encode(['code' => 500, 'msg' => 'token错误','data'=>[]]);
             die;
         }
     }

@@ -9,10 +9,10 @@ use think\Validate;
 class RegisterForm extends Validate
 {
     protected $rule = [
-        'invite_code' => 'checkInvite|require',
+//        'invite_code' => 'checkInvite|require',
         // 'nick_name' => 'require',
         'mobile' => 'require|regex:^1\d{10}$|checkMobile',
-         'code' => 'require',
+//         'code' => 'require',
         'password' => 'require|min:6',
 //        're_password' => 'require|confirm:password',
 //        'trad_password' => 'require|min:6',
@@ -24,16 +24,16 @@ class RegisterForm extends Validate
     ];
 
     protected $message = [
-        'invite_code.require' => '邀请码不能为空',
+//        'invite_code.require' => '邀请码不能为空',
         // 'nick_name.require' => '昵称不能为空',
         'mobile.require' => '账号不能为空',
         'mobile.regex' => '账号格式不正确',
-         'code.require' => '验证码不能为空',
+//         'code.require' => '验证码不能为空',
         'password.require' => '登录密码不能为空',
-        'trad_password.require' => '交易密码不能为空',
+//        'trad_password.require' => '交易密码不能为空',
         'password.min' => '登录密码至少为6位',
-        'trad_password.min' => '交易密码至少为6位',
-        'check' => '用户协议必须勾选',
+//        'trad_password.min' => '交易密码至少为6位',
+//        'check' => '用户协议必须勾选',
 //        'center_id' => '运营中心未选择',
         // 'safe_password.confirm' => '两次密码不一样'
         // 'safe_password.require' => '交易密码不能为空',

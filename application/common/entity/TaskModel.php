@@ -76,10 +76,12 @@ class TaskModel extends Model {
         $query->task_url = $data['task_url'];
         $query->demand_side = $data['demand_side'];
         $query->task_num = $data['task_num'];
+        $query->level = $data['level'];
+
         if(isset($data['requirement'])) {
             $query->requirement = $data['requirement'];
         }
-        $query->task_price = 1;
+        $query->task_price = 1.8;
         $query->status = $data['status'];
         if(!isset($data['create_time'])){
             $query->create_time = time();

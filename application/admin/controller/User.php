@@ -33,7 +33,7 @@ class User extends Admin
         $next_id = $this->getNext($left_uid);
 
         $entity = userModel::alias('u')
-            ->field('u.*,mw.number,mw.bond,mw.agent,uic.invite_code,l.level_name');
+            ->field('u.*,mw.commission,mw.bonus,mw.credit1,mw.credit2,uic.invite_code,l.levelname');
         if ($keyword = $request->get('keyword')) {
             $type = $request->get('type');
             switch ($type) {
@@ -42,6 +42,9 @@ class User extends Admin
                     break;
                 case 'nick_name':
                     $entity->where('u.nick_name', 'like', '%' . $keyword . '%');
+                    break;
+                case 'id':
+                    $entity->where('u.id', '=', $keyword);
                     break;
             }
             $map['type'] = $type;
@@ -68,9 +71,9 @@ class User extends Admin
             $entity->whereIn('u.id',$next_id);
         }
         $list = $entity
-            ->leftJoin('my_wallet mw', 'mw.uid = u.id')
+            ->leftJoin('user_wallet mw', 'mw.uid = u.id')
             ->leftJoin('user_invite_code uic', 'u.id = uic.user_id')
-            ->leftJoin('config_user_level l', 'u.level = l.id')
+            ->leftJoin('commission_level l', 'u.commission_level = l.id')
             ->order($orderStr)
             ->distinct(true)
             ->paginate(15, false, [
@@ -113,7 +116,7 @@ class User extends Admin
     {
         $id = $request->param('id');
         $res = userModel::where('id', $id)->update(['status' => 1]);
-        LogService::write('会员管理', '用户激活会员');
+//        LogService::write('会员管理', '用户激活会员');
         if ($res) {
             return json()->data(['code' => 0, 'toUrl' => url('/admin/user/index')]);
         }
@@ -128,7 +131,7 @@ class User extends Admin
     {
         $id = $request->param('id');
         $res = userModel::where('id', $id)->update(['status' => -1, 'forbidden_time' => time()]);
-        LogService::write('会员管理', '用户冻结会员');
+//        LogService::write('会员管理', '用户冻结会员');
         if ($res) {
             return json()->data(['code' => 0, 'toUrl' => url('/admin/user/index')]);
         }
@@ -142,8 +145,9 @@ class User extends Admin
     public function delete(Request $request)
     {
         $id = $request->param('id');
-        $res = userModel::where('id', $id)->delete();
-        LogService::write('会员管理', '用户删除会员');
+//        $res = userModel::where('id', $id)->delete();
+        $res = userModel::where('id', $id)->update(['deleted'=>1]);
+//        LogService::write('会员管理', '用户删除会员');
         if ($res) {
             return json()->data(['code' => 0, 'toUrl' => url('/admin/user/index')]);
         }
@@ -159,12 +163,14 @@ class User extends Admin
     {
         $id = $request->param('id');
         $info = userModel::alias('u')
-            ->field('u.*,p.bank_user_name,p.bank_name,p.bank_card')
+            ->field('u.*,p.bank_user_name,p.bank_name,p.bank_card,p.alipay_name,p.alipay_account')
             ->leftJoin('user_payment p','p.uid = u.id')
             ->where('u.id', $id)
             ->find();
+        $commission_level = Db::name('commission_level')->select();
         return $this->render('edit', [
             'info' => $info,
+            'commission_level' => $commission_level,
         ]);
     }
 
@@ -173,7 +179,11 @@ class User extends Admin
      */
     public function create()
     {
-        return $this->render('edit');
+        $commission_level = Db::name('commission_level')->select();
+
+        return $this->render('edit',[
+            'commission_level' => $commission_level,
+        ]);
     }
 
     /**
@@ -203,51 +213,63 @@ class User extends Admin
         }
         $remark1 = $request->post("remark");
         $types = $request->post('types');
-
         if ($types == '1') {
-            $types1 = 'bond';
-            $remark = $remark1 . '保证金账户';
-            $types2 = 1;
+            $credit = 'credit1';
+            $remark = $remark1 ;
         } elseif ($types == '2') {
-            $types1 = 'number';
-            $remark = $remark1 . '佣金账户';
-            $types2 = 2;
+            $credit = 'credit2';
+            $remark = $remark1;
         }
-        $hasNum = MyWallet::where('uid', $id)->value($types1);
-        $wallet_data = [
-            'uid' => $id,
-            'number' => $number,
-            'old' => $hasNum,
-            'new' => $hasNum - $number,
-            'remark' => $remark,
-            'types' => 9,
-            'status' => 2,
-            'money_type' => $types2,
-        ];
-        $newNum = $hasNum - $number;
-        $my_wallet_log = new MyWalletLog();
-        $inslog = $my_wallet_log->addNew($my_wallet_log, $wallet_data);
 
-        MyWallet::where('uid', $id)->setDec($types1, $number);
-        if($types == 1){//保证金
-            $configList = ConfigTeamLevelModel::order('id')->select();
-            foreach ($configList as $k => $v){
-                if(isset($configList[$k+1]['assure_money'])){
-                    $max = $configList[$k+1]['assure_money'];
-                }else{
-                    $max = $v['assure_money'] + 1;
-                }
-                if($newNum >= $v['assure_money']  && $newNum < $max){
-                    $star_level = $v['id'];
-                }
-            }
+        $user_model = new \app\index\model\User();
+        $result = $user_model->setUserWallet($id,$credit,2,1,$number,$remark);
+        if($result['code'] == 400){
+            return ['code' => 1, 'message' => $result['msg']];
         }
-        if(isset($star_level)){
-            userModel::where('id',$id)->setField('star_level',$star_level);
-        }
-        if (!$inslog) {
-            return ['code' => 1, 'message' => '充值失败'];
-        }
+//        if ($types == '1') {
+//            $types1 = 'bond';
+//            $remark = $remark1 . '保证金账户';
+//            $types2 = 1;
+//        } elseif ($types == '2') {
+//            $types1 = 'number';
+//            $remark = $remark1 . '佣金账户';
+//            $types2 = 2;
+//        }
+//        $hasNum = MyWallet::where('uid', $id)->value($types1);
+//        $wallet_data = [
+//            'uid' => $id,
+//            'number' => $number,
+//            'old' => $hasNum,
+//            'new' => $hasNum - $number,
+//            'remark' => $remark,
+//            'types' => 9,
+//            'status' => 2,
+//            'money_type' => $types2,
+//        ];
+//        $newNum = $hasNum - $number;
+//        $my_wallet_log = new MyWalletLog();
+//        $inslog = $my_wallet_log->addNew($my_wallet_log, $wallet_data);
+//
+//        MyWallet::where('uid', $id)->setDec($types1, $number);
+//        if($types == 1){//保证金
+//            $configList = ConfigTeamLevelModel::order('id')->select();
+//            foreach ($configList as $k => $v){
+//                if(isset($configList[$k+1]['assure_money'])){
+//                    $max = $configList[$k+1]['assure_money'];
+//                }else{
+//                    $max = $v['assure_money'] + 1;
+//                }
+//                if($newNum >= $v['assure_money']  && $newNum < $max){
+//                    $star_level = $v['id'];
+//                }
+//            }
+//        }
+//        if(isset($star_level)){
+//            userModel::where('id',$id)->setField('star_level',$star_level);
+//        }
+//        if (!$inslog) {
+//            return ['code' => 1, 'message' => '充值失败'];
+//        }
         return ['code' => 0, 'toUrl' => url('user/index')];
     }
 
@@ -263,52 +285,60 @@ class User extends Admin
         }
         $remark1 = $request->post("remark");
         $types = $request->post('types');
-
         if ($types == '1') {
-            $types1 = 'bond';
-            $remark = $remark1 . '保证金账户';
-            $types2 = 1;
+            $credit = 'credit1';
+            $remark = $remark1 ;
         } elseif ($types == '2') {
-            $types1 = 'number';
-            $remark = $remark1 . '佣金账户';
-            $types2 = 2;
+            $credit = 'credit2';
+            $remark = $remark1;
+        } elseif ($types == '3') {
+            $credit = 'bonus';
+            $remark = $remark1;
+        }elseif ($types == '4') {
+            $credit = 'commission';
+            $remark = $remark1;
         }
-        $hasNum = MyWallet::where('uid', $id)->value($types1);
-        $wallet_data = [
-            'uid' => $id,
-            'number' => $number,
-            'old' => $hasNum,
-            'new' => $hasNum + $number,
-            'remark' => $remark,
-            'types' => 1,
-            'status' => 1,
-            'money_type' => $types2,
-        ];
-
-        $my_wallet_log = new MyWalletLog();
-        $inslog = $my_wallet_log->addNew($my_wallet_log, $wallet_data);
-        $newNum = $hasNum + $number;
-        MyWallet::where('uid', $id)->setInc($types1, $number);
-        if($types == 1){//保证金
-            $configList = ConfigTeamLevelModel::order('id')->select();
-            foreach ($configList as $k => $v){
-                if(isset($configList[$k+1]['assure_money'])){
-                    $max = $configList[$k+1]['assure_money'];
-                }else{
-                    $max = $v['assure_money'] + 1;
-                }
-                if($newNum >= $v['assure_money']  && $newNum < $max){
-                    $star_level = $v['id'];
-
-                }
-            }
+        $user_model = new \app\index\model\User();
+        $result = $user_model->setUserWallet($id,$credit,1,2,$number,$remark);
+        if($result['code'] == 400){
+            return ['code' => 1, 'message' => $result['msg']];
         }
-       if(isset($star_level)){
-            userModel::where('id',$id)->setField('star_level',$star_level);
-       }
-        if (!$inslog) {
-            return ['code' => 1, 'message' => '充值失败'];
-        }
+//        $hasNum = MyWallet::where('uid', $id)->value($types1);
+//        $wallet_data = [
+//            'uid' => $id,
+//            'number' => $number,
+//            'old' => $hasNum,
+//            'new' => $hasNum + $number,
+//            'remark' => $remark,
+//            'types' => 1,
+//            'status' => 1,
+//            'money_type' => $types2,
+//        ];
+//
+//        $my_wallet_log = new MyWalletLog();
+//        $inslog = $my_wallet_log->addNew($my_wallet_log, $wallet_data);
+//        $newNum = $hasNum + $number;
+//        MyWallet::where('uid', $id)->setInc($types1, $number);
+//        if($types == 1){//保证金
+//            $configList = ConfigTeamLevelModel::order('id')->select();
+//            foreach ($configList as $k => $v){
+//                if(isset($configList[$k+1]['assure_money'])){
+//                    $max = $configList[$k+1]['assure_money'];
+//                }else{
+//                    $max = $v['assure_money'] + 1;
+//                }
+//                if($newNum >= $v['assure_money']  && $newNum < $max){
+//                    $star_level = $v['id'];
+//
+//                }
+//            }
+//        }
+//       if(isset($star_level)){
+//            userModel::where('id',$id)->setField('star_level',$star_level);
+//       }
+//        if (!$inslog) {
+//            return ['code' => 1, 'message' => '充值失败'];
+//        }
         return ['code' => 0, 'toUrl' => url('user/index')];
     }
 
@@ -328,16 +358,21 @@ class User extends Admin
             return json()->data(['code' => 1, 'message' => '账号已被注册,请重新填写']);
         }
         $add_data = $request->post();
-        if ($pid = $service->checkHigher($request->post('higher'))) {
-            $add_data['pid'] = $pid;
-        } else {
-            if ($request->post('higher') == 0) {
-
-                $add_data['pid'] = $request->post('higher');
+        if($request->post('higher')){
+            if ($pid = $service->checkHigher($request->post('higher'))) {
+                $add_data['pid'] = $pid;
             } else {
-                return json()->data(['code' => 1, 'message' => '推荐人账号不存在,请重新填写']);
+                if ($request->post('higher') == 0) {
+
+                    $add_data['pid'] = $request->post('higher');
+                } else {
+                    return json()->data(['code' => 1, 'message' => '推荐人账号不存在,请重新填写']);
+                }
             }
+        }else{
+            $add_data['pid'] = 0;
         }
+
 
         Db::startTrans();
         try {
@@ -345,15 +380,22 @@ class User extends Admin
             if (!$userId) {
                 throw new \Exception('保存失败');
             }
+            if(!empty($add_data['pid'])){
+                $result = $this->inviteGive($add_data['pid']);
+                if (!$result) {
+                    throw new \Exception('保存失败');
+                }
+            }
+
             $inviteCode = new UserInviteCode();
             if (!$inviteCode->saveCode($userId)) {
                 throw new \Exception('保存失败');
             }
             $wallet_data = [
                 'uid' => $userId,
-                'update_time' => time(),
+                'createtime' => time(),
             ];
-            $wallet_model = Db('my_wallet');
+            $wallet_model = Db('user_wallet');
 
             $wallet_model->insertGetId($wallet_data);
             Db::commit();
@@ -363,6 +405,48 @@ class User extends Admin
             throw new AdminException($e->getMessage());
         }
     }
+
+    public function inviteGive($uid){
+        $user = Db::name('user')->where('id',$uid)->field('id,invite_count')->find();
+        if(($user['invite_count'] + 1) % 3 == 0){
+            $config = Db::name('config')
+                ->alias('c')
+                ->leftJoin('game_ticket t','t.id = c.value')
+                ->where('c.key','Invite_give')
+                ->field('t.id as tid,t.price')
+                ->find();
+            $times = time();
+            if(!empty($config)){
+                $data = [
+                    'uid'=>$uid,
+                    'ticket_id'=>$config['tid'],
+                    'price'=>$config['price'],
+                    'status'=>0,
+                    'is_give'=>1,
+                    'createtime'=>$times,
+                    'orvertime'=>$times + (86400 * 30),
+                ];
+                $log = [
+                    'uid'=>$uid,
+                    'ticket_id'=>$config['tid'],
+                    'num'=>1,
+                    'op_type'=>2,
+                    'createtime'=>time(),
+                ];
+                $result = Db::name('user_give_ticket_log')->insert($log);
+                if(!$result){
+                    return false;
+                }
+                $result = Db::name('user_game_ticket')->insert($data);
+                if(!$result){
+                    return false;
+                }
+
+            }
+        }
+        return true;
+    }
+
 
     /**
      * @power 会员管理|会员列表@编辑会员
@@ -387,17 +471,19 @@ class User extends Admin
         if($payment){
             UserPaymentModel::where('uid',$id)
                 ->update([
-                    'bank_user_name' => $request->post('bank_user_name'),
-                    'bank_name' => $request->post('bank_name'),
-                    'bank_card' => $request->post('bank_card'),
+                    'alipay_name' => $request->post('alipay_name'),
+                    'alipay_account' => $request->post('alipay_account'),
+//                    'bank_card' => $request->post('bank_card'),
                     'update_time' => time(),
                 ]);
         }else{
             UserPaymentModel::insert([
                     'uid' => $id,
-                    'bank_user_name' => $request->post('bank_user_name'),
-                    'bank_name' => $request->post('bank_name'),
-                    'bank_card' => $request->post('bank_card'),
+                    'alipay_name' => $request->post('alipay_name'),
+                    'alipay_account' => $request->post('alipay_account'),
+//                    'bank_user_name' => $request->post('bank_user_name'),
+//                    'bank_name' => $request->post('bank_name'),
+//                    'bank_card' => $request->post('bank_card'),
                     'create_time' => time(),
                 ]);
         }

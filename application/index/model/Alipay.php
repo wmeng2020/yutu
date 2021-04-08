@@ -2,75 +2,251 @@
 
 namespace app\index\model;
 
+use app\common\entity\UserDiscountList;
+use app\common\entity\UserGameTicket;
+use app\common\PHPMailer\Exception;
 use think\Db;
 use think\Request;
-
+use Yansongda\Pay\Pay;
+use Yansongda\Pay\Log;
 
 class Alipay {
-    protected $config = [
-        'app_id' => '2016082000295641',
-        'notify_url' => 'http://yansongda.cn/notify.php',
-        'return_url' => 'http://yansongda.cn/return.php',
-        'ali_public_key' => 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuWJKrQ6SWvS6niI+4vEVZiYfjkCfLQfoFI2nCp9ZLDS42QtiL4Ccyx8scgc3nhVwmVRte8f57TFvGhvJD0upT4O5O/lRxmTjechXAorirVdAODpOu0mFfQV9y/T9o9hHnU+VmO5spoVb3umqpq6D/Pt8p25Yk852/w01VTIczrXC4QlrbOEe3sr1E9auoC7rgYjjCO6lZUIDjX/oBmNXZxhRDrYx4Yf5X7y8FRBFvygIE2FgxV4Yw+SL3QAa2m5MLcbusJpxOml9YVQfP8iSurx41PvvXUMo49JG3BDVernaCYXQCoUJv9fJwbnfZd7J5YByC+5KM4sblJTq7bXZWQIDAQAB',
-        // 加密方式： **RSA2**
-        'private_key' => 'MIIEpAIBAAKCAQEAs6+F2leOgOrvj9jTeDhb5q46GewOjqLBlGSs/bVL4Z3fMr3p+Q1Tux/6uogeVi/eHd84xvQdfpZ87A1SfoWnEGH5z15yorccxSOwWUI+q8gz51IWqjgZxhWKe31BxNZ+prnQpyeMBtE25fXp5nQZ/pftgePyUUvUZRcAUisswntobDQKbwx28VCXw5XB2A+lvYEvxmMv/QexYjwKK4M54j435TuC3UctZbnuynSPpOmCu45ZhEYXd4YMsGMdZE5/077ZU1aU7wx/gk07PiHImEOCDkzqsFo0Buc/knGcdOiUDvm2hn2y1XvwjyFOThsqCsQYi4JmwZdRa8kvOf57nwIDAQABAoIBAQCw5QCqln4VTrTvcW+msB1ReX57nJgsNfDLbV2dG8mLYQemBa9833DqDK6iynTLNq69y88ylose33o2TVtEccGp8Dqluv6yUAED14G6LexS43KtrXPgugAtsXE253ZDGUNwUggnN1i0MW2RcMqHdQ9ORDWvJUCeZj/AEafgPN8AyiLrZeL07jJz/uaRfAuNqkImCVIarKUX3HBCjl9TpuoMjcMhz/MsOmQ0agtCatO1eoH1sqv5Odvxb1i59c8Hvq/mGEXyRuoiDo05SE6IyXYXr84/Nf2xvVNHNQA6kTckj8shSi+HGM4mO1Y4Pbb7XcnxNkT0Inn6oJMSiy56P+CpAoGBAO1O+5FE1ZuVGuLb48cY+0lHCD+nhSBd66B5FrxgPYCkFOQWR7pWyfNDBlmO3SSooQ8TQXA25blrkDxzOAEGX57EPiipXr/hy5e+WNoukpy09rsO1TMsvC+v0FXLvZ+TIAkqfnYBgaT56ku7yZ8aFGMwdCPL7WJYAwUIcZX8wZ3dAoGBAMHWplAqhe4bfkGOEEpfs6VvEQxCqYMYVyR65K0rI1LiDZn6Ij8fdVtwMjGKFSZZTspmsqnbbuCE/VTyDzF4NpAxdm3cBtZACv1Lpu2Om+aTzhK2PI6WTDVTKAJBYegXaahBCqVbSxieR62IWtmOMjggTtAKWZ1P5LQcRwdkaB2rAoGAWnAPT318Kp7YcDx8whOzMGnxqtCc24jvk2iSUZgb2Dqv+3zCOTF6JUsV0Guxu5bISoZ8GdfSFKf5gBAo97sGFeuUBMsHYPkcLehM1FmLZk1Q+ljcx3P1A/ds3kWXLolTXCrlpvNMBSN5NwOKAyhdPK/qkvnUrfX8sJ5XK2H4J8ECgYAGIZ0HIiE0Y+g9eJnpUFelXvsCEUW9YNK4065SD/BBGedmPHRC3OLgbo8X5A9BNEf6vP7fwpIiRfKhcjqqzOuk6fueA/yvYD04v+Da2MzzoS8+hkcqF3T3pta4I4tORRdRfCUzD80zTSZlRc/h286Y2eTETd+By1onnFFe2X01mwKBgQDaxo4PBcLL2OyVT5DoXiIdTCJ8KNZL9+kV1aiBuOWxnRgkDjPngslzNa1bK+klGgJNYDbQqohKNn1HeFX3mYNfCUpuSnD2Yag53Dd/1DLO+NxzwvTu4D6DCUnMMMBVaF42ig31Bs0jI3JQZVqeeFzSET8fkoFopJf3G6UXlrIEAQ==',
-        // 使用公钥证书模式，请配置下面两个参数，同时修改ali_public_key为以.crt结尾的支付宝公钥证书路径，如（./cert/alipayCertPublicKey_RSA2.crt）
-        // 'app_cert_public_key' => './cert/appCertPublicKey.crt', //应用公钥证书路径
-        // 'alipay_root_cert' => './cert/alipayRootCert.crt', //支付宝根证书路径
-        'log' => [ // optional
-            'file' => './logs/alipay.log',
-            'level' => 'info', // 建议生产环境等级调整为 info，开发环境为 debug
-            'type' => 'single', // optional, 可选 daily.
-            'max_file' => 30, // optional, 当 type 为 daily 时有效，默认 30 天
-        ],
-        'http' => [ // optional
-            'timeout' => 5.0,
-            'connect_timeout' => 5.0,
-            // 更多配置项请参考 [Guzzle](https://guzzle-cn.readthedocs.io/zh_CN/latest/request-options.html)
-        ],
-        'mode' => 'dev', // optional,设置此参数，将进入沙箱模式
-    ];
 
-    public function index()
+    protected $config = [];
+
+    public function __construct()
     {
+        $this->config = \config('alipay');
+    }
+
+    public function createOrder($data = [])
+    {
+        if($data['op_type'] == 2){
+            $this->config['notify_url'] = Request::instance()->domain()."/index/pay/vipAlipay";
+            $this->config['return_url'] = Request::instance()->domain()."/index/pay/vipAlipay";
+        }
         $order = [
-            'out_trade_no' => time(),
-            'total_amount' => '1',
-            'subject' => 'test subject - 测试',
+            'out_trade_no' => $data['out_trade_no'],
+            'total_amount' => $data['total_amount'],
+            // 'total_amount' => 0.1,
+            'subject' => $data['subject'],
         ];
 
-        $alipay = Pay::alipay($this->config)->web($order);
+        $alipay = Pay::alipay($this->config)->app($order);
 
-        return $alipay->send();// laravel 框架中请直接 `return $alipay`
+        return $alipay->getContent();
+//        return $alipay->send();// laravel 框架中请直接 `return $alipay`
     }
 
-    public function return()
-    {
-        $data = Pay::alipay($this->config)->verify(); // 是的，验签就这么简单！
+//    public function return()
+//    {
+//        $data = Pay::alipay($this->config)->verify(); // 是的，验签就这么简单！
+//
+//        // 订单号：$data->out_trade_no
+//        // 支付宝交易号：$data->trade_no
+//        // 订单总金额：$data->total_amount
+//    }
 
-        // 订单号：$data->out_trade_no
-        // 支付宝交易号：$data->trade_no
-        // 订单总金额：$data->total_amount
-    }
-
+    /**
+     * 充值钻石异步回调
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function notify()
     {
+//        $content = Db::name('alipay_notify')->where('id',50)->value('content');
+//
+//        $content = json_decode($content,true);
+//        $data = $content;
+//        var_dump($content);
+//        var_dump($data);die;
+//        var_dump($this->config);die;
+        $request = input('post.');
+        Db::name('alipay_notify')->insert(['op_type'=>1,'content'=>json_encode($request)]);
         $alipay = Pay::alipay($this->config);
+        $data = $alipay->verify(); // 是的，验签就这么简单！
+        if($data['trade_status'] == "TRADE_SUCCESS" || $data['trade_status'] == "TRADE_FINISHED"){
+            Db::startTrans();
+            try {
+                $user_recharge_log = Db::name('user_recharge_log')->where('ordersn',$data['out_trade_no'])->find();
 
-        try{
-            $data = $alipay->verify(); // 是的，验签就这么简单！
-
-            // 请自行对 trade_status 进行判断及其它逻辑进行判断，在支付宝的业务通知中，只有交易通知状态为 TRADE_SUCCESS 或 TRADE_FINISHED 时，支付宝才会认定为买家付款成功。
-            // 1、商户需要验证该通知数据中的out_trade_no是否为商户系统中创建的订单号；
-            // 2、判断total_amount是否确实为该订单的实际金额（即商户订单创建时的金额）；
-            // 3、校验通知中的seller_id（或者seller_email) 是否为out_trade_no这笔单据的对应的操作方（有的时候，一个商户可能有多个seller_id/seller_email）；
-            // 4、验证app_id是否为该商户本身。
-            // 5、其它业务逻辑情况
-
-            Log::debug('Alipay notify', $data->all());
-        } catch (\Exception $e) {
-            // $e->getMessage();
+                if(!empty($user_recharge_log)){
+                    $user_model = new User();
+                    $agent = [];
+                    //                    var_dump($user_recharge_log);die;
+                    if($user_recharge_log['money'] > 0 && $user_recharge_log['num'] > 0 && $user_recharge_log['status'] == 0){
+                        $commission_level = Db::name('commission_level')->select();
+                        //充值钻石
+                        $result = $user_model->setUserWallet($user_recharge_log['uid'],'credit1',1,2,$user_recharge_log['num'],'充值钻石');
+                        if(!$result){
+                            throw new Exception("充值失败(充值钻石)");
+                        }
+                        $user_model->getUserAgents($user_recharge_log['uid'],$agent);
+                        if(!empty($agent)){
+                            //充值佣金
+                            foreach ($agent as $value){
+                                if($value['commission_level'] > 0){
+                                    $recharge_commission = $commission_level[($value['commission_level'] - 1)]['recharge_commission'];
+                                    if($recharge_commission > 0){
+                                        $commission_money = sprintf("%.2f",($user_recharge_log['money'] * $recharge_commission) / 100);
+                                        if($commission_money > 0){
+                                            $result = $user_model->setUserWallet($value['id'],'commission',6,2,$commission_money,['uid'=>$user_recharge_log['uid'],'msg'=>"团队奖励"]);
+                                            if($result['code'] == 400){
+                                                throw new Exception($result['msg']."(团队奖励)");
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        //修改状态
+                        $result = Db::name('user_recharge_log')->where('id',$user_recharge_log['id'])->update(['status'=>1]);
+                        if(!$result){
+                            throw new Exception("充值失败(修改状态)");
+                        }
+                    }
+                }
+                Db::commit();
+            }catch (Exception $e){
+                Db::rollback();
+                $log = "<br />\r\n\r\n".'==================='."\r\n".date("Y-m-d H:i:s")."\r\n".$e->getMessage();
+                @file_put_contents('logs/notify_log.txt', $log, FILE_APPEND);
+                return $alipay->success()->send();
+            }
         }
+//            $request = input('post.');
+//            Db::name('alipay_notify')->insert(['content'=>json_encode($request)]);
+        //写入文件做日志 调试用
+//            $log = "<br />\r\n\r\n".'==================='."\r\n".date("Y-m-d H:i:s")."\r\n".json_encode($request);
+//            @file_put_contents('upload/alipay.txt', $log, FILE_APPEND);
+
+//            Db::name('user_wallet')->where('uid',2)->update(['commission'=>2]);
+        // 请自行对 trade_status 进行判断及其它逻辑进行判断，在支付宝的业务通知中，只有交易通知状态为 TRADE_SUCCESS 或 TRADE_FINISHED 时，支付宝才会认定为买家付款成功。
+        // 1、商户需要验证该通知数据中的out_trade_no是否为商户系统中创建的订单号；
+        // 2、判断total_amount是否确实为该订单的实际金额（即商户订单创建时的金额）；
+        // 3、校验通知中的seller_id（或者seller_email) 是否为out_trade_no这笔单据的对应的操作方（有的时候，一个商户可能有多个seller_id/seller_email）；
+        // 4、验证app_id是否为该商户本身。
+        // 5、其它业务逻辑情况
+
+//            Log::debug('Alipay notify', $data->all());
+        return $alipay->success()->send();// laravel 框架中请直接 `return $alipay->success()`
+    }
+
+    /**
+     *充值VIP异步回调
+     */
+    public function vipNotify(){
+        $this->config['notify_url'] = Request::instance()->domain()."/index/pay/vipAlipay";
+        $this->config['return_url'] = Request::instance()->domain()."/index/pay/vipAlipay";
+//        $request = input('post.');
+//        Db::name('alipay_notify')->insert(['content'=>json_encode($request)]);
+//        echo "success";die;
+//        $content = Db::name('alipay_notify')->where('id',46)->value('content');
+//        $content = json_decode($content,true);
+//        $data = $content;
+//        $request = input('post.');
+//        Db::name('alipay_notify')->insert(['op_type'=>2,'content'=>json_encode($request)]);
+        $alipay = Pay::alipay($this->config);
+        $data = $alipay->verify(); // 是的，验签就这么简单！
+        if($data['trade_status'] == "TRADE_SUCCESS" || $data['trade_status'] == "TRADE_FINISHED"){
+            $user_open_vip_log = Db::name('user_open_vip_log')->where('ordersn',$data['out_trade_no'])->find();
+            Db::startTrans();
+            try {
+                if(!empty($user_open_vip_log) && $user_open_vip_log['status'] == 0){
+                    $times = time();
+                    $user = Db::name('user')->where(['id'=>$user_open_vip_log['uid']])->field('vip,give_time,vip_endtime')->find();
+                    if($user['vip']){
+                        if($user['vip_endtime'] > $times){
+                            //VIP未过期
+                            //VIP结束时间
+                            $vip_endtime =  $user['vip_endtime'] + ($user_open_vip_log['day_num'] * 86400);
+                        }else{
+                            //VIP已过期
+                            //VIP结束时间
+                            $vip_endtime =  $times + ($user_open_vip_log['day_num'] * 86400);
+
+                        }
+                        $result = Db::name('user')->where('id',$user_open_vip_log['uid'])->update(['vip_endtime'=>$vip_endtime]);
+                        if(!$result){
+                            throw new Exception('修改VIP结束时间失败');
+                        }
+                    }else{
+                        //未开通过VIP
+                        //VIP结束时间
+                        $vip_endtime =  $times + ($user_open_vip_log['day_num'] * 86400);
+                        $result = Db::name('user')->where('id',$user_open_vip_log['uid'])->update(['vip_endtime'=>$vip_endtime,'vip'=>1]);
+                        if(!$result){
+                            throw new Exception('修改VIP结束时间失败');
+                        }
+                        //赠送门票和折扣卷
+                        if(empty($user['give_time']) || intval($user['give_time']) <= 0){
+                            //配置
+                            //赠送会员门票ID
+                            $give_user_ticket_id = Db::name('config')->where('key','ticket_id')->value('value');
+                            //门票详情
+                            $game_ticket = Db::name('game_ticket')->where('id',$give_user_ticket_id)->find();
+                            //赠送折扣卷数量
+                            $give_user_discount_num = Db::name('config')->where('key','discount')->value('value');
+                            //折扣卷详情
+                            $discount_list = Db::name('discount_list')->find();
+                            $user_ticket_data = [];
+                            $user_discount_data = [];
+                            //赠送折扣卷
+                            if($discount_list['discount'] > 0 && $give_user_discount_num > 0){
+                                for ($i = 1;$i <= $give_user_discount_num;$i++){
+                                    $user_discount_data[] = [
+                                        'uid'=>$user_open_vip_log['uid'],
+                                        'discount_id'=>$discount_list['id'],
+                                        'discount'=>$discount_list['discount'],
+                                        'createtime'=>$times,
+                                    ];
+                                }
+                            }
+                            //赠送赏金卷
+                            if($give_user_ticket_id && $game_ticket){
+                                for ($i = 1;$i <= 5;$i++){
+                                    $user_ticket_data[] = [
+                                        'uid'=>$user_open_vip_log['uid'],
+                                        'ticket_id'=>$give_user_ticket_id,
+                                        'price'=>$game_ticket['price'],
+                                        'is_give'=>1,
+                                        'createtime'=>$times,
+                                        'orvertime'=>$times + (86400 * 30),
+                                    ];
+                                }
+                            }
+
+                            if($user_ticket_data){
+                                $user_discount_list_model = new UserGameTicket();
+                                $user_discount_list_model->isUpdate(false)->saveAll($user_ticket_data);
+                            }
+
+                            if($user_discount_data){
+                                $user_discount_list_model = new UserDiscountList();
+                                $user_discount_list_model->isUpdate(false)->saveAll($user_discount_data);
+                            }
+
+                            $result = Db::name('user')->where('id',$user_open_vip_log['uid'])->update(['give_time'=>$times]);
+                            if(!$result){
+                                throw new Exception('修改赠送时间失败');
+                            }
+                        }
+                    }
+                    $result = Db::name('user_open_vip_log')->where('id',$user_open_vip_log['id'])->update(['status'=>1]);
+                    if(!$result){
+                        throw new Exception('修改记录状态失败');
+                    }
+                }
+                Db::commit();
+            }catch (Exception $e){
+                Db::rollback();
+                $log = "<br />\r\n\r\n".'==================='."\r\n".date("Y-m-d H:i:s")."\r\n".$e->getMessage();
+                @file_put_contents('logs/notify_log.txt', $log, FILE_APPEND);
+                return $alipay->success()->send();
+            }
+        }
+
+        Log::debug('Alipay notify', $data->all());
 
         return $alipay->success()->send();// laravel 框架中请直接 `return $alipay->success()`
     }

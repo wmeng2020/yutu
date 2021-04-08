@@ -9,6 +9,7 @@
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
 
+
 // [ 应用入口文件 ]
 
 // 定义应用目录
@@ -27,6 +28,7 @@ define('ADMIN_C', __DIR__ . '/application/admin/controller/');
 define('ADMIN_V', __DIR__ . '/application/admin/view/');
 define('MODEL_C', __DIR__ . '/application/common/model/');
 define('INDEX_C', __DIR__ . '/application/index/controller/');
+ini_set('opcache.revalidate_freq',0);
 
 // 加载框架引导文件
 require __DIR__ . '/../thinkphp/start.php';

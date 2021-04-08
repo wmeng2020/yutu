@@ -52,6 +52,16 @@ class ManageUser extends Model
     }
 
     /**
+     * 获取VIP过期时间
+     */
+    public function getVipEndTime()
+    {
+        return $this->vip_endtime ? date('Y-m-d H:i:s', $this->vip_endtime) : 0;
+    }
+
+
+
+    /**
      * 判断是否被禁用
      */
     public function isForbiddened()

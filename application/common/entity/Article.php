@@ -18,10 +18,7 @@ class Article extends Model
     public static function getAllCate()
     {
         return [
-            '1' => '系统公告',
             '2' => '客服',
-            '3' => '商学院',
-            '4' => '官方群',
         ];
     }
 

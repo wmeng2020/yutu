@@ -168,6 +168,17 @@
                     </div>
                 </div>
             </div>
+
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">秘钥</label>
+                <div class="col-sm-5">
+                    <input type="password" value="" name="password" class="form-control"
+                           placeholder="请输入秘钥">
+                </div>
+            </div>
+
+
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
                     <button type="submit" onclick="main.ajaxPosts(this)" data-url="{:url('admin/System/update',['id'=>$list.id])}"

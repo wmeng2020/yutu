@@ -7,6 +7,8 @@ use app\common\entity\ConfigUserLevelModel;
 use app\common\entity\LevelUpLogModel;
 use app\common\entity\LootVipModel;
 use think\Request;
+use think\DB;
+
 
 class Level extends Base
 {
@@ -15,18 +17,11 @@ class Level extends Base
     */
    public function getLevelList()
    {
-       $user_info = \app\common\entity\User::alias('u')
-           ->field('u.id,u.mobile,l.level_name,u.avatar')
-           ->leftJoin('config_user_level l','l.id = u.star_level')
-           ->where('u.id',$this->userId)
-           ->find();
-
-        $list = ConfigTeamLevelModel::select();
-        $data = [
-            'user' => $user_info,
-            'list' => $list,
-        ];
-        return json(['code' => 0, 'msg' => '获取成功', 'info' => $data]);
+       $data = DB::table('config_user_level')->field('id,level_name,count,money,money')->select();
+       $user = DB::table('user')->where('id',$this->userId)->field('id,mobile,nick_name,avatar,level')->find();
+       $user['level_name'] = DB::table('config_user_level')->where('id',$user['level'])->value('level_name');
+       $user['count'] = DB::table('config_user_level')->where('id',$user['level'])->value('count');
+        return json(['code' => 0, 'msg' => '获取成功', 'info' => $data,'user'=>$user]);
    }
    private function getConfigValue($key, $value='value')
    {
@@ -35,7 +30,7 @@ class Level extends Base
            ->value($value);
    }
    /**
-    * 购买保证金套餐
+    * 购买会员等级
     */
    public function buyVip(Request $request)
    {
@@ -43,17 +38,22 @@ class Level extends Base
        if(!$id){
            return json(['code' => 1, 'msg' => '请检查参数']);
        }
-       $team_info = ConfigTeamLevelModel::where('id',$id)
-           ->find();
+       $team_info = DB::table('config_user_level')->where('id',$id)->find();
+       $user = DB::table('user')->where('id',$this->userId)->find();
+       if($id>$user['level']){
+        $conmoney = DB::table('config_user_level')->where('id',$user['level'])->value('money');
+        $team_info['money'] = $team_info['money']-$conmoney;
+       }
        $money = \app\common\entity\MyWallet::where('uid',$this->userId)
            ->value('number');
+           
 
-       if($money < $team_info['assure_money']){
-           return json(['code' => 0, 'msg' => '余额不足','toUrl'=>1]);
+       if($money < $team_info['money']){
+           return json(['code' => 0, 'msg' => '余额不足','toUrl'=>1,'money'=>$team_info['money']]);
        }
        //自己等级
        $star_level = \app\common\entity\User::where('id',$this->userId)
-           ->value('star_level');
+           ->value('level');
        if($star_level >= $id){
            return json(['code' => 1, 'msg' => '您已购买，无需重复购买']);
        }
@@ -61,19 +61,22 @@ class Level extends Base
        $model = new \app\common\entity\MyWallet();
        $model_data = [
            'uid' => $this->userId,
-           'num' => $team_info['assure_money'],
-           'remark' => '购买保证金套餐',
+           'num' => $team_info['money'],
+           'remark' => '购买会员套餐',
        ];
        $take_money_res = $model->lootVipMoney($model,$model_data);
 
        if($take_money_res){
            //修改会员等级
-           $entry = new LevelUpLogModel();
-           $entry->lootVipLog([
-               'uid' => $this->userId,
-               'level' => $id,
-               'status' => 1,
-           ]);
+          $upda = \app\common\entity\User::where('id',$this->userId)
+           ->update(['level'=>$id]);
+
+           // $entry = new LevelUpLogModel();
+           // $entry->lootVipLog([
+           //     'uid' => $this->userId,
+           //     'level' => $id,
+           //     'status' => 1,
+           // ]);
            return json(['code' => 0, 'msg' => '购买成功']);
        }
 

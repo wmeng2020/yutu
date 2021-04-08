@@ -30,11 +30,17 @@ class ConfigUserLevelModel extends Model {
         if(isset($data['level_name'])){
             $query->level_name = $data['level_name'];
         }
-        $query->team_num = $data['team_num'];
-        $query->valid_num = $data['valid_num'];
+        // $query->team_num = $data['team_num'];
+        // $query->valid_num = $data['valid_num'];
         $query->one_level = $data['one_level'];
         $query->two_level = $data['two_level'];
         $query->three_level = $data['three_level'];
+        $query->count = $data['count'];
+        $query->money = $data['money'];
+        $query->one_money = $data['one_money'];
+        $query->two_money = $data['two_money'];
+        $query->three_money = $data['three_money'];
+        $query->deposit_cost = $data['deposit_cost'];
         return $query->save();
     }
 }

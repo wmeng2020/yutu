@@ -9,6 +9,7 @@ use app\common\entity\TaskModel;
 use app\common\entity\TaskOrderModel;
 use app\common\service\Task\Service;
 use think\Request;
+use think\Db;
 
 class Task extends Base
 {
@@ -16,11 +17,11 @@ class Task extends Base
      * 任务列表
      */
     public function index(Request $request)
-    {
+    {   $level = $request->post('level')??0;
         $limit = $request->post('limit') ? $request->post('limit') : 15;
         $page = $request->post('page') ? $request->post('page') : 1;
         $query = TaskModel::alias('t')
-            ->field('t.id,t.task_url,t.demand_side,t.task_num,t.task_price');
+            ->field('t.id,t.task_url,t.demand_side,t.task_num,t.task_price,t.level');
         //本人已领取任务ID
         $received_task = TaskOrderModel::where('uid',$this->userId)
             ->whereIn('status',[0,1])
@@ -29,6 +30,7 @@ class Task extends Base
             $query->whereNotIn('t.id',$received_task);
         }
         $list = $query->where('status',1)
+            ->where('t.level',$level)
             ->page($page)
             ->paginate($limit);
 
@@ -65,14 +67,14 @@ class Task extends Base
         }
         //一共可领取任务数
         $level = \app\common\entity\User::where('id',$this->userId)
-            ->value('star_level');
-        if($level > 0){
-            $tasks_num = ConfigTeamLevelModel::where('id',$level)
-                ->value('task_num');
-        }else{
-            $tasks_num = Config::where('key','free_task_num')
-                ->value('value');
-        }
+            ->value('level');
+        // if($level > 0){
+            $tasks_num = DB::table('config_user_level')->where('id',$level)
+                ->value('count');
+        // }else{
+        //     $tasks_num = Config::where('key','free_task_num')
+        //         ->value('value');
+        // }
         //已领取任务数
         $has_task_num = TaskOrderModel::where('uid',$this->userId)
             ->whereTime('receivetime','today')
@@ -83,9 +85,9 @@ class Task extends Base
         }
         $user = \app\common\entity\User::where('id',$this->userId)
             ->find();
-        if($user['tiktok_status'] != 3){
-            return json(['code' => 1, 'msg' => '请绑定抖音账号','toUrl'=>1]);
-        }
+        // if($user['tiktok_status'] != 3){
+            // return json(['code' => 1, 'msg' => '请绑定抖音账号','toUrl'=>1]);
+        // }
 //        if ($user['kwaifu_status'] != 3){
 //            return json(['code' => 1, 'msg' => '请绑定快手账号','toUrl'=>2]);
 //        }
@@ -109,6 +111,7 @@ class Task extends Base
      */
     public function receivedTaskList(Request $request)
     {
+        $user = DB::table('user')->where('id',$this->userId)->find();
         $limit = $request->post('limit',15) ;
         $page = $request->post('page',1);
         $status = $request->post('status');
@@ -117,19 +120,22 @@ class Task extends Base
             $query->where('to.status',$status);
         }
         $list = $query->alias('to')
-            ->field('to.id,to.realprice,to.status,t.demand_side,examinetime,t.task_url')
+            ->field('to.id,to.realprice,to.status,t.demand_side,examinetime,t.task_url,t.level')
             ->leftJoin('task t','t.id = to.task_id')
             ->where('to.uid',$this->userId)
             ->order('to.receivetime','desc')
             ->page($page)
             ->paginate($limit);
+        $today = DB::table('task_order')->where('uid',$this->userId)->whereTime('receivetime','today')->count();
+        $level_day = DB::table('config_user_level')->where('id',$user['level'])->value('count');
+        $surplus_num = $level_day- $today;
         foreach ($list as $v){
             if($v['examinetime']){
                 $v['examinetime'] = date('Y-m-d H:i:s',$v['examinetime']);
             }
         }
 
-        return json(['code' => 0, 'msg' => '获取成功', 'info' => $list]);
+        return json(['code' => 0, 'msg' => '获取成功', 'info' => $list,'surplus_num'=>$surplus_num]);
     }
     /**
      * 提交任务
@@ -195,7 +201,7 @@ class Task extends Base
         if($request->isPost()) {
             $user_info = \app\common\entity\User::where('id', $this->userId)
                 ->find();
-            if ($user_info['star_level'] < 1) {
+            if ($user_info['level'] < 3) {
                 return json(['code' => 1, 'msg' => '无权限使用改功能']);
             }
             $is_use = Db('deposit')->where('uid', $this->userId)
@@ -205,10 +211,10 @@ class Task extends Base
                 return json(['code' => 1, 'msg' => '今日已托管']);
             }
 
-            if($user_info['tiktok_status'] != 3){
-                return json(['code' => 1, 'msg' => '请绑定抖音账号','toUrl'=>1]);
-            }
-            $config = ConfigTeamLevelModel::where('id', $user_info['star_level'])
+            // if($user_info['tiktok_status'] != 3){
+            //     return json(['code' => 1, 'msg' => '请绑定抖音账号','toUrl'=>1]);
+            // }
+            $config = DB::table('config_user_level')->where('id', $user_info['level'])
                 ->value('deposit_cost');
             $is_deposit = Db('deposit')->where('uid', $this->userId)
                 ->where('status', 1)

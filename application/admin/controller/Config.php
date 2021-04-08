@@ -14,8 +14,10 @@ class Config extends Admin
      */
     public function index()
     {
+        $ticket = Db::name('game_ticket')->where(['status'=>1,'deleted'=>0])->select();
         return $this->render('index', [
-            'list' => \app\common\entity\Config::where('type', 1)->where('status',1)->select()
+            'list' => \app\common\entity\Config::where('type', 1)->where('status',1)->select(),
+            'ticket'=>$ticket,
         ]);
     }
 

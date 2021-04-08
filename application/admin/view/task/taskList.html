@@ -38,6 +38,7 @@
                     <th class="text-center">ID</th>
                     <th class="text-center">任务链接</th>
                     <th class="text-center">需求方</th>
+                    <th class="text-center">要求等级</th>
                     <th class="text-center">任务总数量</th>
                     <th class="text-center">任务价格</th>
                     <th class="text-center">状态</th>
@@ -55,6 +56,9 @@
                         </td>
                         <td class="text-center">
                             {$order->demand_side}
+                        </td>
+                        <td class="text-center">
+                            {$order->level}
                         </td>
                         <td class="text-center">
                             {$order->task_num}

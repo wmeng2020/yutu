@@ -11,9 +11,9 @@ class RechargeModel extends Model {
     /**
      * @var string 对应的数据表名
      */
-    protected $table = 'recharge';
+    protected $table = 'user_recharge_log';
 
-    protected $createTime = 'create_time';
+    protected $createTime = 'createtime';
 
     protected $autoWriteTimestamp = false;
 
@@ -23,9 +23,9 @@ class RechargeModel extends Model {
     public static function getAllStatus()
     {
         return [
-            1 => '审核中',
-            2 => '通过',
-            3 => '拒绝',
+            0 => '待支付',
+            1 => '已支付',
+            -1 => '拒绝',
         ];
     }
     /**
@@ -54,7 +54,8 @@ class RechargeModel extends Model {
         $query->uid = $data['uid'];
         $query->orderNo = $data['orderNo'];
         $query->types = $data['types'];
-        $query->total = $data['total'];
+        $query->level = $data['level'];
+//        $query->total = $data['total'];
         $query->proof = $data['proof'];
         $query->status = $data['status'];
         $query->create_time = time();

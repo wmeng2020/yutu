@@ -178,6 +178,7 @@ class MyWallet extends Model {
    public function taskMoney($query,$data)
    {
        $oldInfo = $this->where('uid',$data['uid'])->find();
+       // dump($oldInfo);die;
        Db::startTrans();
        try {
            $edit_data['number'] = $oldInfo['number'] + $data['number'];
@@ -236,18 +237,18 @@ class MyWallet extends Model {
                 'create_time' => time(),
             ];
             MyWalletLog::insert($create_data);
-            $create_data = [
-                'uid' => $data['uid'],
-                'number' => $data['num'],
-                'old' => $old_bond,
-                'new' => $old_bond + $data['num'],
-                'remark' => $data['remark'],
-                'types' => 4,
-                'status' => 1,
-                'money_type' => 1,
-                'create_time' => time(),
-            ];
-            MyWalletLog::insert($create_data);
+            // $create_data = [
+            //     'uid' => $data['uid'],
+            //     'number' => $data['num'],
+            //     'old' => $old_bond,
+            //     'new' => $old_bond + $data['num'],
+            //     'remark' => $data['remark'],
+            //     'types' => 4,
+            //     'status' => 1,
+            //     'money_type' => 1,
+            //     'create_time' => time(),
+            // ];
+            // MyWalletLog::insert($create_data);
             Db::commit();
             return true;
         } catch (\Exception $e) {

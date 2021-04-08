@@ -11,9 +11,9 @@ class MyWalletLog extends Model {
     /**
      * @var string 对应的数据表名
      */
-    protected $table = 'my_wallet_log';
+    protected $table = 'user_wallet_log';
 
-    protected $createTime = 'create_time';
+    protected $createTime = 'createtime';
 
     protected $autoWriteTimestamp = false;
 
@@ -34,22 +34,24 @@ class MyWalletLog extends Model {
     {
         return [
             1 => '充值',
-            2 => '提现',
-            3 => '提现拒绝，退还',
-            4 => '转账',
-            5 => '任务佣金',
-            6 => '下级分佣',
-            7 => '代理佣金',
-
+            2 => '消费',
+            3 => '提现',
+            4 => '提现拒绝，退还',
+            5 => '推广佣金（购买门票返佣）',
+            6 => '团队佣金（充值返佣）',
+            7 => '奖金奖励（参与比赛奖金）',
+            8 => '聊天室消耗钻石',
+            9 => '推广佣金（聊天室消耗钻石返佣）',
         ];
     }
     //获取所有账户类型
     public static function getAllMoneyTypes()
     {
         return [
-            1 => '保证金账户',
-            2 => '佣金账户',
-            3 => '代理账户',
+            1 => '钻石',
+            2 => '金币',
+            3 => '佣金',
+            4 => '奖金',
         ];
     }
     //获取账户类型
@@ -73,17 +75,19 @@ class MyWalletLog extends Model {
             case 1:
                 return '充值';
             case 2:
-                return '提现';
+                return '消费';
             case 3:
-                return '提现拒绝，退还';
+                return '提现';
             case 4:
-                return '转账';
+                return '提现拒绝，退还';
             case 5:
-                return '任务佣金';
+                return '推广佣金（购买门票返佣）';
             case 6:
-                return '下级分佣';
+                return '团队佣金（充值返佣）';
             case 7:
-                return '代理佣金';
+                return '奖金奖励（参与比赛奖金）';
+            case 8:
+                return '购买会员';
             default:
                 return '';
         }

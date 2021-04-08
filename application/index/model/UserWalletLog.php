@@ -22,10 +22,18 @@ use app\common\entity\Fansconfig;
 use app\common\entity\Masterconfig;
 use app\common\model\UserCurrency;
 
-class UserWallet {
+class UserWalletLog {
 
-    public function getUserWallet($uid,$page = 1,$psize = 10){
-        $UserWallet = Db::name('user_wallet_log')->where('uid',$uid)->order('id desc')->page($page,$psize)->select();
+    public function getUserWalletLog($uid,$page = 1,$psize = 10,$field = "*",$credit = ""){
+        if(!empty($credit)){
+            $where = [
+                'uid'=>$uid,
+                'credit'=>$credit,
+            ];
+        }else{
+            $where = ['uid'=>$uid];
+        }
+        $UserWallet = Db::name('user_wallet_log')->where($where)->field($field)->order('id desc')->page($page,$psize)->select();
         foreach ($UserWallet as &$value){
             if($value['op_type'] == 1){
                 $op_type = "消费";
@@ -40,18 +48,31 @@ class UserWallet {
     }
 
     public function setUserWalletLog($uid,$credit,$types,$op_type,$money,$remarks){
+        if(is_array($remarks)){
+            $from = $remarks['uid'];
+            $remarks = $remarks['msg'];
+        }
         $user_credit = Db::name('user_wallet')->where('uid', $uid)->value($credit);
-        var_dump($user_credit);die;
+        $after_change_money = 0;
+        if($op_type == 1){
+            $after_change_money = sprintf("%.2f",($user_credit - $money));
+        }elseif ($op_type == 2){
+            $after_change_money = sprintf("%.2f",($user_credit + $money));
+        }
         $data = [
             'uid'=>$uid,
+            'credit'=>$credit,
             'change_money'=>$money,
             'original_money'=>$user_credit,
-            'after_change_money'=>sprintf("%.2f",($user_credit + $money)),
+            'after_change_money'=>$after_change_money,
             'types'=>$types,
             'op_type'=>$op_type,
             'remarks'=>$remarks,
             'createtime'=>time(),
         ];
+        if(!empty($from)){
+            $data['froms'] = $from;
+        }
         $result = Db::name('user_wallet_log')->insert($data);
         return $result;
     }

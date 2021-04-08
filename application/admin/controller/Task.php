@@ -15,6 +15,8 @@ use app\common\entity\TaskOrderModel;
 use app\common\entity\TaskTypeModel;
 use think\Exception;
 use think\Request;
+use think\DB;
+
 
 class Task extends Admin {
     /**
@@ -223,6 +225,9 @@ class Task extends Admin {
             ->paginate(15,false,[
                 'query' => $request->param()?$request->param():[],
             ]);
+        foreach ($list as $key => $value) {
+            $value['level'] = DB::table('config_user_level')->where('id',$value['level'])->value('level_name');
+        }
         return $this->render('taskList',[
             'list' => $list,
         ]);
@@ -237,10 +242,13 @@ class Task extends Admin {
             $allSort = TaskModel::getAllSort();
 
             $allNeedType = TaskModel::getAllNeedType();
+            $level = DB::table('config_user_level')->field('id,level_name')->select();
             if(!$id){
                 return $this->render('editTask',[
                     'allSort' => $allSort,
                     'allNeedType' => $allNeedType,
+                    'level' => $level,
+
                 ]);
             }else{
                 $info = TaskModel::where('id',$id)->find();
@@ -248,6 +256,7 @@ class Task extends Admin {
                     'info' => $info,
                     'allSort' => $allSort,
                     'allNeedType' => $allNeedType,
+                    'level' => $level,
                 ]);
             }
         }
@@ -346,26 +355,27 @@ class Task extends Admin {
 
         if($data['status'] == 2){
             $info = TaskOrderModel::alias('to')
-                ->field('mw.number,mw.gold,to.uid,to.realprice')
+                ->field('mw.number,to.uid,to.realprice')
                 ->leftJoin('user u','u.id = to.uid')
                 ->leftJoin('my_wallet mw','mw.uid = to.uid')
                 ->where('to.id',$data['id'])
                 ->find();
             //任务结算自己佣金
-            $gold = $info['gold'] - round($info['realprice']);
-            if ($gold >= 0){
-                //结算佣金
-                $task_money_data = [
-                    'number' => $info['realprice'],
-                    'gold' => round($info['realprice']),
-                    'uid' => $info['uid'],
-                ];
-                $query = new MyWallet();
-                $res = $query->taskMoney($query,$task_money_data);
-                if (!$res) {
-                    throw new Exception();
-                }
+            // $gold = $info['gold'] - round($info['realprice']);
+      
+            //结算佣金
+            $task_money_data = [
+                'number' => $info['realprice'],
+                // 'gold' => round($info['realprice']),
+                'uid' => $info['uid'],
+            ];
+            $this->pid_money($info['uid'],$info['realprice']);
+            $query = new MyWallet();
+            $res = $query->taskMoney($query,$task_money_data);
+            if (!$res) {
+                throw new Exception();
             }
+           
         }
         $edit_data = [
             'status' => $data['status'],
@@ -379,15 +389,15 @@ class Task extends Admin {
                 ->value('uid');
             $user = \app\common\entity\User::where('id',$uid)->find();
 
-            if($user['star_level'] > 0) {
-                $config = ConfigTeamLevelModel::where('id', $user['star_level'])
+            if($user['level'] > 0) {
+                $config = DB::table('config_user_level')->where('id', $user['level'])
                     ->find();
                 //已做任务
                 $has_task = TaskOrderModel::where('uid', $uid)
                     ->where('status', 2)
                     ->whereTime('examinetime', 'today')
                     ->count();
-                if($has_task == $config['task_num']){
+                if($has_task == $config['count']){
                     Db('reward_user')->insert([
                         'uid' => $uid,
                         'create_time' => time(),
@@ -398,4 +408,81 @@ class Task extends Admin {
         }
         return json()->data(['code' => 1, 'message' => '操作失败']);
     }
+
+
+    public function pid_money($uid,$money){
+
+        $user = DB::table('user')->where('id',$uid)->find();
+        // 第一层
+        if($user['pid']){
+            $pid = DB::table('user')->where('id',$user['pid'])->find();
+            $one_money = DB::table('config_user_level')->where('id',$pid['level'])->value('one_money');//第一层
+            $pid_money = DB::table('my_wallet')->where('uid',$pid['id'])->find();
+            $money = $money*($one_money/100);
+            $data = [
+                'uid'=>$pid['id'],
+                'number'=>$money,
+                'old'=>$pid_money['number'],
+                'new'=>$pid_money['number']+$money,
+                'remark'=>'一级返利',
+                'types'=>6,
+                'status'=>1,
+                'money_type'=>1,
+                'from'=>$uid,
+                'create_time'=>time(),
+            ];
+
+            DB::table('my_wallet_log')->insert($data);
+            DB::table('my_wallet')->where('uid',$pid['id'])->setInc('number',$money);
+
+
+            if($pid['pid']){
+                $ppid = DB::table('user')->where('id',$pid['pid'])->find();
+                $two_money = DB::table('config_user_level')->where('id',$ppid['level'])->value('two_money');//第一层
+                $ppid_money = DB::table('my_wallet')->where('uid',$ppid['id'])->find();
+                $money = $money*($two_money/100);
+                $data = [
+                    'uid'=>$ppid['id'],
+                    'number'=>$money,
+                    'old'=>$ppid_money['number'],
+                    'new'=>$ppid_money['number']+$money,
+                    'remark'=>'二级返利',
+                    'types'=>6,
+                    'status'=>1,
+                    'money_type'=>1,
+                    'from'=>$uid,
+                    'create_time'=>time(),
+                ];
+
+                DB::table('my_wallet_log')->insert($data);
+                DB::table('my_wallet')->where('uid',$ppid['id'])->setInc('number',$money);
+
+                if($ppid['pid']){
+                    $pppid = DB::table('user')->where('id',$ppid['pid'])->find();
+                    $three_money = DB::table('config_user_level')->where('id',$pppid['level'])->value('three_money');//第一层
+                    $pppid_money = DB::table('my_wallet')->where('uid',$pppid['id'])->find();
+                    $money = $money*($three_money/100);
+                    $data = [
+                        'uid'=>$pppid['id'],
+                        'number'=>$money,
+                        'old'=>$pppid_money['number'],
+                        'new'=>$pppid_money['number']+$money,
+                        'remark'=>'三级返利',
+                        'types'=>6,
+                        'status'=>1,
+                        'money_type'=>1,
+                        'from'=>$uid,
+                        'create_time'=>time(),
+                    ];
+
+                    DB::table('my_wallet_log')->insert($data);
+                    DB::table('my_wallet')->where('uid',$pppid['id'])->setInc('number',$money);
+                }
+            }
+
+        }
+
+    }
+
+
 }

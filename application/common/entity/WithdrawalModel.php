@@ -11,9 +11,9 @@ class WithdrawalModel extends Model {
     /**
      * @var string 对应的数据表名
      */
-    protected $table = 'withdrawal';
+    protected $table = 'user_withdrawal';
 
-    protected $createTime = 'create_time';
+    protected $createTime = 'createtime';
 
     protected $autoWriteTimestamp = false;
 
@@ -23,9 +23,9 @@ class WithdrawalModel extends Model {
     public static function getAllStatus()
     {
         return [
-            1 => '审核中',
-            2 => '通过',
-            3 => '拒绝',
+            0 => '审核中',
+            1 => '通过',
+            -1 => '拒绝',
         ];
     }
     /**
@@ -36,7 +36,17 @@ class WithdrawalModel extends Model {
         return [
             1 => '支付宝',
             2 => '银行卡',
-            3 => '',
+        ];
+    }
+
+    /**
+     * 获取所有类型
+     */
+    public static function getAllOpTypes()
+    {
+        return [
+            1 => '佣金提现',
+            2 => '奖金提现',
         ];
     }
     /**

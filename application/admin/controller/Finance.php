@@ -21,9 +21,9 @@ class Finance extends Admin {
     public function userWalletLog(Request $request)
     {
         $entry = MyWalletLog::alias('mwl')
-            ->leftJoin('my_wallet mw','mwl.uid = mw.uid')
+            ->leftJoin('user_wallet mw','mwl.uid = mw.uid')
             ->leftJoin('user u','u.id = mwl.uid')
-            ->field('mwl.*,u.nick_name,u.mobile,mw.number as balance');
+            ->field('mwl.*,u.nick_name,u.mobile');
         if ($keyword = $request->get('keyword')) {
             $type = $request->get('type');
             switch ($type) {
@@ -44,15 +44,15 @@ class Finance extends Admin {
         $startTime = $request->get('startTime');
         $endTime = $request->get('endTime');
         if($startTime){
-            $entry->where('mwl.create_time', '>=', strtotime($startTime));
+            $entry->where('mwl.createtime', '>=', strtotime($startTime));
             $map['startTime'] = $startTime;
         }
         if($endTime){
-            $entry->where('mwl.create_time', '<', strtotime($endTime));
+            $entry->where('mwl.createtime', '<', strtotime($endTime));
             $map['endTime'] = $endTime;
         }
         $list = $entry
-            ->order('mwl.create_time','desc')
+            ->order('mwl.createtime','desc')
             ->paginate(15,false,[
                 'query' => $request->param()?$request->param():[],
             ]);
@@ -68,9 +68,9 @@ class Finance extends Admin {
     public function exportUserWalletLog(Request $request){
         $export = new Export();
         $entry = MyWalletLog::alias('mwl')
-            ->leftJoin('my_wallet mw','mwl.uid = mw.uid')
+            ->leftJoin('user_wallet mw','mwl.uid = mw.uid')
             ->leftJoin('user u','u.id = mwl.uid')
-            ->field('mwl.*,u.nick_name,u.mobile,mw.number as balance');
+            ->field('mwl.*,u.nick_name,u.mobile');
         if ($keyword = $request->get('keyword')) {
             $type = $request->get('type');
             switch ($type) {
@@ -91,27 +91,27 @@ class Finance extends Admin {
         $startTime = $request->get('startTime');
         $endTime = $request->get('endTime');
         if($startTime){
-            $entry->where('mwl.create_time', '>=', strtotime($startTime));
+            $entry->where('mwl.createtime', '>=', strtotime($startTime));
             $map['startTime'] = $startTime;
         }
         if($endTime){
-            $entry->where('mwl.create_time', '<', strtotime($endTime));
+            $entry->where('mwl.createtime', '<', strtotime($endTime));
             $map['endTime'] = $endTime;
         }
         $page = $request->get('page')? $request->get('page'):0;
         $list = $entry
             ->page($page)
-            ->order('mwl.create_time','desc')
+            ->order('mwl.createtime','desc')
             ->paginate(15,false,[
                 'query' => $request->param()?$request->param():[],
             ]);
         foreach ($list as $v){
             $v['types_name'] = $v->getType($v->types);
-            $v['status_number'] = $v->getStatus($v->status).$v->number;
+            $v['change_money'] = $v['op_type'] == 1 ? "-".$v['change_money'] : "+".$v['change_money'];
         }
         $filename = '会员财务记录';
-        $header = array('ID', '现在余额', '流水类型', '原来的金额', '变化的金额', '变化后的金额', '备注', '时间');
-        $index = array('id', 'balance', 'types_name', 'old', 'status_number', 'new', 'remark', 'create_time');
+        $header = array('ID', '流水类型', '原来的金额', '变化的金额', '变化后的金额', '备注', '时间');
+        $index = array('id', 'types_name', 'original_money', 'change_money', 'after_change_money', 'remarks', 'createtime');
         $export->createtable($list, $filename, $header, $index);
     }
     /**

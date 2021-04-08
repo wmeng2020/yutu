@@ -1,508 +1,554 @@
 <?php
 
-namespace app\index\controller;
+namespace app\index\model;
 
 use app\common\entity\Config;
-use app\common\entity\FundLogModel;
-use app\common\entity\GoodsModel;
-use app\common\entity\MyWalletLog;
-use app\common\entity\PrizeLogModel;
-use app\common\entity\PrizePublicTotalModel;
-use app\common\entity\PrizeSeePointModel;
-use app\common\entity\RechargeModel;
-use app\common\entity\TaskOrderModel;
-use app\common\entity\UserAddressModel;
+use app\common\entity\Log;
+use app\common\entity\MyWallet;
+use app\common\entity\Orders;
+use app\common\entity\Allaward;
 use app\common\entity\UserInviteCode;
 use app\common\entity\UserLevelConfigModel;
-use app\common\entity\UserPaymentModel;
-use app\common\entity\UserUpgradeModel;
-use app\common\entity\UserYuncangModel;
-use app\common\entity\WithdrawalModel;
-use think\Console;
+use app\common\entity\UserProduct;
+use app\common\PHPMailer\Exception;
+use app\common\service\Users\Cache;
+use app\common\service\Users\Identity;
+use app\common\service\Users\Service;
+use app\index\model\UserWalletLog;
 use think\Db;
-use think\Exception;
 use think\Request;
+use app\common\entity\Category;
+use app\common\entity\Areaconfig;
+use app\common\entity\Cityconfig;
+use app\common\entity\Fansconfig;
+use app\common\entity\Masterconfig;
+use app\common\model\UserCurrency;
+use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\LabelAlignment;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Response\QrCodeResponse;
 
 
-class User extends Base {
-    /**
-     * 用户地址|列表
-     */
-    public function useraddress(Request $request)
-    {
-        $list = $this->addresssearch($request);
 
-        return json(['code'=>0,'msg'=>'请求成功','info'=>$list]);
-    }
-    /**
-     * 用户地址|添加新收获地址
-     */
-    public function addAddress(Request $request)
-    {
-        $validate = $this->validate($request->post(), '\app\index\validate\UserAddress');
-        if ($validate !== true) {
-            return json(['code' => 1, 'msg' => $validate]);
+class User {
+
+    public function checkRegisterOpen() {
+        $registerOpen = Config::getValue('register_open');
+        if ($registerOpen) {
+            return true;
         }
-        $address = new UserAddressModel();
-        if($request->post('status')){
-            $userAddress = $address->where('uid',$this->userId)->select();
-            foreach ($userAddress as $k => $v){
-                if($v['status'] == 1){
-                    $address->where('uid',$v['uid'])->update(['status'=>0]);
-                }
-            }
-        }
-        $add_data= $request->post();
-        $add_data['uid'] = $this->userId;
-        $result = $address->addRess($address,$add_data);
-        if($result) return json(['code'=>0,'msg'=>'添加地址成功']);
-        return json(['code'=>1,'msg'=>'失败']);
-    }
-    /**
-     *用户地址|修改|设为默认
-     */
-    public function updateAddress (Request $request)
-    {
-        $id = $request->post('id');
-        $query = UserAddressModel::where('id', $id)->find();
-
-        if (!$query) {
-            return json(['code' => 1, 'msg' => '地址信息不存在']);
-        }
-        if($request->post('status') == 1){
-            $address = new UserAddressModel();
-            $address
-                ->where('uid',$query['uid'])
-                ->where('status',1)
-                ->update(['status'=>0]);
-        }
-        $edit_data = $request->post();
-        unset($edit_data['id']);
-        $result = UserAddressModel::where('id', $id)->update($edit_data);
-        if(!$result) return json(['code'=>1,'msg'=>'操作失败']);
-        return json(['code' => 0, 'msg' => '操作成功']);
-    }
-    /**
-     * 用户地址|删除地址
-     */
-    public function delAddress (Request $request)
-    {
-        $id = $request->post('id');
-        $query = UserAddressModel::where('id', $id)->find();
-        if (!$query) {
-            return json(['code' => 1, 'msg' => '地址信息不存在']);
-        }
-        if($query['status'] == 1){
-            return json(['code' => 1, 'msg' => '默认地址不能删除']);
-        }
-        $result = $query->delete();
-        if(!$result) return json(['code'=>1,'msg'=>'操作失败']);
-        return json(['code' => 0, 'msg' => '操作成功']);
-    }
-    /**
-     * 用户地址|地址信息查询
-     */
-    protected function addresssearch($request)
-    {
-        $query = UserAddressModel::alias('ua')->field('ua.*');
-        if ($status = $request->get('status')) {
-            $query->where('ua.status',$status);
-            $map['ua.status'] = $status;
-        }
-        $page = $request->get('page')?$request->get('page'):1;
-        $limit = $request->get('limit')?$request->get('limit'):15;
-        $userTable = (new \app\common\entity\User())->getTable();
-        $list = $query
-            ->leftJoin("$userTable u", 'u.id = ua.uid')
-            ->where('uid',$this->userId)
-            ->where(isset($map) ? $map : [])
-            ->order('ua.create_time', 'desc')
-            ->page($page)
-            ->limit($limit)
-            ->select();
-        return $list;
-    }
-    /**
-     * 用户余额充值下单
-     */
-    public function moneyAdd(Request $request)
-    {
-        if($request->isGet()){
-            $info = db('config_money')->find();
-            return json(['code'=>0,'msg'=>'请求成功','info'=>$info]);
-        }
-        if($request->isPost()){
-            $validate = $this->validate($request->post(), '\app\index\validate\UserRecharge');
-            if ($validate !== true) {
-                return json(['code' => 1, 'msg' => $validate]);
-            }
-            $data = [
-                'uid' => $this->userId,
-                'orderNo' => authcode('RN'),
-                'types' => $request->post('types'),
-                'total' => $request->post('total'),
-                'proof' => $request->post('proof'),
-                'status' => 1,
-            ];
-            $address = new RechargeModel();
-            $result = $address->addData($address,$data);
-            if($result) return json(['code'=>0,'msg'=>'用户充值下单成功','info'=>$result]);
-            return json(['code'=>1,'msg'=>'用户充值下单失败']);
-        }
-
-    }
-    /**
-     * 用户提现
-     */
-    public function moneyCut(Request $request)
-    {
-        $user_money = \app\common\entity\MyWallet::where('uid',$this->userId)
-            ->value('number');
-        //手续费率
-        $rate = Config::getValue('withdrawa_fee');
-        $commission_start_time = Config::getValue('commission_start_time');
-        $commission_end_time = Config::getValue('commission_end_time');
-        $withdraw_base = Config::getValue('withdraw_base');
-        if($request->isGet()){
-            return json(['code' => 0, 'msg' => '请求成功','info'=>[
-                'money' => $user_money,
-                'rate' => $rate,
-                'start_time' => $commission_start_time,
-                'end_time' => $commission_end_time,
-                'withdraw_base' => $withdraw_base,
-            ]]);
-        }
-        if($request->isPost()){
-            $types = $request->post('types');
-            if(!$types)return json(['code' => 1, 'msg' => '参数错误']);
-
-            if(time() < strtotime($commission_start_time) || time() > strtotime($commission_end_time)){
-                return json(['code' => 1, 'msg' => '未开始']);
-            }
-
-            $cutNum = WithdrawalModel::where('uid',$this->userId)
-                ->whereTime('create_time','today')
-                ->count();
-
-            $allNum = Config::getValue('commission_withdraw_num');
-            if($cutNum > $allNum){
-                return json(['code' => 1, 'msg' => '今日提现次数已用完']);
-            }
-            if($types == 1){//支付宝
-                $validate = $this->validate($request->post(), '\app\index\validate\UserWithdrawalZfb');
-                if ($validate !== true) {
-                    return json(['code' => 1, 'msg' => $validate]);
-                }
-
-            }elseif ($types == 2){//银行卡
-                $validate = $this->validate($request->post(), '\app\index\validate\UserWithdrawal');
-                if ($validate !== true) {
-                    return json(['code' => 1, 'msg' => $validate]);
-                }
-            }
-
-            //用户余额
-            if($user_money < $request->post('total')){
-                return json(['code' => 1, 'msg' => '余额不足']);
-            }
-            //交易密码
-            $user_Info = \app\common\entity\User::alias('u')
-                ->where('u.id',$this->userId)
-                ->find();
-            $model = new \app\common\service\Users\Service();
-            if (!$model->checkSafePassword($request->post('trad_password'), $user_Info)) {
-//                return json(['code'=>1,'msg'=>'密码错误']);
-            }
-            $serviceCharge = $request->post('total') * $rate * 0.01;
-            //提现申请
-            $add_data = [
-                'uid' => $this->userId,
-                'money' => $request->post('total'),
-                'realmoney' => $request->post('total') - $serviceCharge,
-                'types' => $request->post('types'),
-                'bank_user_name' => $request->post('bank_user_name',''),
-                'bank_name' => $request->post('bank_name',''),
-                'bank_card' => $request->post('bank_card',''),
-                'alipay_name' => $request->post('alipay_name',''),
-                'alipay_account' => $request->post('alipay_account',''),
-                'status' => 1,
-                'create_time' => time(),
-            ];
-
-            //提现流水
-            $log_data = [
-                'uid'  => $this->userId,
-                'num'  => $request->post('total'),
-                'remark'  => '用户申请提现',
-            ];
-
-            Db::startTrans();
-            try {
-                $model = new \app\common\entity\MyWallet();
-                $model->takeMoney($model,$log_data);
-                $address = new WithdrawalModel();
-                $address->insert($add_data);
-                Db::commit();
-                return json(['code'=>0,'msg'=>'用户提现申请成功']);
-            }catch (Exception $e){
-                Db::rollback();
-                return json(['code'=>1,'msg'=> $e]);
-            }
-        }
+        return false;
     }
 
-    /**
-     * 转账
-     */
-    public function moneyTransfer(Request $request)
-    {
-        $validate = $this->validate($request->post(), '\app\index\validate\UserTransfer');
-        if ($validate !== true) {
-            return json(['code' => 1, 'msg' => $validate]);
+    public function checkIp() {
+        $ipTotal = Config::getValue('register_ip');
+        $request = Request::instance();
+        $ip = $request->ip();
+        $total = \app\common\entity\User::where('register_ip', $ip)->count();
+        if ($ipTotal > $total) {
+            return true;
         }
-        $user_money = \app\common\entity\MyWallet::where('uid',$this->userId)
-            ->value('number');
-        //用户余额
-        if($user_money < $request->post('total')){
-            return json(['code' => 1, 'msg' => '余额不足']);
-        }
-        //交易密码
-        $user_Info = \app\common\entity\User::alias('u')
-            ->where('u.id',$this->userId)
-            ->find();
-        $model = new \app\common\service\Users\Service();
-        if (!$model->checkSafePassword($request->post('trad_password'), $user_Info)) {
-            return json(['code'=>1,'msg'=>'密码错误']);
-        }
-        //转账流水
-        $log_data = [
-            'uid'  => $this->userId,
-            'toUid'  => \app\common\entity\User::where('mobile',$request->post('mobile'))
-                    ->value('id'),
-            'num'  => $request->post('total'),
-            'my_remark'  => '用户转账扣款',
-            'to_remark'  => '用户转账收款',
-        ];
+        return false;
+    }
+    public function doRegister($data) {
+        Db::startTrans();
         try {
-            $model = new \app\common\entity\MyWallet();
-            $model->transfer($model,$log_data);
-            return json(['code'=>0,'msg'=>'转账成功']);
+            $entity = new \app\common\entity\User();
+            $service = new Service();
+
+            $result = UserInviteCode::getUserIdByCode(isset($data['invite_code'])?$data['invite_code']:'');
+            $request = Request::instance();
+            $parentId = $result?$result:0;
+            $entity->mobile = $data['mobile'];
+            $entity->nick_name = $data['mobile'];
+            //        $entity->center_id = isset($data['center_id'])?$data['center_id']:0;
+            $entity->password = $service->getPassword($data['password']);
+            $entity->trad_password = $service->getPassword($data['password']);
+            $entity->register_time = time();
+            $entity->level = 0;
+            $entity->register_ip = $request->ip();
+            $entity->status = \app\common\entity\User::STATUS_DEFAULT;
+            $entity->pid = $parentId;
+
+//        ();
+            if ($entity->save()) {
+
+                $inviteCode = new UserInviteCode();
+                $result = $inviteCode->saveCode($entity->id);
+                $entity->save();
+                if(!$result){
+                    throw new Exception();
+                }
+
+                //增加邀请人数
+                if($parentId != 0){
+                    $result = $this->UpgradeCommssionLevel($parentId);
+                    if(!$result){
+                        throw new Exception();
+                    }
+                    $result = $this->inviteGive($parentId);
+
+                    if(!$result){
+                        throw new Exception();
+                    }
+                    \app\common\entity\User::where('id', $parentId)->setInc('invite_count');
+
+                    //分佣条件升级
+                }
+                //            $give_money = db('config')
+                //                ->where('key','give_money')
+                //                ->value('value');
+                //            $wallet_data = [
+                //                'uid' => $entity->id,
+                //                'number' => $give_money,
+                //                'update_time' => time(),
+                //            ];
+                $wallet_data = [
+                    'uid'=>$entity->id,
+                    'createtime'=>time(),
+                ];
+
+                //            $bounty_list_1 = [
+                //                'uid'=>$entity->id,
+                //                'game_type'=>1,
+                //                'createtime'=>time(),
+                //            ];
+                //            $bounty_list_2 = [
+                //                'uid'=>$entity->id,
+                //                'game_type'=>2,
+                //                'createtime'=>time(),
+                //            ];
+                //            //加入赏金榜
+                //            Db::name('bounty_list')->insert($bounty_list_1);
+                //            Db::name('bounty_list')->insert($bounty_list_2);
+                //创建用户钱包
+                $result = $this->addUserWallet($wallet_data);
+
+                if(!$result){
+                    throw new Exception();
+                }
+                Db::commit();
+                return true;
+            }
         }catch (Exception $e){
-            return json(['code'=>1,'msg'=>'转账失败']);
+            Db::rollback();
+            return false;
+        }
+
+        return false;
+    }
+
+    /**
+     * 邀请赠送门票
+     * @param $uid
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function inviteGive($uid){
+        $user = Db::name('user')->where('id',$uid)->field('id,invite_count')->find();
+        if(($user['invite_count'] + 1) % 3 == 0){
+            $config = Db::name('config')
+                ->alias('c')
+                ->leftJoin('game_ticket t','t.id = c.value')
+                ->where('c.key','Invite_give')
+                ->field('t.id as tid,t.price')
+                ->find();
+            $times = time();
+            if(!empty($config)){
+                $data = [
+                    'uid'=>$uid,
+                    'ticket_id'=>$config['tid'],
+                    'price'=>$config['price'],
+                    'status'=>0,
+                    'is_give'=>1,
+                    'createtime'=>$times,
+                    'orvertime'=>$times + (86400 * 30),
+                ];
+                $log = [
+                    'uid'=>$uid,
+                    'ticket_id'=>$config['tid'],
+                    'num'=>1,
+                    'op_type'=>2,
+                    'createtime'=>time(),
+                ];
+                $result = Db::name('user_give_ticket_log')->insert($log);
+                if(!$result){
+                    return false;
+                }
+                $result = Db::name('user_game_ticket')->insert($data);
+                if(!$result){
+                    return false;
+                }
+
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 会员分佣等级升级
+     * @param $uid
+     * @return bool
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * @throws \think\exception\PDOException
+     */
+    public function UpgradeCommssionLevel($uid){
+        $user = Db::name('user')->where('id',$uid)->field('id,commission_level')->find();
+        $commission_level = Db::name('commission_level')->select();
+        $parent_team = $this->getTeam($uid);
+        $parent_team_num = count($parent_team);
+        foreach ($commission_level as $value){
+            if($parent_team_num >= $value['team_num']){
+                $level = $value['id'];
+            }
+        }
+        if($level > $user['commission_level']){
+            $result = Db::name('user')->where('id',$uid)->update(['commission_level'=>$level]);
+            if(!$result){
+                return false;
+            }
+        }
+        return true;
+
+    }
+
+
+    public function addUserWallet($data){
+        return Db::name('user_wallet')->insert($data);
+    }
+
+    //添加钱包
+    public function addWallet($data)
+    {
+        (new MyWallet())->insert($data);
+    }
+    //注册赠送
+    public function sendRegisterReward($user) {
+        //判断后台是否开启注册送矿机
+        $registerReward = Config::getValue('register_send_produc');
+        if (!$registerReward) {
+            return true;
+        }
+        $number = Config::getValue('register_send_product_num');
+        if ($number < 1) {
+            return true;
+        }
+
+        //送矿机
+        $model = new UserProduct();
+        for ($i = 0; $i < $number; $i++) {
+            $result = $model->addInfo($user->id, 1, UserProduct::TYPE_CERTIFICATION);
+
+            if (!$result) {
+                Log::addLog(Log::TYPE_PRODUCT, '认证送矿机失败', [
+                    'user_id' => $user->id,
+                    'mobile' => $user->mobile
+                ]);
+            }
         }
     }
+
     /**
-     * 兑换
+     * 得到用户的详细信息
      */
-    public function exchange(Request $request)
+    public function getInfo($id) {
+        return \app\common\entity\User::where('id', $id)->find();
+    }
+
+    /**
+     * 银行卡号 微信号 支付宝账号 唯一
+     */
+    public function checkMsg($type, $account, $id = '') {
+        return \app\common\entity\User::where("$type", $account)->where('id', '<>', $id)->find();
+    }
+
+    public function doLogin($account, $password) {
+        $user = \app\common\entity\User::where('mobile', $account)->find();
+        if (!$user) {
+            return '账号或者密码错误';
+        }
+        $model = new \app\common\service\Users\Service();
+        if (!$model->checkPassword($password, $user)) {
+            return '账号或者密码错误';
+        }
+        if ($user->status == \app\common\entity\User::STATUS_FORBIDDED) {
+            return '账号已被禁用';
+        }
+        //保存session
+        $identity = new Identity();
+        $identity->saveSession($user);
+        return true;
+    }
+    //判断有没有注册过
+    public function domobile($mobile) {
+        $user = \app\common\entity\User::where('mobile',$mobile)->find();
+        if ($user) {
+            return false;
+        }
+        return true;
+    }
+
+    //判断有没有注册过
+    public function doEmail($mobile) {
+        $user = \app\common\entity\User::where('email',$mobile)->find();
+        if ($user) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * @param $uid 会员ID
+     * @param $credit 改变字段
+     * @param $types  类型：1：充值，2：消费，3：提现，4：提现拒绝，5：推广佣金（购买门票返佣），6：团队佣金（充值返佣），7：奖金奖励（参与比赛奖金）
+     * @param $op_type ：1消费2充值
+     * @param $money 改变金额
+     * @param $remarks 备注
+     * @return array
+     * @throws \think\Exception
+     */
+    public function setUserWallet($uid,$credit,$types,$op_type,$money,$remarks){
+        $user_credit = $this->getUserWallet($uid,$credit);
+        $money = sprintf("%.2f",$money);
+        if($op_type == 1){
+            $user_orther_money = sprintf("%.2f",$user_credit - $money);
+            if($user_orther_money < 0){
+                return ['code'=>400,'msg'=>'账户余额不足'];
+            }
+        }
+        $UserWallet = new UserWalletLog();
+        $result = $UserWallet->setUserWalletLog($uid,$credit,$types,$op_type,$money,$remarks);
+        if($result){
+            if($op_type == 1){
+                $result = Db::name('user_wallet')->where('uid',$uid)->setDec($credit,$money);
+            }elseif ($op_type == 2){
+                $result = Db::name('user_wallet')->where('uid',$uid)->setInc($credit,$money);
+            }
+        }
+        if($result){
+            return ['code'=>200,'msg'=>'success'];
+        }
+        return ['code'=>400,'msg'=>'系统错误'];
+    }
+
+    /**
+     * 获取会员钱包的某一种币
+     * @param $uid
+     * @param $credit
+     * @return mixed
+     */
+    public function getUserWallet($uid,$credit){
+        $UserWallet = Db::name('user_wallet')->where('uid', $uid)->value($credit);
+        return $UserWallet;
+    }
+
+    /**
+     * 获取会员钱包
+     * @param $uid
+     * @return array|false|\PDOStatement|string|\think\Model
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function getUserWallets($uid){
+        $UserWallets = Db::name('user_wallet')->where('uid', $uid)->find();
+        return $UserWallets;
+
+    }
+
+    /**
+     * 获取会员VIP
+     * @param $uid
+     * @return array|false|\PDOStatement|string|\think\Model
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function getUserVip($uid){
+        $userVip = Db::name('user')->where('id', $uid)->value('vip');
+        return $userVip;
+    }
+
+    #z生成邀请logo二维码
+    public function getQrCode($code_content, $code_name, $code_size = 200, $code_logo = '', $code_logo_width = 20, $code_font = null)
     {
-        $assure_transfer_start_time = $this->getConfigValue('assure_transfer_start_time');
-        $assure_transfer_end_time = $this->getConfigValue('assure_transfer_end_time');
-        $data = [
-            'start_time' => $assure_transfer_start_time,
-            'end_time' => $assure_transfer_end_time
+        // 二维码内容
+        $qr_code = new QrCode($code_content);
+        // 二维码设置
+        $qr_code->setSize($code_size);
+        // 边框宽度
+        $qr_code->setMargin(5);
+        // 图片格式
+        $qr_code->setWriterByName('png');
+        // 字符编码
+        $qr_code->setEncoding('UTF-8');
+        // 容错等级，分为L、M、Q、H四级
+        $qr_code->setErrorCorrectionLevel(ErrorCorrectionLevel::HIGH()); //设置二维码的纠错率，可以有low、medium、quartile、hign多个纠错率
+        // 颜色设置，前景色，背景色(默认黑白)
+        $qr_code->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0, 'a' => 0]);
+        $qr_code->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255, 'a' => 0]);
+        // 二维码标签
+        if ($code_font) {
+            $qr_code->setLabel('Scan the Code ', 16, __DIR__ . '字体地址', LabelAlignment::CENTER);
+        }
+        // logo设置
+        if ($code_logo) {
+            $qr_code->setLogoPath($code_logo);
+            // logo大小
+            $qr_code->setLogoWidth($code_logo_width);
+            // 存放地址
+            $code_path = '../public/upload/' . $code_name . '.png';
+            $qr_code->writeFile($code_path);
+        } else {
+            // 存放地址
+            $code_path = '../public/upload/' . $code_name . '.png';
+            $qr_code->writeFile($code_path);
+        }
+        // 输出图片
+        // header('Content-Type: ' . $qr_code->getContentType());
+        // $qr_code->writeString();
+        return '/upload/' . $code_name . '.png';
+    }
+
+    /**
+     * 获取用户职业
+     * @param $occupation
+     * @return mixed
+     */
+    public function getUserOccupation($occupation){
+        if(!in_array($occupation,[1,2,3,4,5,6])){
+            return "";
+        }
+        $user_occupation = [
+            1=>"小学生",
+            2=>"初中生",
+            3=>"高中生",
+            4=>"大学生",
+            5=>"白领",
+            6=>"小老板",
         ];
-        if($request->isGet()) {
-            return json(['code' => 0, 'msg' => '转账成功', 'info' => $data]);
-        }
-        if($request->isPost()) {
-            $validate = $this->validate($request->post(), '\app\index\validate\Exchange');
-            if ($validate !== true) {
-                return json(['code' => 1, 'msg' => $validate]);
-            }
-            $types = $request->post('types');
-            $total = $request->post('total');
-            $myWallet = \app\common\entity\MyWallet::where('uid', $this->userId)
-                ->find();
+        return $user_occupation[$occupation];
+    }
 
-            if ($types == 1) {//保证金
-                if ($total > $myWallet['bond']) {
-                    return json(['code' => 1, 'msg' => '保证金不足']);
-                }
+    /**
+     * 获取用户性别
+     * @param $gender
+     * @return string
+     */
+    public function getUserGender($gender){
+        if(!in_array($gender,[1,0])){
+            return [];
+        }
+        $gender == 1 && $userGender = "男";
+        $gender == 0 && $userGender = "女";
+        return $userGender;
+    }
 
-                if (time() < strtotime($assure_transfer_start_time) || time() > strtotime($assure_transfer_end_time)) {
-                    return json(['code' => 1, 'msg' => '未开始']);
-                }
-                $hasTask = TaskOrderModel::where('uid', $this->userId)
-                    ->whereTime('receivetime', 'today')
-                    ->find();
-                if ($hasTask) {
-                    return json(['code' => 1, 'msg' => '明日才可兑换']);
-                }
+    /**
+     * 获取团队(可以规定查到第几层)
+     * @param $uid 会员ID
+     * @param $data 返回数据
+     * @param int $layer 查询层数
+     * @param int $i
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function getTeam($uid,&$data = [],$layer = 0,$i = 0){
+        $user = Db::name('user')->where('pid','in',$uid)->field('id')->select();
+        $ids = "";
+        if($layer > 0){
+            if($layer < $i){
+                return $data;
+            }
+        }
+        $i++;
+        if(!empty($user)){
+            foreach ($user as $value){
+                $ids .= $value['id'].",";
+                $value['layer'] = $i;
+                $data[] = $value;
+            }
+            $ids = trim($ids,',');
+            $this->getTeam($ids,$data,$layer,$i);
+        }
 
-            } elseif ($types == 2) {//代理账户
-                if ($total > $myWallet['agent']) {
-                    return json(['code' => 1, 'msg' => '代理账户金额不足']);
-                }
-            }
-            //转账流水
-            $log_data = [
-                'uid' => $this->userId,
-                'types' => $types,
-                'num' => $request->post('total'),
-                'my_remark' => '用户兑换扣款',
-                'to_remark' => '用户兑换收款',
-            ];
-            try {
-                $model = new \app\common\entity\MyWallet();
-                $model->transfer($model, $log_data);
-                if ($types == 1) {//保证金
-                    \app\common\entity\User::where('id', $this->userId)
-                        ->setField('star_level', 0);
-                }
-                return json(['code' => 0, 'msg' => '兑换成功']);
-            } catch (Exception $e) {
-                return json(['code' => 1, 'msg' => $e]);
-            }
-        }
+        return $data;
     }
-    /**
-     * 资金流水
-     */
-    public function walletLog(Request $request)
-    {
-        $query = MyWalletLog::alias('mwl')->field('mwl.*');
-        $limit = $request->post('limit')?$request->post('limit'):15;
-        $page = $request->post('page')?$request->post('page'):1;
-        if($types = $request->post('types')){
-            $query->where('mwl.types', $types);
-            $map['types'] = $types;
-        }
-        $list = $query
-            ->where('mwl.uid',$this->userId)
-            ->order('mwl.create_time','desc')
-            ->page($page)
-            ->paginate($limit, false, [
-                'query' => isset($map) ? $map : []
-            ]);
-        return json(['code'=>0,'msg'=>'请求成功','info'=>$list]);
-    }
-    /**
-     * 充值记录
-     */
-    public function rechargeLog(Request $request)
-    {
-        $query = RechargeModel::alias('r')->field('r.*');
-        $limit = $request->post('limit')?$request->post('limit'):15;
-        $page = $request->post('page')?$request->post('page'):1;
-        if($types = $request->get('types')){
-            $query->where('r.types', $types);
-            $map['types'] = $types;
-        }
-        $list = $query
-            ->where('r.uid',$this->userId)
-            ->order('r.create_time','desc')
-            ->page($page)
-            ->paginate($limit, false, [
-                'query' => isset($map) ? $map : []
-            ]);
-        return json(['code'=>0,'msg'=>'请求成功','info'=>$list]);
-    }
-    /**
-     * 提现记录
-     */
-    public function withdrawLog(Request $request)
-    {
-        $query = WithdrawalModel::alias('w')->field('w.*');
-        $limit = $request->post('limit')?$request->post('limit'):15;
-        $page = $request->post('page')?$request->post('page'):1;
-        if($types = $request->get('types')){
-            $query->where('w.types', $types);
-            $map['types'] = $types;
-        }
-        $list = $query
-            ->where('w.uid',$this->userId)
-            ->order('w.create_time','desc')
-            ->page($page)
-            ->paginate($limit, false, [
-                'query' => isset($map) ? $map : []
-            ]);
-        foreach ($list as $v){
-            $info = json_decode($v['proof']);
-            if($v['types'] == 3){
-                $v['bank_card'] = $info->bank_card;
-                $v['bank_name'] = $info->bank_name;
-                $v['bank_user'] = $info->bank_user;
-            }
-            unset($v['proof']);
-        }
-        return json(['code'=>0,'msg'=>'请求成功','info'=>$list]);
-    }
-    /**
-     * 绑定收款信息
-     */
-    public function setPayment(Request $request)
-    {
-        if($request->isGet()){
-            $types = $request->get('types');
-            if(!$types) return json(['code' => 1, 'msg' => '参数错误']);
-            if($types == 1){
-                $field = 'alipay_name,alipay_account,pay_image_id';
-            }elseif ($types ==2){
-                $field = 'bank_user_name,bank_name,bank_card';
-            }
-            $info = UserPaymentModel::field($field)
-                ->where('uid',$this->userId)
-                ->find();
-            return json(['code'=>0,'msg'=>'请求成功','info'=>$info]);
 
-        }
-        if($request->isPost()) {
-            $types = $request->post('types');
-            if (!$types) return json(['code' => 1, 'msg' => '参数错误']);
-            if ($types == 1) {//支付宝
-                $validate = $this->validate($request->post(), '\app\index\validate\SetPaymentZfb');
-                if ($validate !== true) {
-                    return json(['code' => 1, 'msg' => $validate]);
-                }
-
-            } elseif ($types == 2) {//银行卡
-                $validate = $this->validate($request->post(), '\app\index\validate\SetPayment');
-                if ($validate !== true) {
-                    return json(['code' => 1, 'msg' => $validate]);
-                }
-            }
-            $add_data = $request->post();
-            unset($add_data['types']);
-            $add_data['uid'] = $this->userId;
-            $add_data['create_time'] = time();
-            $add_data['update_time'] = time();
-            $info = UserPaymentModel::where('uid', $this->userId)
-                ->find();
-            if ($info) {
-                $model = $info;
-            } else {
-                $model = new UserPaymentModel();
-            }
-            $res = $model->save($add_data);
-            if ($res) {
-                return json(['code' => 0, 'msg' => '操作成功']);
-            }
-            return json(['code' => 1, 'msg' => '操作失败']);
-        }
-    }
     /**
-     * @desc 根据两点间的经纬度计算距离
-     * @param float $lat 纬度值
-     * @param float $lng 经度值
+     * 获取团队(可以规定只查第几层)
+     * @param $uid 会员ID
+     * @param $data 返回数据
+     * @param int $layer 查询层数
+     * @param int $num 查询数量
+     * @param int $i
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
      */
-    function getdistance($lng1,$lat1,$lng2,$lat2)
-    {
-        //将角度转为狐度
-        $radLat1=deg2rad($lat1);
-        $radLat2=deg2rad($lat2);
-        $radLng1=deg2rad($lng1);
-        $radLng2=deg2rad($lng2);
-        $a=$radLat1-$radLat2;//两纬度之差,纬度<90
-        $b=$radLng1-$radLng2;//两经度之差纬度<180
-        $s=2*asin(sqrt(pow(sin($a/2),2)+cos($radLat1)*cos($radLat2)*pow(sin($b/2),2)))*6378.137;
-        return $s;
+    public function getLayerTeam($uid,&$data,$layer = 0,$num = 10,$i = 0){
+        if($layer <= 0){
+            return false;
+        }
+        if(count($data) >= $num){
+            return $data;
+        }
+        $user = Db::name('user')->where('pid','in',$uid)->field('id,avatar,nick_name,register_time')->select();
+        $ids = "";
+        if(!empty($user)){
+            $i++;
+            if($layer == $i){
+                foreach ($user as $value){
+                    $value['layer'] = $i;
+                    $data[] = $value;
+                }
+                return $data;
+            }else{
+                foreach ($user as $value){
+                    $ids .= $value['id'].",";
+                }
+                $ids = trim($ids,',');
+                $this->getLayerTeam($ids,$data,$layer,$num,$i);
+            }
+        }
+
+        return $data;
     }
-    private function getConfigValue($key, $value='value')
-    {
-        return db('config')
-            ->where('key',$key)
-            ->value($value);
+
+    /**
+     * 获取上级（可以规定查到第几层）
+     * @param $uid 会员ID
+     * @param $data 返回结果
+     * @param int $layer 规定层数（等于0全查）
+     * @param int $i
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function getUserAgents($uid,&$data,$layer = 0,$i = 0){
+        if($layer > 0){
+            if($i > $layer){
+                return $data;
+            }
+        }
+        $user = Db::name('user')->where('id',$uid)->field('id,avatar,nick_name,register_time,pid,commission_level')->find();
+        $i++;
+        if(!empty($user)){
+            if($i > 1){
+                $data[] = $user;
+            }
+            $this->getUserAgents($user['pid'],$data,$layer,$i);
+        }
+        return $data;
     }
+
 
 }

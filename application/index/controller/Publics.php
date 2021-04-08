@@ -6,6 +6,7 @@ use app\common\entity\Config;
 use app\common\entity\MyWalletLog;
 
 use app\common\entity\User;
+use app\common\service\Users\Identity;
 use app\common\service\Users\Service;
 use app\index\model\SendCode;
 use app\index\model\SendCode1;
@@ -29,17 +30,38 @@ class Publics extends Controller
      */
     public function login(Request $request)
     {
-        $result = $this->validate($request->post(), 'app\index\validate\LoginForm');
-        if ($result !== true) {
-            return json(['code' => 1, 'msg' => $result]);
-        }
-        $model = new \app\index\model\User();
-        $result = $model->doLogin($request->post('mobile'), $request->post('password'));
-        if ($result !== true) {
-            if ($result == '用户名或密码错误') {
-                return json(['code' => 1, 'msg' => $result]);
+        $post = $request->post();
+        //1为帐号密码登录2为短信验证码登录
+        if($post['login_type'] == 1){
+            $result = $this->validate($request->post(), 'app\index\validate\LoginForm');
+            if ($result !== true) {
+                return _result(false,$result);
             }
-            return json(['code' => 1, 'msg' => $result]);
+            $model = new \app\index\model\User();
+            $result = $model->doLogin($request->post('mobile'), $request->post('password'));
+            if ($result !== true) {
+                return _result(false,$result);
+            }
+        }elseif ($post['login_type'] == 2){
+            if(empty($post['mobile'])){
+                return _result(false,"请输入手机号");
+            }
+            $user = User::where('mobile',$post['mobile'])->find();
+            if(empty($user)){
+                return _result(false,"该用户不存在");
+            }
+            $form = new RegisterForm();
+            $msg_checking = Config::getValue('msg_checking');//开启短信验证
+            if($msg_checking){
+                if (!$form->checkCode($request->post('code'), $request->post('mobile'))) {
+                    return _result(false,'验证码输入错误');
+                }
+            }
+            //保存session
+            $identity = new Identity();
+            $identity->saveSession($user);
+        }else{
+            return _result(false,"请选择一种登录方式");
         }
         User::where('mobile', $request->post('mobile'))
             ->update([
@@ -48,12 +70,12 @@ class Publics extends Controller
                 'last_date'=> date('Y-m-d H:i:s',time()),
             ]);
         User::where('mobile', $request->post('mobile'))->setInc('login_number');
-        $userInfo = User::alias('u')
-            ->field('u.id')
-            ->leftJoin('my_wallet mw', 'mw.uid = u.id')
-            ->where('u.mobile', $request->post('mobile'))
-            ->find();
-        return json(['code' => 0, 'msg' => '登录成功', 'info' => $userInfo]);
+//        $userInfo = User::alias('u')
+//            ->field('u.id')
+//            ->leftJoin('my_wallet mw', 'mw.uid = u.id')
+//            ->where('u.mobile', $request->post('mobile'))
+//            ->find();
+        return _result(true,'登录成功');
     }
 
     /**
@@ -63,26 +85,28 @@ class Publics extends Controller
     {
         $validate = $this->validate($request->post(), '\app\index\validate\Forget');
         if ($validate !== true) {
-            return json(['code' => 1, 'msg' => $validate]);
+            return _result(false,$validate);
         }
         $info = User::where('mobile', $request->post('mobile'))->find();
         if (!$info) {
-            return json(['code' => 1, 'msg' => '用户不存在']);
+            return _result(false,"用户不存在");
         }
         $form = new RegisterForm();
         $msg_checking = Config::getValue('msg_checking');//开启短信验证
         if($msg_checking){
             if (!$form->checkCode($request->post('code'), $request->post('mobile'))) {
-               return json(['code' => 1, 'msg' => '验证码输入错误']);
+                return _result(false,"验证码输入错误");
             }
         }
         $model = new Service();
         $res = $model->updatePwd($info, $request->post());
         if (is_int($res)) {
-            return json(['code' => 0, 'msg' => '新密码设置成功']);
+            return _result(true,"新密码设置成功");
         }
-        return json(['code' => 1, 'msg' => '系统错误']);
+        return _result(false,"新密码设置失败");
+
     }
+
 
     /**
      * 注册接口
@@ -90,28 +114,27 @@ class Publics extends Controller
     public function doRegister(Request $request)
     {
         $model = new \app\index\model\User();
-        if (!$model->checkIp()) {
+//        if (!$model->checkIp()) {
 //            return json(['code' => 1, 'msg' => '该IP已注册太多用户']);
-        }
+//        }
         $form = new RegisterForm();
         $msg_checking = Config::getValue('msg_checking');//开启短信验证
         if($msg_checking){
             if (!$form->checkCode($request->post('code'), $request->post('mobile'))) {
-
-                return json(['code' => 1, 'msg' => '验证码输入错误']);
+                return _result(false,'验证码输入错误');
             }
         }
 
         $validate = $this->validate($request->post(), '\app\index\validate\RegisterForm');
         if ($validate !== true) {
-            return json(['code' => 1, 'msg' => $validate]);
+            return _result(false,$validate);
         }
         $add_data = $request->post();
         $result = $model->doRegister($add_data);
         if ($result) {
-            return json(['code' => 0, 'msg' => '注册成功']);
+            return _result(true,'注册成功');
         }
-        return json(['code' => 1, 'msg' => '注册失败']);
+        return _result(false,'注册失败');
     }
 
     /**
@@ -123,14 +146,15 @@ class Publics extends Controller
             $mobile = $request->post('mobile');
             //检验手机号码
             if (!preg_match('#^1\d{10}$#', $mobile)) {
-                return json(['code' => 1, 'msg' => '手机号码格式不正确', 'info' => $mobile]);
+                _result(false,'手机号码格式不正确');
             }
             $model = new SendCode($mobile, 'register');
             $res = $model->send();
             if ($res === true) {
-                return json(['code' => 0, 'msg' => '你的验证码发送成功']);
+                return _result(true,'验证码发送成功');
+//                return json(['code' => 0, 'msg' => '你的']);
             }
-            return json(['code' => 1, 'msg' => '发送失败']);
+            return _result(false,'发送失败');
         }
     }
 

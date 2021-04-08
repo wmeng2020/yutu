@@ -27,7 +27,7 @@
                 <h4>会员数量</h4>
             </header>
             <div class="panel-body">
-                <h3>{$user['total']}</h3>
+                <h3>{$user['total']}人</h3>
             </div>
         </section>
     </div>
@@ -37,77 +37,28 @@
                 <h4>今日会员注册数量</h4>
             </header>
             <div class="panel-body">
-                <h3>{$user['today']}</h3>
+                <h3>{$user['today']}人</h3>
             </div>
         </section>
     </div>
     <div class="col-lg-3 col-md-3">
         <section class="panel">
             <header class="panel-heading">
-                <h4>星级会员总数</h4>
+                <h4>昨日会员注册数量</h4>
             </header>
             <div class="panel-body">
-                <h3>{$user['level']}</h3>
+                <h3>{$user['yesterday']}人</h3>
             </div>
         </section>
     </div>
-    <div class="col-lg-3 col-md-3">
-        <section class="panel">
-            <header class="panel-heading">
-                <h4>会员任务总数量</h4>
-            </header>
-            <div class="panel-body">
-                <h3>{$task['all']}</h3>
-            </div>
-        </section>
-    </div>
-    <div class="col-lg-3 col-md-3">
-        <section class="panel">
-            <header class="panel-heading">
-                <h4>任务未完成数量</h4>
-            </header>
-            <div class="panel-body">
-                <h3>{$task['not_finished']}</h3>
-            </div>
-        </section>
-    </div>
-    <div class="col-lg-3 col-md-3">
-        <section class="panel">
-            <header class="panel-heading">
-                <h4>任务待审核数量</h4>
-            </header>
-            <div class="panel-body">
-                <h3>{$task['not_check']}</h3>
-            </div>
-        </section>
-    </div>
-    <div class="col-lg-3 col-md-3">
-        <section class="panel">
-            <header class="panel-heading">
-                <h4>任务审核通过数量</h4>
-            </header>
-            <div class="panel-body">
-                <h3>{$task['pass']}</h3>
-            </div>
-        </section>
-    </div>
-    <div class="col-lg-3 col-md-3">
-        <section class="panel">
-            <header class="panel-heading">
-                <h4>任务审核不通过数量</h4>
-            </header>
-            <div class="panel-body">
-                <h3>{$task['not_pass']}</h3>
-            </div>
-        </section>
-    </div>
+
     <div class="col-lg-3 col-md-3">
         <section class="panel">
             <header class="panel-heading">
                 <h4>充值统计</h4>
             </header>
             <div class="panel-body">
-                <h3>{$money['recharge']}</h3>
+                <h3>￥{$money['recharge']}</h3>
             </div>
         </section>
     </div>
@@ -117,17 +68,17 @@
                 <h4>提现统计</h4>
             </header>
             <div class="panel-body">
-                <h3>{$money['withdrawal']}</h3>
+                <h3>￥{$money['withdrawal']}</h3>
             </div>
         </section>
     </div>
     <div class="col-lg-3 col-md-3">
         <section class="panel">
             <header class="panel-heading">
-                <h4>今日充值金额<span style="color: red">（{$money['remind']}）</span></span></h4>
+                <h4>今日充值金额<span style="color: red"></span></span></h4>
             </header>
             <div class="panel-body">
-                <h3>{$money['today_recharge']}</h3>
+                <h3>￥{$money['today_recharge']}</h3>
             </div>
         </section>
     </div>
@@ -137,7 +88,37 @@
                 <h4>今日提现金额</h4>
             </header>
             <div class="panel-body">
-                <h3>{$money['today_withdrawal']}</h3>
+                <h3>￥{$money['today_withdrawal']}</h3>
+            </div>
+        </section>
+    </div>
+    <div class="col-lg-3 col-md-3">
+        <section class="panel">
+            <header class="panel-heading">
+                <h4>昨日提现金额</h4>
+            </header>
+            <div class="panel-body">
+                <h3>￥{$money['yesterday_withdrawal']}</h3>
+            </div>
+        </section>
+    </div>
+    <div class="col-lg-3 col-md-3">
+        <section class="panel">
+            <header class="panel-heading">
+                <h4>今日报名人数</h4>
+            </header>
+            <div class="panel-body">
+                <h3>{$participate_game_num}人</h3>
+            </div>
+        </section>
+    </div>
+    <div class="col-lg-3 col-md-3">
+        <section class="panel">
+            <header class="panel-heading">
+                <h4>今日奖金发放</h4>
+            </header>
+            <div class="panel-body">
+                <h3>￥{$total_bonus}</h3>
             </div>
         </section>
     </div>
@@ -206,26 +187,26 @@
             },num * 1000)
         };
 
-        var sendAjax = function(){
-            isSuccess = false;
-            $.ajax({
-                url : "{:url('admin/index/remind')}",
-                methods : 'post',
-                data :{},
-                success : function (res) {
-                    console.log(res);
-                    isSuccess = true;
-                    if(res.code == 0){
-                        audio[0].play();
-                    };
-                },
-                error : function (err) {
-                    isSuccess = true;
-                }
-            })
-
-        };
-        startTimer(3);
+        // var sendAjax = function(){
+        //     isSuccess = false;
+        //     $.ajax({
+        //         url : "{:url('admin/index/remind')}",
+        //         methods : 'post',
+        //         data :{},
+        //         success : function (res) {
+        //             console.log(res);
+        //             isSuccess = true;
+        //             if(res.code == 0){
+        //                 audio[0].play();
+        //             };
+        //         },
+        //         error : function (err) {
+        //             isSuccess = true;
+        //         }
+        //     })
+        //
+        // };
+        // startTimer(3);
     });
 
 

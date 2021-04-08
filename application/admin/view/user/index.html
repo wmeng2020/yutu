@@ -22,6 +22,7 @@
                     <select name="type" id="type" class="form-control">
                         <option {if $Request.get.type == 'nick_name'} selected {/if} value="nick_name">用户名</option>
                         <option {if $Request.get.type == 'mobile'} selected {/if} value="mobile">手机号</option>
+                        <option {if $Request.get.type == 'id'} selected {/if} value="id">ID号</option>
                     </select>
                 </div>
                 <div class="col-xs-3 no-pd-l">
@@ -43,14 +44,19 @@
             <tr>
                 <th class="text-center">会员ID</th>
                 <th class="text-center">会员账号</th>
-                <th class="text-center">昵称</th>
+                <th class="text-center">会员信息</th>
                 <th class="text-center">上级信息</th>
                 <th class="text-center">注册信息</th>
                 <th class="text-center">等级</th>
                 <th class="text-center">状态</th>
-                <th class="text-center">佣金账户</th>
-                <th class="text-center">保证金账户</th>
-                <th class="text-center">代理账户</th>
+                <th class="text-center">VIP</th>
+                <th class="text-center">金币</th>
+                <th class="text-center">钻石</th>
+                <th class="text-center">佣金</th>
+                <th class="text-center">奖金</th>
+<!--                <th class="text-center">佣金账户</th>-->
+<!--                <th class="text-center">保证金账户</th>-->
+<!--                <th class="text-center">代理账户</th>-->
                 <th class="text-center">直推人数</th>
                 <th class="text-center">操作</th>
             </tr>
@@ -83,7 +89,11 @@
                         ip：{$entity->register_ip}
                     </td>
                     <td style="vertical-align: middle" class="text-center">
-                        {$entity->level_name}
+                        {if empty($entity->levelname)}
+                        勇士
+                        {else}
+                        {$entity->levelname}
+                        {/if}
                     </td>
                     <td style="vertical-align: middle" class="text-center">
                         {if $entity->status == -1}
@@ -93,14 +103,25 @@
                         <a class="btn btn-xs btn-success">正常</a>
                         {/if}
                     </td>
-                    <td class="text-center">
-                        {$entity->number}
+                    <td style="vertical-align: middle" class="text-center">
+                        {if $entity->vip == 1}
+                        <a class="btn btn-xs btn-success">是</a><br>
+                        <span>到期时间：{$entity->getVipEndTime()}</span>
+                        {else /}
+                        <a class="btn btn-xs btn-danger">否</a>
+                        {/if}
                     </td>
-                    <td class="text-center">
-                        {$entity->bond}
+                    <td style="vertical-align: middle" class="text-center">
+                        {$entity->credit2}
                     </td>
-                    <td class="text-center">
-                        {$entity->agent}
+                    <td style="vertical-align: middle" class="text-center">
+                        {$entity->credit1}
+                    </td>
+                    <td style="vertical-align: middle" class="text-center">
+                        {$entity->commission}
+                    </td>
+                    <td style="vertical-align: middle" class="text-center">
+                        {$entity->bonus}
                     </td>
                     <td class="text-center">
                         {$entity->next_count}

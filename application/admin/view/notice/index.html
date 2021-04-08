@@ -77,16 +77,18 @@
         </div>
     </div>
 </section>
+
 {/block}
 
 
 {block name="footer"}
-    <script>
-        function showContent(e){
-            $.dialog({
-                title: '文章内容',
-                content: $(e).prev().html()
-            });
-        }
-    </script>
+<script>
+    function showContent(e){
+        $.dialog({
+            title: '文章内容',
+            content: $(e).prev().html()
+        });
+    }
+</script>
 {/block}
+

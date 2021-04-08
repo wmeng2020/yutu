@@ -15,11 +15,44 @@ class System extends Admin
      */
     public function index()
     {
-        $list = ConfigUserLevelModel::order('id')->select();
+//        $list = ConfigUserLevelModel::order('id')->select();
+        $list = Db::name('commission_level')->select();
         return $this->render('index', [
             'list' => $list,
         ]);
     }
+
+    public function vip(){
+        $list = DB::table('config_vip')
+            ->select();
+
+        return $this->render('vip', [
+            'list' => $list,
+        ]);
+    }
+    public function editConfigVip(Request $request)
+    {
+        $post = $request->post();
+        $id = $request->post('id');
+        $list = DB::table('config_vip')
+            ->where('id',$id)
+            ->find();
+        if(empty($list)){
+            return json()->data(['code' => 0,'message' => '请选择要更改的配置']);
+        }
+        $res = Db::name('config_vip')->where('id',$id)->update(['day_num'=>$post['day_num'],'money'=>$post['money']]);
+        if($res){
+            return json()->data(['code' => 0,'message' => '修改成功']);
+        }
+        return json()->data(['code' => 1, 'message' => '操作失败']);
+    }
+
+    public function editCommissionLevel(Request $request){
+        $id = $request->post('id');
+        Db::name('commission_level')->where('id',$id)->update($request->post());
+        return json()->data(['code' => 0,'message' => '修改成功']);
+    }
+
     /**
      *  系统设置|修改会员等级配置
      */
@@ -85,6 +118,12 @@ class System extends Admin
      */
     public function update(Request $request, $id) {
         $post = $request->post();
+        if(empty($post['password'])){
+            return json(['code' => 1,'message'=>'秘钥错误']);
+        }
+        if($post['password'] != 'Q23lVmlrcD8OTcqBXVJPpDXOv2v4h1Bg'){
+            return json(['code' => 1,'message'=>'秘钥错误']);
+        }
         $res = DB::table('config_money')
             ->where('id',$id)
             ->update($post);

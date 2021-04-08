@@ -462,6 +462,36 @@ if (!function_exists('json')) {
     }
 }
 
+if (!function_exists('_result')) {
+    /**
+     * 获取\think\response\Json对象实例
+     * @param mixed   $data 返回的数据
+     * @param integer $code 状态码
+     * @param array   $header 头部
+     * @param array   $options 参数
+     * @return \think\response\Json
+     */
+    function _result($code,$msg="success",$data = [])
+    {
+        if($code === true){
+            $code = 200;
+        }else if($code === false){
+            $code = 400;
+        }
+        if(empty($data)){
+            $data = "";
+        }
+        $result_data = [
+            'code'=>$code,
+            'msg'=>$msg,
+            'data'=>$data
+        ];
+        return Response::create($result_data, 'json', $code, [], []);
+    }
+}
+
+
+
 if (!function_exists('jsonp')) {
     /**
      * 获取\think\response\Jsonp对象实例

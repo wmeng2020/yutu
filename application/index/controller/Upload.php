@@ -40,19 +40,24 @@ class Upload
             }
             unlink("." . $uploadModel->fileName);
             if (!file_exists("./uploads/" . $savename . $atype)) {
-                return json([
-                    'code' => 1,
-                    'fail' => "上传失败，请稍后再试"
-                ]);
+                return _result(false,'上传失败，请稍后再试');
+//                return json([
+//                    'code' => 1,
+//                    'fail' => "上传失败，请稍后再试"
+//                ]);
             }
-            return json([
-                'code' => 0,
-                'data' => "/uploads/" . $savename . $atype
-            ]);
+            return _result(true,'success',['path'=>"/uploads/" . $savename . $atype]);
+
+//            return json([
+//                'code' => 0,
+//                'data' => "/uploads/" . $savename . $atype
+//            ]);
         }
-        return json([
-            'code' => 1, 'fail' => $uploadModel->error
-        ]);
+        return _result(false, $uploadModel->error);
+
+//        return json([
+//            'code' => 1, 'fail' => $uploadModel->error
+//        ]);
 
     }
     public function uploadVideo() {

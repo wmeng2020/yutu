@@ -94,7 +94,7 @@ class Service
         }
 
         if (!$this->checkPassword($password, $userInfo)) {
-            return '用户名或者密码错误';
+           return '用户名或者密码错误';
         }
 
         //设置session

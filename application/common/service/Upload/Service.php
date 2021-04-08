@@ -24,7 +24,6 @@ class Service
     public function upload()
     {
         $file = request()->file($this->name);
-
         $info = $file->validate($this->validate)->move('uploads');
         $a = str_replace('\\', '/', $info->getSaveName());
 //        print_r();

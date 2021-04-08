@@ -41,7 +41,7 @@ class Service
         $entity->mobile = $data['mobile'];
         $entity->pid = $data['pid'];
         $entity->password = $this->getPassword($data['password']);
-        $entity->trad_password = $this->getPassword($data['trad_password']);
+//        $entity->trad_password = $this->getPassword($data['trad_password']);
         $entity->register_time = time();
         $entity->register_ip = $data['ip'] ?? $request->ip();
         $entity->status = User::STATUS_DEFAULT;
@@ -58,14 +58,14 @@ class Service
         if ($data['password']) {
             $user->password = $this->getPassword($data['password']);
         }
-        if ($data['trad_password']) {
-            $user->trad_password = $this->getPassword($data['trad_password']);
-        }
+//        if ($data['trad_password']) {
+//            $user->trad_password = $this->getPassword($data['trad_password']);
+//        }
         $user->mobile = $data['mobile'] ;
         if($data['pid']) {
             $user->pid = $data['pid'];
         }
-
+        $user->commission_level = $data['commission_level'];
         return $user->save();
     }
     /**

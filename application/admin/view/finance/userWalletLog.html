@@ -47,7 +47,6 @@
                     <th class="text-center">ID</th>
                     <th class="text-center">用户信息</th>
                     <th class="text-center">来自</th>
-                    <th class="text-center">现在余额</th>
                     <th class="text-center">流水类型</th>
                     <th class="text-center">原来的金额</th>
                     <th class="text-center">变化的金额</th>
@@ -66,31 +65,25 @@
                             昵称：{$order->nick_name}
                         </td>
                         <td class="text-center">
-                            {if($order->types == 4)}
-                            手机号：{$user->getUserInfo($order->from)['mobile']}<br>
-                            昵称：{$user->getUserInfo($order->from)['nick_name']}
+                            {if($order->types == 5 || $order->types == 4)}
+                            手机号：{$user->getUserInfo($order->froms)['mobile']}<br>
+                            昵称：{$user->getUserInfo($order->froms)['nick_name']}
                             {/if}
-                        </td>
-                        <td class="text-center">
-                            {$order->balance}
                         </td>
                         <td class="text-center">
                             {$order->getType($order->types)}
                         </td>
+                        <td class="text-center">{$order->original_money}</td>
+                        <td class="text-center">{if $order->op_type == 1}-{else}+{/if}{$order->change_money}</td>
+                        <td class="text-center">{$order->after_change_money}</td>
+
+
+
                         <td class="text-center">
-                            {$order->old}
+                           {$order->remarks}
                         </td>
                         <td class="text-center">
-                            {$order->getStatus($order->status)}{$order->number}
-                        </td>
-                        <td class="text-center">
-                            {$order->new}
-                        </td>
-                        <td class="text-center">
-                           {$order->remark}
-                        </td>
-                        <td class="text-center">
-                           {$order->create_time}
+                           {$order->createtime}
                         </td>
                     </tr>
                 {/foreach}

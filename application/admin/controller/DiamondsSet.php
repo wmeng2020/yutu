@@ -8,7 +8,7 @@ use think\Db;
 use think\Request;
 use app\common\entity\User;
 
-class Diamonds_set extends Admin {
+class DiamondsSet extends Admin {
 
     #|绑定帐号步骤
     public function index(){
@@ -46,15 +46,16 @@ class Diamonds_set extends Admin {
     public function save(Request $request) {
 
 
-        $title = $request->post('title');
-        $content = $request->post('content');
-        if(empty($title)){
-            return json()->data(['code' => 1, 'message' => "请填写协议名称"]);
+        $money = $request->post('money');
+        $num = $request->post('num');
+        $op_type = intval($request->post('op_type'));
+        if(empty($money)){
+            return json()->data(['code' => 1, 'message' => "请填写金额"]);
         }
-        if(empty($content)){
-            return json()->data(['code' => 1, 'message' => "请填写协议内容"]);
+        if(empty($num)){
+            return json()->data(['code' => 1, 'message' => "请填写钻石数量"]);
         }
-        Db::name('diamonds_set')->insert(['title'=>$title,'content'=>$content,'createtime'=>time()]);
+        Db::name('diamonds_set')->insert(['num'=>$num,'money'=>$money,'op_type'=>$op_type,'createtime'=>time()]);
 
         return json(['code' => 0, 'toUrl' => url('/admin/diamonds_set/index')]);
     }
@@ -67,15 +68,16 @@ class Diamonds_set extends Admin {
         if(empty($entity)){
             return json()->data(['code' => 1, 'message' => "修改对象不存在"]);
         }
-        $title = $request->post('title');
-        $content = $request->post('content');
-        if(empty($title)){
-            return json()->data(['code' => 1, 'message' => "请填写协议名称"]);
+        $money = $request->post('money');
+        $num = $request->post('num');
+        $op_type = intval($request->post('op_type'));
+        if(empty($money)){
+            return json()->data(['code' => 1, 'message' => "请填写金额"]);
         }
-        if(empty($content)){
-            return json()->data(['code' => 1, 'message' => "请填写协议内容"]);
+        if(empty($num)){
+            return json()->data(['code' => 1, 'message' => "请填写钻石数量"]);
         }
-        $data = ['title'=>$title,'content'=>$content];
+        $data = ['num'=>$num,'money'=>$money,'op_type'=>$op_type];
         Db::name('diamonds_set')->where('id',$id)->update($data);
 
         return json(['code' => 0, 'toUrl' => url('/admin/diamonds_set/index')]);

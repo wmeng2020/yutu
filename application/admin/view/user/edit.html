@@ -43,37 +43,49 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-2 control-label">交易密码</label>
+                <label class="col-sm-2 control-label">请选择等级</label>
 
                 <div class="col-sm-5">
-                    <input type="password" name="trad_password" class="form-control" placeholder="交易密码">
+                    <select name="commission_level" class="form-control" id="game-sel">
+                        <option value="0">勇士</option>
+                        {foreach $commission_level as $key=>$item}
+                        <option value="{$item['id']}" {if $info->commission_level == $item['id']}selected{/if}>{$item['levelname']}</option>
+                        {/foreach}
+                    </select>
                 </div>
-                <div class="class-sm-5">
-                    <span class="help-block">如果不填写就不会修改</span>
+            </div>
+<!--            <div class="form-group">-->
+<!--                <label class="col-sm-2 control-label">交易密码</label>-->
+
+<!--                <div class="col-sm-5">-->
+<!--                    <input type="password" name="trad_password" class="form-control" placeholder="交易密码">-->
+<!--                </div>-->
+<!--                <div class="class-sm-5">-->
+<!--                    <span class="help-block">如果不填写就不会修改</span>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <label class="col-sm-2 control-label">确认交易密码</label>-->
+<!--                <div class="col-sm-5">-->
+<!--                    <input type="password" value="" name="re_trad_password" class="form-control" placeholder="交易密码">-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <label class="col-sm-2 control-label">开户人</label>-->
+<!--                <div class="col-sm-5">-->
+<!--                    <input type="text" value="{$info->bank_user_name}" name="bank_user_name" class="form-control" placeholder="开户人">-->
+<!--                </div>-->
+<!--            </div>-->
+            <div class="form-group">
+                <label class="col-sm-2 control-label">支付宝姓名</label>
+                <div class="col-sm-5">
+                    <input type="text" value="{$info->alipay_name}" name="bank_name" class="form-control" placeholder="支付宝姓名">
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-2 control-label">确认交易密码</label>
+                <label class="col-sm-2 control-label">支付宝帐号</label>
                 <div class="col-sm-5">
-                    <input type="password" value="" name="re_trad_password" class="form-control" placeholder="交易密码">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-2 control-label">开户人</label>
-                <div class="col-sm-5">
-                    <input type="text" value="{$info->bank_user_name}" name="bank_user_name" class="form-control" placeholder="开户人">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-2 control-label">开户行</label>
-                <div class="col-sm-5">
-                    <input type="text" value="{$info->bank_name}" name="bank_name" class="form-control" placeholder="开户行">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-2 control-label">银行卡号</label>
-                <div class="col-sm-5">
-                    <input type="text" value="{$info->bank_card}" name="bank_card" class="form-control" placeholder="银行卡号">
+                    <input type="text" value="{$info->alipay_account}" name="bank_card" class="form-control" placeholder="支付宝帐号">
                 </div>
             </div>
             <div class="form-group">
@@ -114,6 +126,18 @@
                 </div>
             </div>
             <div class="form-group">
+                <label class="col-sm-2 control-label">请选择等级</label>
+
+                <div class="col-sm-5">
+                    <select name="commission_level" class="form-control" id="game-sel">
+                        <option value="0">勇士</option>
+                        {foreach $commission_level as $key=>$item}
+                        <option value="{$item['id']}">{$item['levelname']}</option>
+                        {/foreach}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
                 <label class="col-sm-2 control-label">登录密码</label>
 
                 <div class="col-sm-5">
@@ -126,20 +150,20 @@
                     <input type="password" name="re_password" class="form-control" placeholder="请再次输入登录密码">
                 </div>
             </div>
-            <div class="form-group">
-                <label class="col-sm-2 control-label">交易密码</label>
-                <div class="col-sm-5">
-                    <input type="password" value="" name="trad_password" class="form-control"
-                           placeholder="请输入交易密码">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-2 control-label">重复交易密码</label>
-                <div class="col-sm-5">
-                    <input type="password" value="" name="re_trad_password" class="form-control"
-                           placeholder="请再次输入交易密码">
-                </div>
-            </div>
+<!--            <div class="form-group">-->
+<!--                <label class="col-sm-2 control-label">交易密码</label>-->
+<!--                <div class="col-sm-5">-->
+<!--                    <input type="password" value="" name="trad_password" class="form-control"-->
+<!--                           placeholder="请输入交易密码">-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <label class="col-sm-2 control-label">重复交易密码</label>-->
+<!--                <div class="col-sm-5">-->
+<!--                    <input type="password" value="" name="re_trad_password" class="form-control"-->
+<!--                           placeholder="请再次输入交易密码">-->
+<!--                </div>-->
+<!--            </div>-->
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
                     <button type="submit" onclick="main.ajaxPosts(this)" data-url="{:url('admin/user/save')}"
