@@ -11,7 +11,7 @@
 
 
 // [ 应用入口文件 ]
-header('Access-Control-Allow-Origin: *');
+#header('Access-Control-Allow-Origin: *');
 // 定义应用目录
 define('APP_PATH', __DIR__ . '/../application/');
 define('ROOT_URL', 'http://' . $_SERVER['SERVER_NAME']);
